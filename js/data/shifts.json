@@ -3,7 +3,6 @@
     {
       "id": "CLINIC_MANAGER",
       "title": "Client Service Officer/Representative",
-
       "extendedProps": {
         "isParent": true,
         "group": true,
@@ -52,7 +51,6 @@
     {
       "id": "AUDIOLOGIST",
       "title": "Audiologist",
-
       "extendedProps": {
         "isParent": true,
         "group": true,
@@ -67,11 +65,11 @@
         },
         {
           "id": 7,
-          "title": "Grace O'Connor",
-          "extendedProps": {
-            "shift": 2,
-            "imgUrl": "./Assets/images/Jack.png"
-          }
+          "title": "Grace O'Connor"
+        },
+        {
+          "id": 11,
+          "title": "Mee"
         }
       ]
     }

@@ -10,24 +10,22 @@ body {
   padding: 0px;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 100vw;
-  height: 100vh;
 }
-
-#calendar .ec-timeline .ec-time {
-  width: 220px;
+.ec-main {
+  width: 100%;
 }
 
 #calendar .ec-timeline .ec-line {
-  width: 220px;
   border: none;
 }
 
 #calendar .ec-timeline .ec-days {
   border: none !important;
   box-shadow: none !important;
-  /* padding: 8px; */
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
 }
+
 #calendar .ec-timeline .ec-line,
 .ec-timeline .ec-days,
 .ec-timeline .ec-slot {
@@ -41,7 +39,7 @@ body {
 .ec-content {
   border-right: none !important;
 }
-/* Remove resource column borders */
+
 .ec-timeline .ec-resource,
 .ec-timeline .ec-resource-label {
   border: none !important;
@@ -49,21 +47,21 @@ body {
   box-shadow: none !important;
 }
 
-/* Remove day headers borders */
 .ec-timeline .ec-days-header,
 .ec-timeline .ec-day-header {
   border: none !important;
   box-shadow: none !important;
 }
 
-/* Optional: remove any remaining outline/margin artifacts */
 .ec-timeline .ec-event {
   border: none !important;
   box-shadow: none !important;
 }
+
 .events-blue {
   background-color: #d1e3f5;
   border: 2px solid #6d99d3;
+  border-right: 5px;
   display: flex;
   justify-content: space-between;
   padding: 4px;
@@ -78,6 +76,7 @@ body {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
 .events-red {
   background-color: #f9dada;
   border: 2px solid #e58f95;
@@ -95,6 +94,7 @@ body {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
 .icons {
   display: flex;
   margin-top: 10px;
@@ -112,18 +112,22 @@ body {
   display: flex;
   flex-direction: column;
 }
+
 .title {
   font-weight: 400;
   font-size: 14px;
   color: #000;
 }
+
 .resource-name {
-  font-size: 18px;
+  font-size: 16px;
 }
+
 .shift {
   font-size: 12px;
   color: #7a7979;
 }
+
 .parent-title {
   color: #6068ab;
 }
@@ -140,21 +144,63 @@ body {
   background-color: #f3f2f1 !important;
   color: #000000 !important;
   border: none;
-  /* padding: 4px 6px; */
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 14px;
   font-weight: 500;
 }
+
 .ec-events {
   background-color: white;
   color: #000000 !important;
   border: 3px solid #f3f2f1;
-  /* padding: 6px 6px; */
+
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 14px;
   font-weight: 500;
+}
+
+.header {
+  color: #605e5c;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.day-week {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.icon {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.svg-hrs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.parent-title-hours {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 1rem;
+}
+
+.parent-event {
+  width: 100%;
+  background-color: #f3f2f1;
+  color: #72706f;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  font-weight: 400;
+  font-size: 18px;
+  padding: px;
+  gap: 2px;
 }

@@ -1,6 +1,7 @@
 .filter-container {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 12px;
   background: #f3f2f1;
@@ -14,14 +15,17 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
+  flex: 1 1 auto;
 }
+
 .left-filter button,
 .left-filter .dropdown-btn {
   display: flex;
-  align-items: center; /* vertically center everything */
-  gap: 6px; /* spacing between items */
-  padding: 6px 12px; /* optional padding */
-  font-size: 14px; /* consistent font size */
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 14px;
   cursor: pointer;
   background: #f3f2f1;
   border: 1px solid #ccc;
@@ -46,10 +50,13 @@
 .right-filter {
   display: flex;
   align-items: center;
+  justify-content: end;
   gap: 12px;
   padding: 8px 12px;
   border-radius: 8px;
   margin-bottom: 12px;
+  flex-wrap: wrap;
+  flex: 1 1 auto;
 }
 .right-filter div {
   display: flex;
@@ -110,6 +117,7 @@
 .toolbarBtn {
   align-items: center;
 }
+
 .dropdown-content input[type="checkbox"] {
   accent-color: #6068ab;
   cursor: pointer;
@@ -119,6 +127,7 @@
   border: 1px solid #6068ab;
   height: 12px;
 }
+
 .dropdown-content label {
   font-weight: 500;
   display: flex;
@@ -139,7 +148,7 @@
   background: #f3f2f1;
   border-radius: 6px;
   cursor: pointer;
-  width: fit-content;
+  /* width: fit-content; */
 }
 
 .calendar-label {
