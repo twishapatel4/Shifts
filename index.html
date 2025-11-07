@@ -10,6 +10,10 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@event-calendar/build@4.6.0/dist/event-calendar.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
   </head>
 
   <body>
@@ -19,11 +23,8 @@
     <div class="filter-container">
       <div class="left-filter">
         <button id="calendar-btn">
-          <label for="datefilter" class="btn">
-            <img src="./Assets/icons/calendar.svg" height="20" width="20" />
-            Today
-          </label>
-
+          <img src="./Assets/icons/calendar.svg" height="20" width="20" />
+          <span id="calendar-btn-text">Today</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -41,7 +42,6 @@
               d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
             />
           </svg>
-
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -59,7 +59,7 @@
               d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
             />
           </svg>
-          17 Nov 2025<svg
+          <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -74,10 +74,9 @@
               d="m19.5 8.25-7.5 7.5-7.5-7.5"
             />
           </svg>
+          <input type="text" id="calendarRange" style="display: none" />
         </button>
 
-        <input type="date" id="startDate" style="display: none" />
-        <input type="date" id="endDate" style="display: none" />
         <!-- id="territoryDropdown" onclick="toggleDropdown()" -->
         <div class="dropdown" data-dropdown>
           <button class="dropdown-btn">
@@ -99,13 +98,22 @@
             </svg>
           </button>
           <div class="dropdown-content" id="dropdownContent">
-            <label><input type="checkbox" value="National" /> National</label>
-            <label><input type="checkbox" value="Regional" /> Regional</label>
             <label
-              ><input type="checkbox" value="Area (Cluster)" /> Area
-              (Cluster)</label
+              ><input type="checkbox" value="National" /><span>
+                National</span
+              ></label
             >
-            <label><input type="checkbox" value="District" /> District</label>
+            <label
+              ><input type="checkbox" value="Regional" />
+              <span>Regional</span></label
+            >
+            <label
+              ><input type="checkbox" value="Area (Cluster)" />
+              <span>Area</span> (Cluster)</label
+            >
+            <label
+              ><input type="checkbox" value="District" /><span>District</span>
+            </label>
           </div>
         </div>
 
@@ -130,23 +138,28 @@
           </button>
           <div class="dropdown-content" id="dropdownContent">
             <label
-              ><input type="checkbox" value="Permanent Sites" /> Permanent
+              ><input type="checkbox" value="Permanent Sites" />
+              <span>Permanent Sites</span></label
+            >
+            <label
+              ><input type="checkbox" value="Visiting Sites" /><span>
+                Visiting</span
+              >
               Sites</label
             >
             <label
-              ><input type="checkbox" value="Visiting Sites" /> Visiting
-              Sites</label
-            >
-            <label
-              ><input type="checkbox" value="Home Visits" /> Home Visits
+              ><input type="checkbox" value="Home Visits" /><span>
+                Home Visits</span
+              >
             </label>
             <label
-              ><input type="checkbox" value="Outreach Sites" /> Outreach
-              Sites</label
+              ><input type="checkbox" value="Outreach Sites" /><span>
+                Outreach Sites</span
+              ></label
             >
             <label
-              ><input type="checkbox" value="Virtual Sites" /> Virtual
-              Sites</label
+              ><input type="checkbox" value="Virtual Sites" />
+              <span>Virtual Sites</span></label
             >
           </div>
         </div>
@@ -172,13 +185,16 @@
           </button>
           <div class="dropdown-content" id="dropdownContent">
             <label
-              ><input type="checkbox" value="National" /> Audiologist</label
+              ><input type="checkbox" value="National" />
+              <span>Audiologist</span></label
             >
             <label
-              ><input type="checkbox" value="Regional" /> Clinic Manager</label
+              ><input type="checkbox" value="Regional" />
+              <span>Clinic Manager</span></label
             >
             <label
-              ><input type="checkbox" value="District" /> Audiometrist</label
+              ><input type="checkbox" value="District" />
+              <span>Audiometrist</span></label
             >
           </div>
         </div>
@@ -212,6 +228,7 @@
     <div id="calendar"></div>
 
     <hr />
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/@event-calendar/build@4.6.0/dist/event-calendar.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@event-calendar/resource-timeline@4.6.0/dist/index.global.min.js"></script>
 

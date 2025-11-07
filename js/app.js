@@ -1,67 +1,123 @@
 document.addEventListener("click", function (e) {
-  const isDropdownBtn = e.target.matches("[data-dropdown] .dropdown-btn");
+  const isDropdownBtn = e.target.closest("[data-dropdown] .dropdown-btn");
 
-  // Close all dropdowns if clicked outside
-  if (!isDropdownBtn) {
-    document
-      .querySelectorAll("[data-dropdown].show")
-      .forEach((drop) => drop.classList.remove("show"));
+  // If clicked on a dropdown button → toggle only that dropdown
+  if (isDropdownBtn) {
+    const dropdown = isDropdownBtn.closest("[data-dropdown]");
+    dropdown.classList.toggle("show");
+    e.stopPropagation();
     return;
   }
 
-  const currentDropdown = e.target.closest("[data-dropdown]");
-  currentDropdown.classList.toggle("show");
+  // If clicked outside → close all dropdowns
+  document
+    .querySelectorAll("[data-dropdown].show")
+    .forEach((drop) => drop.classList.remove("show"));
 });
 
-window.onclick = function (event) {
-  if (!event.target.closest(".dropdown")) {
-    const dropdowns = document.getElementsByClassName("dropdown");
-    // for (let i = 0; i < dropdowns.length; i++) {
-    //   dropdowns[i].classList.remove("show");
-    // }
-    for (let i = 0; i < dropdowns.length; i++) {
-      const dropdown = dropdowns[i];
-
-      // If click is outside the dropdown, close it
-      if (!dropdown.contains(event.target)) {
-        dropdown.classList.remove("show");
-      }
-    }
-  }
-};
+// Prevent closing when clicking inside dropdown content
+document
+  .querySelectorAll("[data-dropdown] .dropdown-content")
+  .forEach((content) => {
+    content.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+  });
 
 const calendarBtn = document.getElementById("calendar-btn");
-// const dateInput = document.getElementById("datefilter");
-const startInput = document.getElementById("startDate");
-const endInput = document.getElementById("endDate");
+const rangeInput = document.getElementById("calendarRange");
 const btnText = document.getElementById("calendar-btn-text");
 
-calendarBtn.addEventListener("click", () => {
-  startInput.showPicker();
+const fp = flatpickr(rangeInput, {
+  mode: "range",
+  dateFormat: "d M Y",
+  numberofMonths: 2,
+  showMonths: 2,
+  // maxDate: new Date().fp_incr(365),
+  onReady: function (selectedDates, dateStr, instance) {
+    addCustomButtons(instance);
+  },
+  onOpen: function (selectedDates, dateStr, instance) {
+    if (!instance.calendarContainer.querySelector(".fp-custom-btns")) {
+      addCustomButtons(instance);
+    }
+  },
+  onClose: function (selectedDates) {
+    if (selectedDates.length === 2) {
+      const start = selectedDates[0];
+      const end = selectedDates[1];
+
+      const options = { day: "2-digit", month: "short", year: "numeric" };
+      btnText.textContent = `${start.toLocaleDateString(
+        "en-US",
+        options
+      )} - ${end.toLocaleDateString("en-US", options)}`;
+    }
+  },
 });
 
-startInput.addEventListener("change", () => {
-  endInput.showPicker();
-});
+function addCustomButtons(instance) {
+  const calendar = instance.calendarContainer;
 
-function formatDate(dateStr) {
-  const date = new Date(dateStr);
-  const options = { day: "2-digit", month: "short", year: "numeric" };
-  return date.toLocaleDateString("en-US", options);
+  const btnContainer = document.createElement("div");
+  btnContainer.className = "fp-custom-btns";
+  btnContainer.style.cssText = `
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 8px 12px;
+    border-top: 1px solid #ddd;
+  `;
+
+  // Clear Button
+  const clearBtn = document.createElement("button");
+  clearBtn.textContent = "Cancel";
+  clearBtn.style.cssText = `
+    background: #c0c0c0;
+    border:none;
+    font-size:14px;
+    font-weight:700;
+    color:#1d1d1d;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  `;
+  clearBtn.onclick = () => {
+    instance.clear();
+  };
+
+  const applyBtn = document.createElement("button");
+  applyBtn.textContent = "Apply";
+  applyBtn.style.cssText = `
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  `;
+  applyBtn.onclick = () => {
+    instance.close();
+    // You can also trigger your logic here, like updating button text
+  };
+
+  btnContainer.appendChild(clearBtn);
+  btnContainer.appendChild(applyBtn);
+
+  calendar.appendChild(btnContainer);
 }
 
-endInput.addEventListener("change", (e) => {
-  const start = formatDate(startInput.value);
-  const end = formatDate(endInput.value);
+calendarBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  fp.open();
+});
 
-  const options = { day: "2-digit", month: "short", year: "numeric" };
-  // calendarBtn.childNodes.forEach((node) => {
-  //   if (node.nodeType === Node.TEXT_NODE) {
-  //     node.textContent = `${start} - ${end}`;
-  //   }
-  // });
+calPrev.addEventListener("click", (e) => {
+  e.stopPropagation();
+  calendar.prev();
+});
 
-  //   const selectedDate = new Date(e.target.value);
-  //   const options = { day: "2-digit", month: "short", year: "numeric" };
-  //   btnText.textContent = selectedDate.toLocaleDateString("en-US", options);
+calNext.addEventListener("click", (e) => {
+  e.stopPropagation();
+  calendar.next();
 });

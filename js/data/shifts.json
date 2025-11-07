@@ -3,8 +3,12 @@
     {
       "id": "CLINIC_MANAGER",
       "title": "Client Service Officer/Representative",
+
       "extendedProps": {
-        "isParent": true
+        "isParent": true,
+        "group": true,
+        "groupOnly": true,
+        "hours": 6
       },
       "children": [
         { "id": 8, "title": "Open Shift", "extendedProps": { "isOpen": true } },
@@ -30,8 +34,12 @@
     {
       "id": "AUDIOMETRIST",
       "title": "Audiometrist",
+
       "extendedProps": {
-        "isParent": true
+        "isParent": true,
+        "group": true,
+        "groupOnly": true,
+        "hours": 117
       },
       "children": [
         { "id": 9, "title": "Open Shift", "extendedProps": { "isOpen": true } },
@@ -44,8 +52,12 @@
     {
       "id": "AUDIOLOGIST",
       "title": "Audiologist",
+
       "extendedProps": {
-        "isParent": true
+        "isParent": true,
+        "group": true,
+        "groupOnly": true,
+        "hours": 117
       },
       "children": [
         {
@@ -58,10 +70,28 @@
     }
   ],
   "events": [
-    { "start": "TODAY", "resourceId": 1, "class": "shift-green" },
-    { "start": "DAY+1", "resourceId": 2, "class": "shift-red" },
-    { "start": "DAY+2", "resourceId": 8 },
-    { "start": "DAY+1", "resourceId": 6, "class": "shift-red" },
-    { "start": "DAY+1", "resourceId": 4, "class": "shift-red" }
+    {
+      "resourceId": "CLINIC_MANAGER",
+      "start": "SUN",
+      "end": "2100-12-31",
+      "title": "shift-full"
+    },
+    {
+      "resourceId": "AUDIOMETRIST",
+      "start": "SUN",
+      "end": "2100-12-31",
+      "title": "shift-full"
+    },
+    {
+      "resourceId": "AUDIOLOGIST",
+      "start": "SUN",
+      "end": "2100-12-31",
+      "title": "shift-full"
+    },
+    { "start": "TODAY", "resourceId": 1, "title": "shift-blue" },
+    { "start": "DAY+1", "resourceId": 2, "title": "shift-red" },
+    { "start": "DAY+1", "resourceId": 8 },
+    { "start": "DAY+1", "resourceId": 6, "title": "shift-blue" },
+    { "start": "DAY+1", "resourceId": 4, "title": "shift-red" }
   ]
 }

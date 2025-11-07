@@ -11,10 +11,11 @@ body {
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   width: 100vw;
+  height: 100vh;
 }
 
 #calendar .ec-timeline .ec-time {
-  width: 210px;
+  width: 220px;
 }
 
 #calendar .ec-timeline .ec-line {
@@ -30,7 +31,7 @@ body {
 
 .ec-event .events {
   width: 100% !important;
-  height: 100% !important;
+  /* height: 100% !important; */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -38,9 +39,9 @@ body {
   box-sizing: border-box;
 }
 
-.events {
+.events-blue {
   background-color: #d1e3f5;
-  /* border: 1px solid #6d99d3; */
+  border: 2px solid #6d99d3;
   display: flex;
   justify-content: space-between;
   padding: 4px;
@@ -55,7 +56,23 @@ body {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-
+.events-red {
+  background-color: #f9dada;
+  border: 2px solid #e58f95;
+  display: flex;
+  justify-content: space-between;
+  padding: 4px;
+  height: 100%;
+  margin: 0px;
+  width: 100%;
+  color: #e58f95;
+  border-radius: 4px;
+  font-size: 12px;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 .icons {
   display: flex;
   margin-top: 10px;
@@ -82,40 +99,33 @@ body {
   font-size: 12px;
   color: #7a7979;
 }
-/* Hide timeline cells for header-only resources */
-.ec-timeline .ec-line[data-resource-id] {
-  border-bottom: 1px solid #e0e0e0; /* optional */
-}
-
-.ec-timeline .ec-line[data-resource-id] {
-  display: flex;
-}
-
-.ec-timeline .ec-line[data-resource-id]:has(.ec-time) {
-  display: flex;
-}
-
-[data-resource-id="CLINIC_MANAGER"] .ec-time {
-  display: none !important;
-  width: 0 !important;
-}
-
 .parent-title {
   color: #6068ab;
 }
 
 .parent-resource {
-  color: #72706f;
+  color: #69588b;
   display: flex;
-  /* gap: 10px; */
 }
-
-/* Parent resource timeline cells */
-.ec-timeline .ec-days .parent-resource {
-  background-color: #f0f0f5; /* light gray for parent */
+.ec-event {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border-radius: 4px;
+  padding: 4px 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
 }
-
-/* Normal resources timeline cells */
-.ec-timeline .ec-days .resource-user:not(.parent-resource) {
-  background-color: #fff; /* white for normal resources */
+.ec-events {
+  background-color: white;
+  color: #000000 !important;
+  border-radius: 4px;
+  padding: 4px 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
 }
