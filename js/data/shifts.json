@@ -65,7 +65,14 @@
           "title": "Open Shift",
           "extendedProps": { "isOpen": true }
         },
-        { "id": 7, "title": "Grace O'Connor" }
+        {
+          "id": 7,
+          "title": "Grace O'Connor",
+          "extendedProps": {
+            "shift": 2,
+            "imgUrl": "./Assets/images/Jack.png"
+          }
+        }
       ]
     }
   ],

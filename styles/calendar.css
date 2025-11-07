@@ -23,22 +23,44 @@ body {
   border: none;
 }
 
-.ec-timeline .ec-days {
+#calendar .ec-timeline .ec-days {
   border: none !important;
   box-shadow: none !important;
   /* padding: 8px; */
 }
-
-.ec-event .events {
-  width: 100% !important;
-  /* height: 100% !important; */
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: none;
-  box-sizing: border-box;
+#calendar .ec-timeline .ec-line,
+.ec-timeline .ec-days,
+.ec-timeline .ec-slot {
+  border: none !important;
+  box-shadow: none !important;
 }
 
+.ec-container {
+  border: none !important;
+}
+.ec-content {
+  border-right: none !important;
+}
+/* Remove resource column borders */
+.ec-timeline .ec-resource,
+.ec-timeline .ec-resource-label {
+  border: none !important;
+  align-items: center;
+  box-shadow: none !important;
+}
+
+/* Remove day headers borders */
+.ec-timeline .ec-days-header,
+.ec-timeline .ec-day-header {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Optional: remove any remaining outline/margin artifacts */
+.ec-timeline .ec-event {
+  border: none !important;
+  box-shadow: none !important;
+}
 .events-blue {
   background-color: #d1e3f5;
   border: 2px solid #6d99d3;
@@ -50,7 +72,7 @@ body {
   width: 100%;
   color: #3376d0;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 14px;
   text-align: center;
   overflow: hidden;
   white-space: nowrap;
@@ -67,7 +89,7 @@ body {
   width: 100%;
   color: #e58f95;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 14px;
   text-align: center;
   overflow: hidden;
   white-space: nowrap;
@@ -95,6 +117,9 @@ body {
   font-size: 14px;
   color: #000;
 }
+.resource-name {
+  font-size: 18px;
+}
 .shift {
   font-size: 12px;
   color: #7a7979;
@@ -106,12 +131,16 @@ body {
 .parent-resource {
   color: #69588b;
   display: flex;
+  border: none;
+  justify-content: space-between;
+  align-items: center;
 }
+
 .ec-event {
-  background-color: #ffffff !important;
+  background-color: #f3f2f1 !important;
   color: #000000 !important;
-  border-radius: 4px;
-  padding: 4px 6px;
+  border: none;
+  /* padding: 4px 6px; */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -121,8 +150,8 @@ body {
 .ec-events {
   background-color: white;
   color: #000000 !important;
-  border-radius: 4px;
-  padding: 4px 6px;
+  border: 3px solid #f3f2f1;
+  /* padding: 6px 6px; */
   display: flex;
   justify-content: space-between;
   align-items: center;
