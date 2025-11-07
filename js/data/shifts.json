@@ -1,0 +1,67 @@
+{
+  "resources": [
+    {
+      "id": "CLINIC_MANAGER",
+      "title": "Client Service Officer/Representative",
+      "extendedProps": {
+        "isParent": true
+      },
+      "children": [
+        { "id": 8, "title": "Open Shift", "extendedProps": { "isOpen": true } },
+        {
+          "id": 1,
+          "title": "Jack Thompson",
+
+          "extendedProps": {
+            "shift": 2,
+            "imgUrl": "./Assets/images/Jack.png"
+          }
+        },
+        {
+          "id": 2,
+          "title": "Sarah Brown",
+          "extendedProps": {
+            "shift": 2,
+            "imgUrl": "./Assets/images/Jack.png"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AUDIOMETRIST",
+      "title": "Audiometrist",
+      "extendedProps": {
+        "isParent": true
+      },
+      "children": [
+        { "id": 9, "title": "Open Shift", "extendedProps": { "isOpen": true } },
+        { "id": 3, "title": "Liam Harris" },
+        { "id": 4, "title": "Emily Johnson" },
+        { "id": 5, "title": "Ethan Smith" },
+        { "id": 6, "title": "Mia Patel" }
+      ]
+    },
+    {
+      "id": "AUDIOLOGIST",
+      "title": "Audiologist",
+      "extendedProps": {
+        "isParent": true
+      },
+      "children": [
+        {
+          "id": 10,
+          "title": "Open Shift",
+          "extendedProps": { "isOpen": true }
+        },
+        { "id": 7, "title": "Grace O'Connor" }
+      ]
+    }
+  ],
+  "events": [
+    { "start": "TODAY", "resourceId": 1, "class": "shift-green" },
+    { "start": "DAY+1", "resourceId": 2, "class": "shift-red" },
+    { "start": "DAY+2", "resourceId": 8 },
+    { "start": "DAY+1", "resourceId": 6, "class": "shift-red" },
+    { "start": "DAY+1", "resourceId": 4, "class": "shift-red" }
+  ]
+}

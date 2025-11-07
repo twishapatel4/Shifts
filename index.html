@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shifts Calendar</title>
+    <link rel="stylesheet" href="styles/calendar.css" />
+    <link rel="stylesheet" href="styles/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@event-calendar/build@4.6.0/dist/event-calendar.min.css"
+    />
+  </head>
+
+  <body>
+    <h2>Shift</h2>
+    <hr />
+
+    <div class="filter-container">
+      <div class="left-filter">
+        <button id="calendar-btn">
+          <label for="datefilter" class="btn">
+            <img src="./Assets/icons/calendar.svg" height="20" width="20" />
+            Today
+          </label>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6"
+            width="16"
+            height="16"
+            id="calPrev"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+            />
+          </svg>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6"
+            width="16"
+            height="16"
+            id="calNext"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+            />
+          </svg>
+          17 Nov 2025<svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            width="18"
+            height="18"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m19.5 8.25-7.5 7.5-7.5-7.5"
+            />
+          </svg>
+        </button>
+
+        <input type="date" id="startDate" style="display: none" />
+        <input type="date" id="endDate" style="display: none" />
+        <!-- id="territoryDropdown" onclick="toggleDropdown()" -->
+        <div class="dropdown" data-dropdown>
+          <button class="dropdown-btn">
+            Select Territory
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              width="18"
+              height="18"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m19.5 8.25-7.5 7.5-7.5-7.5"
+              />
+            </svg>
+          </button>
+          <div class="dropdown-content" id="dropdownContent">
+            <label><input type="checkbox" value="National" /> National</label>
+            <label><input type="checkbox" value="Regional" /> Regional</label>
+            <label
+              ><input type="checkbox" value="Area (Cluster)" /> Area
+              (Cluster)</label
+            >
+            <label><input type="checkbox" value="District" /> District</label>
+          </div>
+        </div>
+
+        <div class="dropdown" data-dropdown>
+          <button class="dropdown-btn">
+            Select Site
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              width="18"
+              height="18"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m19.5 8.25-7.5 7.5-7.5-7.5"
+              />
+            </svg>
+          </button>
+          <div class="dropdown-content" id="dropdownContent">
+            <label
+              ><input type="checkbox" value="Permanent Sites" /> Permanent
+              Sites</label
+            >
+            <label
+              ><input type="checkbox" value="Visiting Sites" /> Visiting
+              Sites</label
+            >
+            <label
+              ><input type="checkbox" value="Home Visits" /> Home Visits
+            </label>
+            <label
+              ><input type="checkbox" value="Outreach Sites" /> Outreach
+              Sites</label
+            >
+            <label
+              ><input type="checkbox" value="Virtual Sites" /> Virtual
+              Sites</label
+            >
+          </div>
+        </div>
+
+        <div class="dropdown" data-dropdown>
+          <button class="dropdown-btn">
+            Select Category
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              width="18"
+              height="18"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m19.5 8.25-7.5 7.5-7.5-7.5"
+              />
+            </svg>
+          </button>
+          <div class="dropdown-content" id="dropdownContent">
+            <label
+              ><input type="checkbox" value="National" /> Audiologist</label
+            >
+            <label
+              ><input type="checkbox" value="Regional" /> Clinic Manager</label
+            >
+            <label
+              ><input type="checkbox" value="District" /> Audiometrist</label
+            >
+          </div>
+        </div>
+      </div>
+      <div class="right-filter">
+        <div>
+          <img src="./Assets/icons/filter.svg" height="20" />
+          Filter
+        </div>
+        <div>
+          <img src="./Assets/icons/view.svg" height="20" />
+          View<svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            width="18"
+            height="18"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m19.5 8.25-7.5 7.5-7.5-7.5"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div id="calendar"></div>
+
+    <hr />
+    <script src="https://cdn.jsdelivr.net/npm/@event-calendar/build@4.6.0/dist/event-calendar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@event-calendar/resource-timeline@4.6.0/dist/index.global.min.js"></script>
+
+    <script src="./js/app.js"></script>
+    <script src="./js/calendar-config.js"></script>
+    <script></script>
+  </body>
+</html>

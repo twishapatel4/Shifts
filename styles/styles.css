@@ -1,0 +1,121 @@
+.filter-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #f3f2f1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.left-filter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.left-filter button,
+.left-filter .dropdown-btn {
+  display: flex;
+  align-items: center; /* vertically center everything */
+  gap: 6px; /* spacing between items */
+  padding: 6px 12px; /* optional padding */
+  font-size: 14px; /* consistent font size */
+  cursor: pointer;
+  background: #f3f2f1;
+  border: 1px solid #ccc;
+}
+
+.left-filter button svg,
+.left-filter .dropdown-btn svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.left-filter button label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.left-filter button #calendar-btn svg:last-child {
+  margin-left: auto;
+}
+
+.right-filter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+.right-filter div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #000;
+}
+
+.right-filter div img,
+.right-filter div svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  min-width: 180px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  z-index: 10;
+  padding: 10px;
+  align-items: center;
+}
+
+.dropdown {
+  color: #000000;
+}
+
+.dropdown.show .dropdown-content {
+  display: block;
+}
+
+.dropdown-btn {
+  background-color: #f3f2f1;
+  border: 1px solid #ccc;
+  width: 200px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #000000;
+}
+
+.dropdown-content label {
+  display: block;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+
+.dropdown-content input {
+  margin-right: 8px;
+}
+
+.dropdown-content label:hover {
+  background-color: #f1f1f1;
+}
+
+.toolbarBtn {
+  align-items: center;
+}
