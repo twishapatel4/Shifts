@@ -148,7 +148,6 @@
   background: #f3f2f1;
   border-radius: 6px;
   cursor: pointer;
-  /* width: fit-content; */
 }
 
 .calendar-label {
@@ -161,4 +160,15 @@
 .nav-arrow {
   cursor: pointer;
   padding: 4px;
+}
+
+.calendar-btn {
+  display: flex;
+  gap: 16px;
+  /* background: red; */
+}
+
+.endDate {
+  font-weight: 600;
+  font-size: 14px;
 }
