@@ -172,3 +172,9 @@
   font-weight: 600;
   font-size: 14px;
 }
+
+.calendar-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}

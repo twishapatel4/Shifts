@@ -39,8 +39,22 @@
       },
       "children": [
         { "id": 9, "title": "Open Shift", "extendedProps": { "isOpen": true } },
-        { "id": 3, "title": "Liam Harris" },
-        { "id": 4, "title": "Emily Johnson" },
+        {
+          "id": 3,
+          "title": "Liam Harris",
+          "extendedProps": {
+            "shift": 2,
+            "imgUrl": "./Assets/images/Jack.png"
+          }
+        },
+        {
+          "id": 4,
+          "title": "Emily Johnson",
+          "extendedProps": {
+            "shift": 2,
+            "imgUrl": "./Assets/images/Jack.png"
+          }
+        },
         { "id": 5, "title": "Ethan Smith" },
         { "id": 6, "title": "Mia Patel" }
       ]
@@ -60,7 +74,11 @@
         },
         {
           "id": 7,
-          "title": "Grace O'Connor"
+          "title": "Grace O'Connor",
+          "extendedProps": {
+            "shift": 2,
+            "imgUrl": "./Assets/images/Jack.png"
+          }
         }
       ]
     },
@@ -69,24 +87,6 @@
     }
   ],
   "events": [
-    {
-      "resourceId": "CLINIC_MANAGER",
-      "start": "SUN",
-      "end": "2100-12-31",
-      "title": "shift-full"
-    },
-    {
-      "resourceId": "AUDIOMETRIST",
-      "start": "SUN",
-      "end": "2100-12-31",
-      "title": "shift-full"
-    },
-    {
-      "resourceId": "AUDIOLOGIST",
-      "start": "SUN",
-      "end": "2100-12-31",
-      "title": "shift-full"
-    },
     { "start": "TODAY", "resourceId": 1, "title": "shift-blue" },
     { "start": "DAY+1", "resourceId": 2, "title": "shift-red" },
     { "start": "DAY+1", "resourceId": 8 },

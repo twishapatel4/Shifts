@@ -80,6 +80,9 @@ body {
 .day-week .ec-today {
   color: #6068ab;
 }
+.ec-expander {
+  display: none;
+}
 
 .events-blue {
   background-color: #d1e3f5;
@@ -170,6 +173,20 @@ body {
   width: 100%;
   padding: 12px;
   /* background: red; */
+}
+
+.ec-sidebar {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.ec-content {
+  overflow: hidden;
+}
+
+.ec-resource-row[data-hidden="true"] {
+  display: none;
 }
 
 .sidebar-title {
