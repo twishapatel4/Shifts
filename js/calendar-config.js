@@ -50,6 +50,9 @@ function initCalendar(resources, events) {
     slotWidth: 220,
     resources,
     events,
+    viewDidMount(info) {
+      addTitleBelowDayHeaders(info);
+    },
     eventContent: renderEventDetails,
     dayHeaderFormat: CustomHeader,
     resourceLabelContent: renderResources,
@@ -63,6 +66,40 @@ function initCalendar(resources, events) {
     .addEventListener("click", () => calendar.next());
 }
 
+// function addTitleBelowDayHeaders(info) {
+//   console.log(info);
+//   // const headerEl = info.el.querySelector(".ec-days"); // Header container
+
+//   // if (!headerEl || headerEl.querySelector(".custom-title-row")) return;
+
+//   // const titleRow = document.createElement("div");
+//   // titleRow.className = "custom-title-row";
+//   // titleRow.innerText = "Weekly Shifts Overview"; // <-- your title text here
+
+//   // // headerEl.appendChild(titleRow);
+//   // headerEl.insertAdjacentElement("afterend", titleRow);
+//   const root = document.getElementById("calendar"); // calendar root you created
+//   if (!root) {
+//     console.log("root");
+//     return;
+//   }
+//   const daysEl = root.querySelector(".ec-days"); // theme default class: ec-days
+//   if (!daysEl) {
+//     console.warn("ec-days not found yet");
+//     return;
+//   }
+
+//   // avoid duplicates
+//   if (root.querySelector(".custom-title-row")) return;
+
+//   const titleRow = document.createElement("div");
+//   titleRow.className = "custom-title-row";
+//   titleRow.innerText = "Weekly Shifts Overview";
+//   daysEl.insertAdjacentElement("afterend", titleRow);
+//   // daysEl.parentNode.insertBefore(titleRow, daysEl.nextSibling);
+//   console.log(titleRow);
+// }
+
 function CustomHeader(date) {
   const weekday = date.toLocaleDateString("en-US", { weekday: "short" }); // Mon, Tue
   const d = String(date.getDate()).padStart(2, "0"); // 04
@@ -70,30 +107,31 @@ function CustomHeader(date) {
   return {
     html: `
 <div class="header">
-  <div class="day-week>
-    <div style="font-size: 18px; font-weight: 600">${d}</div>
-    <div>${weekday}</div>
+  <div class="day-week">
+    <div class="date">${d}</div>
+    <div class="weekday">${weekday}</div>
   </div>
-  <div class="svg-hrs">
-    <div class="icon"><svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke-width="1.5"
-      stroke="currentColor"
-      class="size-6"
-      height="20"
-      width="20"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
-      />
-    </svg> 
-    <span>3</span>
+
+  <div class="user-hrs">
+    <div class="icon">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        height="20"
+        width="20"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
+        />
+      </svg>
+      <span>3</span>
     </div>
-    <div>9 Hrs</div>
+    <div class="hrs">9 Hrs</div>
   </div>
 </div>
     `,

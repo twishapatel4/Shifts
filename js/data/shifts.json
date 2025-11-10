@@ -2,11 +2,9 @@
   "resources": [
     {
       "id": "CLINIC_MANAGER",
-      "title": "Client Service Officer/Representative",
+      "title": "Client Service Officer",
       "extendedProps": {
         "isParent": true,
-        "group": true,
-        "groupOnly": true,
         "hours": 6
       },
       "children": [
@@ -36,8 +34,7 @@
 
       "extendedProps": {
         "isParent": true,
-        "group": true,
-        "groupOnly": true,
+
         "hours": 117
       },
       "children": [
@@ -53,8 +50,6 @@
       "title": "Audiologist",
       "extendedProps": {
         "isParent": true,
-        "group": true,
-        "groupOnly": true,
         "hours": 117
       },
       "children": [
@@ -66,12 +61,11 @@
         {
           "id": 7,
           "title": "Grace O'Connor"
-        },
-        {
-          "id": 11,
-          "title": "Mee"
         }
       ]
+    },
+    {
+      "id": "new"
     }
   ],
   "events": [

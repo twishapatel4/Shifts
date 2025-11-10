@@ -48,10 +48,14 @@ const fp = flatpickr(rangeInput, {
       const end = selectedDates[1];
 
       const options = { day: "2-digit", month: "short", year: "numeric" };
-      btnText.textContent = `${start.toLocaleDateString(
+
+      document.getElementById("startDate").textContent =
+        start.toLocaleDateString("en-US", options);
+
+      document.getElementById("endDate").textContent = end.toLocaleDateString(
         "en-US",
         options
-      )} - ${end.toLocaleDateString("en-US", options)}`;
+      );
     }
   },
 });
