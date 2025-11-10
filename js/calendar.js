@@ -1,6 +1,12 @@
 let cal1Instance; // store calendar instance
 let cal1Resources; // store resources for cal1 toggle
 let cal1Collapsed = false; // track collapsed state
+let cal2Instance; // store calendar instance
+let cal2Resources; // store resources for cal1 toggle
+let cal2Collapsed = false;
+let cal3Instance; // store calendar instance
+let cal3Resources; // store resources for cal1 toggle
+let cal3Collapsed = false;
 
 async function loadShifts() {
   const res = await fetch("./js/data/shifts.json");
@@ -33,6 +39,8 @@ async function loadShifts() {
 
   // Store cal1 resources for toggling
   cal1Resources = clinicManagerGroup.resources;
+  cal2Resources = audiometristGroup.resources;
+  cal3Resources = audiologistGroup.resources;
 
   // Initialize calendars
   cal1Instance = initCalendar(
@@ -41,8 +49,16 @@ async function loadShifts() {
     clinicManagerGroup.events,
     true
   ); // custom header
-  initCalendar("cal2", audiometristGroup.resources, audiometristGroup.events);
-  initCalendar("cal3", audiologistGroup.resources, audiologistGroup.events);
+  cal2Instance = initCalendar(
+    "cal2",
+    audiometristGroup.resources,
+    audiometristGroup.events
+  );
+  cal3Instance = initCalendar(
+    "cal3",
+    audiologistGroup.resources,
+    audiologistGroup.events
+  );
 }
 
 function initCalendar(containerId, resources, events, useCustomHeader = false) {
@@ -157,6 +173,42 @@ document.getElementById("cal1-toggle").addEventListener("click", () => {
   });
 
   cal1Instance.setOption("resources", updatedResources);
+});
+
+document.getElementById("cal2-toggle").addEventListener("click", () => {
+  if (!cal2Instance || !cal2Resources) return;
+
+  cal2Collapsed = !cal2Collapsed;
+
+  const updatedResources = cal2Resources.map((r) => {
+    if (r.extendedProps?.isParent && r.children) {
+      return {
+        ...r,
+        children: cal2Collapsed ? [] : r.children,
+      };
+    }
+    return r;
+  });
+
+  cal2Instance.setOption("resources", updatedResources);
+});
+
+document.getElementById("cal3-toggle").addEventListener("click", () => {
+  if (!cal3Instance || !cal3Resources) return;
+
+  cal3Collapsed = !cal3Collapsed;
+
+  const updatedResources = cal3Resources.map((r) => {
+    if (r.extendedProps?.isParent && r.children) {
+      return {
+        ...r,
+        children: cal3Collapsed ? [] : r.children,
+      };
+    }
+    return r;
+  });
+
+  cal3Instance.setOption("resources", updatedResources);
 });
 
 function CustomHeader(date) {
