@@ -108,6 +108,7 @@ body {
   justify-content: space-between;
   /* padding: 4px; */
   width: 100%;
+  height: 100%;
   color: #e58f95;
   border-radius: 4px;
   font-size: 14px;
@@ -120,9 +121,11 @@ body {
 
 .icons {
   display: flex;
-  margin-top: 10px;
-  gap: 8px;
-  margin-bottom: 2px;
+  /* margin-top: 10px; */
+  /* margin-bottom: 2px;  */
+  /* justify-content: start; */
+  align-items: center;
+  gap: 10px;
 }
 
 .resource-user {
@@ -196,6 +199,7 @@ body {
   align-items: center;
   font-size: 14px;
   font-weight: 500;
+  height: 100%;
   /* padding: 0%; */
 }
 
@@ -210,11 +214,12 @@ body {
   font-size: 14px;
   font-weight: 500;
   width: 100%;
-  margin-top: 0;
+  margin-top: 0px !important;
 }
 
-#calendar .ec-event .ec-draggable {
-  color: #605e5c;
+#calendar .ec-events .ec-draggable {
+  color: #605e5c !important;
+  margin-top: 0px !important;
 }
 
 .header {
