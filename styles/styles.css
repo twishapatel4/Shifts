@@ -193,3 +193,10 @@ body {
   flex-direction: column;
   gap: 0;
 }
+
+.icon-name {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 12px;
+}

@@ -140,6 +140,15 @@ function initCalendar(
 
     resourceLabelContent: renderResources,
     eventContent: renderEventDetails,
+    eventClick: function (info) {
+      const popup = document.getElementById("event-popup");
+      const rect = info.el.getBoundingClientRect();
+      // Position popup below the event
+      popup.style.display = "block";
+      popup.style.top = rect.bottom + window.scrollY + 6 + "px";
+      popup.style.left = rect.left + window.scrollX + "px";
+      popup.style.display = "block";
+    },
 
     viewDidMount() {
       const calendarEl = document.getElementById(containerId);
@@ -272,8 +281,8 @@ function ensureGroupHeader(calendarEl, groupMeta) {
         stroke-width="1.5"
         stroke="currentColor"
         class="size-6"
-        height="16"
-        width="16"
+        height="20"
+        width="20"
       >
         <path
           stroke-linecap="round"
@@ -293,8 +302,8 @@ function ensureGroupHeader(calendarEl, groupMeta) {
       stroke-width="1.5"
       stroke="currentColor"
       class="size-6"
-      height="20"
-      width="20"
+      height="24"
+      width="24"
     >
       <path
         stroke-linecap="round"

@@ -346,6 +346,45 @@ body {
   display: none !important;
 }
 
+.event-popup {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0px 10px;
+  width: auto;
+  max-height: 180px;
+  /* shadow optional */
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  display: none; /* Hidden by default */
+}
+
+.ec-lines {
+  display: none !important;
+}
+
+.users {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.ec-body {
+  border: none !important;
+}
+
+.group-collapse-btn .icon-up {
+  display: none;
+}
+
+.group-collapse-btn.collapsed .icon-down {
+  display: none;
+}
+.group-collapse-btn.collapsed .icon-up {
+  display: inline;
+}
+
 /* --- Sync helpers --- */
 
 /* 1) enforce uniform slot width (match slotWidth in calendar options) */
@@ -408,29 +447,4 @@ body {
 /* if you hide resources (collapsed), keep layout stable */
 .no-resources .ec-sidebar {
   width: calc(var(--ec-sidebar-width, 200px));
-}
-
-.ec-lines {
-  display: none !important;
-}
-
-.users {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.ec-body {
-  border: none !important;
-}
-
-.group-collapse-btn .icon-up {
-  display: none;
-}
-
-.group-collapse-btn.collapsed .icon-down {
-  display: none;
-}
-.group-collapse-btn.collapsed .icon-up {
-  display: inline;
 }

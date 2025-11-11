@@ -1,10 +1,17 @@
 document.addEventListener("click", function (e) {
   const isDropdownBtn = e.target.closest("[data-dropdown] .dropdown-btn");
 
-  // If clicked on a dropdown button → toggle only that dropdown
   if (isDropdownBtn) {
     const dropdown = isDropdownBtn.closest("[data-dropdown]");
+
+    // Close all other dropdowns first
+    document.querySelectorAll("[data-dropdown].show").forEach((drop) => {
+      if (drop !== dropdown) drop.classList.remove("show");
+    });
+
+    // Toggle the clicked dropdown
     dropdown.classList.toggle("show");
+
     e.stopPropagation();
     return;
   }
