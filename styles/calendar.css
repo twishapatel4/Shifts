@@ -189,7 +189,7 @@ body {
   display: none;
 }
 
-.sidebar-title {
+.custom-sidebar-title {
   display: flex;
   flex-direction: column;
   align-items: start;

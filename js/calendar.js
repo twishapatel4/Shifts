@@ -118,38 +118,60 @@ function initCalendar(
           : ev.end,
     };
   });
+
   if (!resources || resources.length === 0) {
     const calendarEl = document.getElementById(containerId);
     calendarEl.classList.add("no-resources");
   }
+
   const calendarOptions = {
     view: "resourceTimelineWeek",
     initialDate: new Date(),
     slotDuration: { days: 1 },
     headerToolbar: false,
+
     editable: false,
-    eventStartEditable: false, // cannot move between days
-    eventDurationEditable: false, // cannot resize
-    eventResourceEditable: false, // cannot move between resources
+    eventStartEditable: false,
+    eventDurationEditable: false,
+    eventResourceEditable: false,
+
     resources,
     events: formattedEvents,
+
     resourceLabelContent: renderResources,
     eventContent: renderEventDetails,
+
     viewDidMount() {
       const calendarEl = document.getElementById(containerId);
 
-      // Insert a lightweight group header above the calendar (not a calendar row)
+      // Add group header if provided
       if (groupMeta) {
         ensureGroupHeader(calendarEl, groupMeta);
       }
 
-      // Hide default day headers if not using custom header
-      if (!useCustomHeader) {
+      const titleEl = calendarEl.querySelector(".ec-sidebar-title");
+
+      if (useCustomHeader) {
+        // CAL0 → Show Custom Sidebar + Keep Day Header
+        if (titleEl && !titleEl.querySelector(".custom-sidebar-div")) {
+          const customDiv = document.createElement("div");
+          customDiv.className = "custom-sidebar-div";
+          customDiv.innerHTML = `
+            <div class="custom-sidebar-title">
+              <div class="sidebar-title-main">November 2025</div>
+              <div class="sidebar-title-sub">Day 0 HRS</div>
+            </div>
+          `;
+          titleEl.appendChild(customDiv);
+        }
+      } else {
+        // OTHER CALENDARS → Hide Sidebar Title + Hide Day Header
+        if (titleEl) titleEl.style.display = "none";
         const dayHeaders = calendarEl.querySelectorAll(".ec-header");
         dayHeaders.forEach((dh) => (dh.style.display = "none"));
       }
 
-      // Safe-guard: hide content cells for any parent resources (shouldn't exist, but just in case)
+      // Hide content of parent rows (unchanged)
       const parentRows = calendarEl.querySelectorAll(".ec-resource-row");
       parentRows.forEach((row) => {
         const resourceId = row.dataset.resourceId;
@@ -167,6 +189,7 @@ function initCalendar(
   if (useCustomHeader) {
     calendarOptions.dayHeaderFormat = CustomHeader;
   }
+
   return EventCalendar.create(
     document.getElementById(containerId),
     calendarOptions
