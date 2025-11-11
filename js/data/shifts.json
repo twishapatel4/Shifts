@@ -2,7 +2,7 @@
   "resources": [
     {
       "id": "CLINIC_MANAGER",
-      "title": "Client Service Officer",
+      "title": "Client Service Officer/Representative",
       "extendedProps": {
         "isParent": true,
         "hours": 6
@@ -53,8 +53,22 @@
             "imgUrl": "./Assets/images/Jack.png"
           }
         },
-        { "id": 5, "title": "Ethan Smith" },
-        { "id": 6, "title": "Mia Patel" }
+        {
+          "id": 5,
+          "title": "Ethan Smith",
+          "extendedProps": {
+            "shift": 2,
+            "imgUrl": "./Assets/images/Jack.png"
+          }
+        },
+        {
+          "id": 6,
+          "title": "Mia Patel",
+          "extendedProps": {
+            "shift": 2,
+            "imgUrl": "./Assets/images/Jack.png"
+          }
+        }
       ]
     },
     {

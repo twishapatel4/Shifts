@@ -167,12 +167,25 @@ function initCalendar(
   if (useCustomHeader) {
     calendarOptions.dayHeaderFormat = CustomHeader;
   }
-
   return EventCalendar.create(
     document.getElementById(containerId),
     calendarOptions
   );
 }
+
+document.getElementById("calPrev").addEventListener("click", () => {
+  cal0Instance?.prev();
+  cal1Instance?.prev();
+  cal2Instance?.prev();
+  cal3Instance?.prev();
+});
+
+document.getElementById("calNext").addEventListener("click", () => {
+  cal0Instance?.next();
+  cal1Instance?.next();
+  cal2Instance?.next();
+  cal3Instance?.next();
+});
 
 function isIsoDate(str) {
   return typeof str === "string" && /^\d{4}-\d{2}-\d{2}/.test(str);
@@ -189,50 +202,65 @@ function ensureGroupHeader(calendarEl, groupMeta) {
 
   header.innerHTML = `
     <div class="group-header-inner">
-      <button type="button" class="group-collapse-btn"><svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            width="18"
-            height="18"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m19.5 8.25-7.5 7.5-7.5-7.5"
-            />
-          </svg></button><div class="group-title">${escapeHtml(title)}</div>
+      <div class="left-header">
+        <button type="button" class="group-collapse-btn"><svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              width="18"
+              height="18"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m19.5 8.25-7.5 7.5-7.5-7.5"
+              />
+            </svg></button>
+            <div class="group-title">${escapeHtml(title)}</div>
+            <div>117 Hrs</div>
+            <div><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" height="16" width="16">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+</svg>
+2</div><button class="dots">...</button>
+      </div>
+      <div class="right-header"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" height="20" width="20">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
+</svg>
+<div>Add People</div>
+      </div>
+
     </div>
   `;
 
   // Insert header before calendar content
   calendarEl.insertBefore(header, calendarEl.firstChild);
-  // const dayHeader = calendarEl.querySelector(".ec-header");
-  // if (dayHeader) {
-  //   dayHeader.insertAdjacentElement("afterend", header);
-  // } else {
-  //   calendarEl.insertBefore(header, calendarEl.firstChild);
-  // }
-
   // collapse behavior: toggles children presence in calendar's resources
   const btn = header.querySelector(".group-collapse-btn");
   btn.addEventListener("click", () => {
     // find which calendar instance this header belongs to
     const calId = calendarEl.id;
+    function toggleGroup(collapsed, instance, resourceStore) {
+      const updated = collapsed ? [] : flattenResources(resourceStore);
+      instance.setOption("resources", updated);
+
+      if (collapsed) {
+        calendarEl.classList.add("no-resource");
+      } else {
+        calendarEl.classList.remove("no-resource");
+      }
+    }
+
     if (calId === "cal1" && cal1Instance && cal1Resources) {
       cal1Collapsed = !cal1Collapsed;
-      const updated = cal1Collapsed ? [] : flattenResources(cal1Resources);
-      cal1Instance.setOption("resources", updated);
+      toggleGroup(cal1Collapsed, cal1Instance, cal1Resources);
     } else if (calId === "cal2" && cal2Instance && cal2Resources) {
       cal2Collapsed = !cal2Collapsed;
-      const updated = cal2Collapsed ? [] : flattenResources(cal2Resources);
-      cal2Instance.setOption("resources", updated);
+      toggleGroup(cal2Collapsed, cal2Instance, cal2Resources);
     } else if (calId === "cal3" && cal3Instance && cal3Resources) {
       cal3Collapsed = !cal3Collapsed;
-      const updated = cal3Collapsed ? [] : flattenResources(cal3Resources);
-      cal3Instance.setOption("resources", updated);
+      toggleGroup(cal3Collapsed, cal3Instance, cal3Resources);
     }
   });
 }
