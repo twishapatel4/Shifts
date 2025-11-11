@@ -12,7 +12,6 @@
         {
           "id": 1,
           "title": "Jack Thompson",
-
           "extendedProps": {
             "shift": 2,
             "imgUrl": "./Assets/images/Jack.png"
@@ -31,7 +30,6 @@
     {
       "id": "AUDIOMETRIST",
       "title": "Audiometrist",
-
       "extendedProps": {
         "isParent": true,
 
@@ -94,6 +92,11 @@
     { "start": "DAY+1", "resourceId": 4, "title": "shift-red" },
     { "start": "DAY+5", "resourceId": 6, "title": "shift-red" },
     { "start": "DAY+3", "resourceId": 7, "title": "shift-blue" },
-    { "start": "DAY+3", "resourceId": 3, "title": "shift-blue" }
+    { "start": "DAY+3", "resourceId": 3, "title": "shift-blue" },
+    { "start": "DAY+4", "resourceId": 3, "title": "shift-red" },
+    { "start": "DAY+2", "resourceId": 6, "title": "shift-red" },
+    { "start": "DAY+4", "resourceId": 5, "title": "shift-blue" },
+    { "start": "DAY+4", "resourceId": 11, "title": "shift-red" },
+    { "start": "DAY+3", "resourceId": 9, "title": "shift-blue" }
   ]
 }

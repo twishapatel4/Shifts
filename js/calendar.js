@@ -1,67 +1,89 @@
-let cal1Instance; // store calendar instance
-let cal1Resources; // store resources for cal1 toggle
-let cal1Collapsed = false; // track collapsed state
-let cal2Instance; // store calendar instance
-let cal2Resources; // store resources for cal1 toggle
+let cal0Instance;
+let cal1Instance;
+let cal1Resources;
+let cal1Collapsed = false;
+let cal2Instance;
+let cal2Resources;
 let cal2Collapsed = false;
-let cal3Instance; // store calendar instance
-let cal3Resources; // store resources for cal1 toggle
+let cal3Instance;
+let cal3Resources;
 let cal3Collapsed = false;
 
 async function loadShifts() {
   const res = await fetch("./js/data/shifts.json");
   const data = await res.json();
 
-  // Split data into 3 groups
+  // Build groups (resources array still contains parent objects)
   const clinicManagerGroup = {
     resources: data.resources.filter((r) => r.id === "CLINIC_MANAGER"),
-    events: data.events.filter(
-      (e) =>
-        e.resourceId === "CLINIC_MANAGER" || [1, 2, 8].includes(e.resourceId)
-    ),
+    events: data.events.filter((e) => [1, 2, 8].includes(Number(e.resourceId))),
   };
 
   const audiometristGroup = {
     resources: data.resources.filter((r) => r.id === "AUDIOMETRIST"),
-    events: data.events.filter(
-      (e) =>
-        e.resourceId === "AUDIOMETRIST" ||
-        [3, 4, 5, 6, 9].includes(e.resourceId)
+    events: data.events.filter((e) =>
+      [3, 4, 5, 6, 9].includes(Number(e.resourceId))
     ),
   };
 
   const audiologistGroup = {
     resources: data.resources.filter((r) => r.id === "AUDIOLOGIST"),
-    events: data.events.filter(
-      (e) => e.resourceId === "AUDIOLOGIST" || [7, 10].includes(e.resourceId)
-    ),
+    events: data.events.filter((e) => [7, 10].includes(Number(e.resourceId))),
   };
 
-  // Store cal1 resources for toggling
+  // Store original resources (including parents) for toggling UI
   cal1Resources = clinicManagerGroup.resources;
   cal2Resources = audiometristGroup.resources;
   cal3Resources = audiologistGroup.resources;
 
-  // Initialize calendars
+  // Initialize calendars. For calendar resources we pass a flattened list WITHOUT parent rows
+  cal0Instance = initCalendar("cal0", [], [], true, null);
   cal1Instance = initCalendar(
     "cal1",
-    cal1Resources,
+    flattenResources(clinicManagerGroup.resources),
     clinicManagerGroup.events,
-    true
-  ); // custom header
+    false, // use custom header for cal1
+    clinicManagerGroup // pass group meta so we can show header above calendar
+  );
+
   cal2Instance = initCalendar(
     "cal2",
-    audiometristGroup.resources,
-    audiometristGroup.events
+    flattenResources(audiometristGroup.resources),
+    audiometristGroup.events,
+    false,
+    audiometristGroup
   );
+
   cal3Instance = initCalendar(
     "cal3",
-    audiologistGroup.resources,
-    audiologistGroup.events
+    flattenResources(audiologistGroup.resources),
+    audiologistGroup.events,
+    false,
+    audiologistGroup
   );
 }
 
-function initCalendar(containerId, resources, events, useCustomHeader = false) {
+// Helper: flatten resource arrays by replacing parent entries with their children
+function flattenResources(resources) {
+  const out = [];
+  resources.forEach((r) => {
+    if (r.extendedProps?.isParent && Array.isArray(r.children)) {
+      // keep group metadata by attaching a _groupId on each child so you can still know the parent
+      r.children.forEach((c) => out.push({ ...c, _groupId: r.id }));
+    } else if (!r.extendedProps?.isParent) {
+      out.push(r);
+    }
+  });
+  return out;
+}
+
+function initCalendar(
+  containerId,
+  resources,
+  events,
+  useCustomHeader = false,
+  groupMeta = null
+) {
   const today = new Date();
   const format = (date) => date.toISOString().split("T")[0];
 
@@ -75,7 +97,7 @@ function initCalendar(containerId, resources, events, useCustomHeader = false) {
     } else if (ev.start === "TODAY") {
       dateStart = new Date();
     } else if (ev.start && ev.start.startsWith("DAY+")) {
-      const days = parseInt(ev.start.replace("DAY+", ""));
+      const days = parseInt(ev.start.replace("DAY+", ""), 10);
       dateStart.setDate(today.getDate() + days);
     }
 
@@ -87,21 +109,28 @@ function initCalendar(containerId, resources, events, useCustomHeader = false) {
 
     return {
       ...ev,
-      start: format(dateStart),
-      end: dateEnd ? format(dateEnd) : ev.end,
+      start: ev.start && isIsoDate(ev.start) ? ev.start : format(dateStart),
+      end:
+        ev.end && isIsoDate(ev.end)
+          ? ev.end
+          : dateEnd
+          ? format(dateEnd)
+          : ev.end,
     };
   });
-
+  if (!resources || resources.length === 0) {
+    const calendarEl = document.getElementById(containerId);
+    calendarEl.classList.add("no-resources");
+  }
   const calendarOptions = {
     view: "resourceTimelineWeek",
     initialDate: new Date(),
     slotDuration: { days: 1 },
     headerToolbar: false,
     editable: false,
-    droppable: false,
-    draggable: false,
-    eventResourceEditable: false, // prevent dragging to other resources
-    slotWidth: 220,
+    eventStartEditable: false, // cannot move between days
+    eventDurationEditable: false, // cannot resize
+    eventResourceEditable: false, // cannot move between resources
     resources,
     events: formattedEvents,
     resourceLabelContent: renderResources,
@@ -109,22 +138,9 @@ function initCalendar(containerId, resources, events, useCustomHeader = false) {
     viewDidMount() {
       const calendarEl = document.getElementById(containerId);
 
-      // Sidebar custom title
-      const titleEl = calendarEl.querySelector(".ec-sidebar-title");
-      if (
-        titleEl &&
-        useCustomHeader &&
-        !titleEl.querySelector(".custom-sidebar-div")
-      ) {
-        const customDiv = document.createElement("div");
-        customDiv.className = "custom-sidebar-div";
-        customDiv.innerHTML = `
-          <div class="sidebar-title">
-            <div class="sidebar-title-main">November 2025</div>
-            <div class="sidebar-title-sub">Day 0 HRS</div>
-          </div>
-        `;
-        titleEl.appendChild(customDiv);
+      // Insert a lightweight group header above the calendar (not a calendar row)
+      if (groupMeta) {
+        ensureGroupHeader(calendarEl, groupMeta);
       }
 
       // Hide default day headers if not using custom header
@@ -133,11 +149,13 @@ function initCalendar(containerId, resources, events, useCustomHeader = false) {
         dayHeaders.forEach((dh) => (dh.style.display = "none"));
       }
 
-      // Hide day cells for parent resources
+      // Safe-guard: hide content cells for any parent resources (shouldn't exist, but just in case)
       const parentRows = calendarEl.querySelectorAll(".ec-resource-row");
       parentRows.forEach((row) => {
         const resourceId = row.dataset.resourceId;
-        const resource = resources.find((r) => r.id == resourceId);
+        const resource = resources.find(
+          (r) => String(r.id) === String(resourceId)
+        );
         if (resource?.extendedProps?.isParent) {
           const dayCells = row.querySelectorAll(".ec-content");
           dayCells.forEach((cell) => (cell.style.display = "none"));
@@ -156,60 +174,68 @@ function initCalendar(containerId, resources, events, useCustomHeader = false) {
   );
 }
 
-// Toggle children visibility
-document.getElementById("cal1-toggle").addEventListener("click", () => {
-  if (!cal1Instance || !cal1Resources) return;
+function isIsoDate(str) {
+  return typeof str === "string" && /^\d{4}-\d{2}-\d{2}/.test(str);
+}
 
-  cal1Collapsed = !cal1Collapsed;
+// Ensure a simple group header (not part of calendar rows) exists above the calendar element
+function ensureGroupHeader(calendarEl, groupMeta) {
+  if (calendarEl.querySelector(".group-header")) return;
 
-  const updatedResources = cal1Resources.map((r) => {
-    if (r.extendedProps?.isParent && r.children) {
-      return {
-        ...r,
-        children: cal1Collapsed ? [] : r.children,
-      };
+  const header = document.createElement("div");
+  header.className = "group-header";
+  const parent = groupMeta.resources.find((r) => r.extendedProps?.isParent);
+  const title = parent ? parent.title : "Group";
+
+  header.innerHTML = `
+    <div class="group-header-inner">
+      <button type="button" class="group-collapse-btn"><svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            width="18"
+            height="18"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m19.5 8.25-7.5 7.5-7.5-7.5"
+            />
+          </svg></button><div class="group-title">${escapeHtml(title)}</div>
+    </div>
+  `;
+
+  // Insert header before calendar content
+  calendarEl.insertBefore(header, calendarEl.firstChild);
+  // const dayHeader = calendarEl.querySelector(".ec-header");
+  // if (dayHeader) {
+  //   dayHeader.insertAdjacentElement("afterend", header);
+  // } else {
+  //   calendarEl.insertBefore(header, calendarEl.firstChild);
+  // }
+
+  // collapse behavior: toggles children presence in calendar's resources
+  const btn = header.querySelector(".group-collapse-btn");
+  btn.addEventListener("click", () => {
+    // find which calendar instance this header belongs to
+    const calId = calendarEl.id;
+    if (calId === "cal1" && cal1Instance && cal1Resources) {
+      cal1Collapsed = !cal1Collapsed;
+      const updated = cal1Collapsed ? [] : flattenResources(cal1Resources);
+      cal1Instance.setOption("resources", updated);
+    } else if (calId === "cal2" && cal2Instance && cal2Resources) {
+      cal2Collapsed = !cal2Collapsed;
+      const updated = cal2Collapsed ? [] : flattenResources(cal2Resources);
+      cal2Instance.setOption("resources", updated);
+    } else if (calId === "cal3" && cal3Instance && cal3Resources) {
+      cal3Collapsed = !cal3Collapsed;
+      const updated = cal3Collapsed ? [] : flattenResources(cal3Resources);
+      cal3Instance.setOption("resources", updated);
     }
-    return r;
   });
-
-  cal1Instance.setOption("resources", updatedResources);
-});
-
-document.getElementById("cal2-toggle").addEventListener("click", () => {
-  if (!cal2Instance || !cal2Resources) return;
-
-  cal2Collapsed = !cal2Collapsed;
-
-  const updatedResources = cal2Resources.map((r) => {
-    if (r.extendedProps?.isParent && r.children) {
-      return {
-        ...r,
-        children: cal2Collapsed ? [] : r.children,
-      };
-    }
-    return r;
-  });
-
-  cal2Instance.setOption("resources", updatedResources);
-});
-
-document.getElementById("cal3-toggle").addEventListener("click", () => {
-  if (!cal3Instance || !cal3Resources) return;
-
-  cal3Collapsed = !cal3Collapsed;
-
-  const updatedResources = cal3Resources.map((r) => {
-    if (r.extendedProps?.isParent && r.children) {
-      return {
-        ...r,
-        children: cal3Collapsed ? [] : r.children,
-      };
-    }
-    return r;
-  });
-
-  cal3Instance.setOption("resources", updatedResources);
-});
+}
 
 function CustomHeader(date) {
   const weekday = date.toLocaleDateString("en-US", { weekday: "short" });
@@ -243,20 +269,21 @@ function renderResources(arg) {
   const parent = resource.extendedProps?.isParent;
   const open = resource.extendedProps?.isOpen;
 
-  if (parent) return {}; // parent: only sidebar, no day cells
+  // We do not render parent as a calendar row; parents were removed from resources list.
+  if (parent) return {};
 
   return {
     html: `
       <div class="resource-user">
         ${
           img
-            ? `<img src="${img}" style="border-radius:50%;" />`
+            ? `<img src="${img}" style="border-radius:50%; width:40px; height:40px; object-fit:cover;"/>`
             : open
-            ? `<div style="width:40px; height:40px; border-radius:50%; background-color:#d9d9d9; display:flex; align-items:center; justify-content:center; font-weight:600; color:#fff; font-size:14px;">${"."}</div>`
+            ? `<div style="width:40px; height:40px; border-radius:50%; background-color:#d9d9d9; display:flex; align-items:center; justify-content:center; font-weight:600; color:#fff; font-size:14px;">.</div>`
             : ""
         }
         <div class="title-shift">
-          <span class="resource-name">${resource.title}</span>
+          <span class="resource-name">${escapeHtml(resource.title)}</span>
           <div class="shift">${shift} Shift</div>
         </div>
       </div>
@@ -266,7 +293,12 @@ function renderResources(arg) {
 
 function renderEventDetails(arg) {
   const event = arg.event;
-  if (event.title === "shift-red") {
+  const title = (event.title || "").toLowerCase();
+
+  // Detect red vs blue from title (user requested event title detection)
+  const isRed = title.includes("red") || title.includes("shift-red");
+
+  if (isRed) {
     return {
       html: `
        <div class="events-red">
@@ -283,11 +315,12 @@ function renderEventDetails(arg) {
     };
   }
 
+  // default -> blue style
   return {
     html: `
     <div class="events-blue">
       <div>
-        <div>FT-Sydney CBD</div>
+        PT-Sydney CBD
         <div class="icons">
           <img src="./Assets/icons/Cup.svg" height="20" width="20" />
           <img src="./Assets/icons/Time.svg" height="20" width="20" />
@@ -299,4 +332,181 @@ function renderEventDetails(arg) {
   };
 }
 
+// Simple helper to escape HTML content when injecting into templates
+function escapeHtml(str) {
+  if (typeof str !== "string") return str;
+  return str.replace(/[&<>"'`]/g, function (s) {
+    return {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+      "`": "&#96;",
+    }[s];
+  });
+}
+
+// Toggle buttons (if you still want the old toggle buttons in DOM)
+document.getElementById("cal1-toggle")?.addEventListener("click", () => {
+  if (!cal1Instance || !cal1Resources) return;
+
+  cal1Collapsed = !cal1Collapsed;
+  const updatedResources = cal1Collapsed ? [] : flattenResources(cal1Resources);
+  cal1Instance.setOption("resources", updatedResources);
+});
+
+document.getElementById("cal2-toggle")?.addEventListener("click", () => {
+  if (!cal2Instance || !cal2Resources) return;
+
+  cal2Collapsed = !cal2Collapsed;
+  const updatedResources = cal2Collapsed ? [] : flattenResources(cal2Resources);
+  cal2Instance.setOption("resources", updatedResources);
+});
+
+document.getElementById("cal3-toggle")?.addEventListener("click", () => {
+  if (!cal3Instance || !cal3Resources) return;
+
+  cal3Collapsed = !cal3Collapsed;
+  const updatedResources = cal3Collapsed ? [] : flattenResources(cal3Resources);
+  cal3Instance.setOption("resources", updatedResources);
+});
+
+// kick off data load
 loadShifts();
+
+/* ---------- Sync utilities for 4 stacked calendars ---------- */
+
+function syncAllCalendarsSetup() {
+  // ids of calendar containers
+  const calIds = ["cal0", "cal1", "cal2", "cal3"];
+
+  // gather elements for each calendar
+  const cals = calIds
+    .map((id) => {
+      const el = document.getElementById(id);
+      if (!el) return null;
+      // try several likely selectors for the timeline scrollable area
+      const scrollEl =
+        el.querySelector(".ec-content") ||
+        el.querySelector(".ec-timeline") ||
+        el.querySelector(".ec-body") ||
+        el.querySelector(".ec-scroll") ||
+        el;
+      const sidebar = el.querySelector(".ec-sidebar") || null;
+      return { id, el, scrollEl, sidebar };
+    })
+    .filter(Boolean);
+
+  if (cals.length < 2) return; // nothing to sync
+
+  // 1) set a common sidebar width based on the widest sidebar
+  function syncSidebarWidths() {
+    let maxW = 0;
+    cals.forEach((c) => {
+      if (c.sidebar) {
+        const w = c.sidebar.getBoundingClientRect().width;
+        if (w > maxW) maxW = w;
+      }
+    });
+    // apply a clamped width and store in CSS variable for fallback
+    if (maxW === 0) maxW = 200;
+    maxW = Math.min(Math.max(maxW, 160), 420); // clamp between 160 and 420px
+    cals.forEach((c) => {
+      if (c.sidebar) {
+        c.sidebar.style.width = `${maxW}px`;
+        c.sidebar.style.minWidth = `${maxW}px`;
+        c.sidebar.style.maxWidth = `${maxW}px`;
+      }
+    });
+    // also store as CSS var for rules that use it
+    document.documentElement.style.setProperty(
+      "--ec-sidebar-width",
+      `${maxW}px`
+    );
+  }
+
+  // 2) set slot width CSS var to match your slotWidth option (if you change slotWidth, update var)
+  function syncSlotWidth(widthPx) {
+    document.documentElement.style.setProperty(
+      "--ec-slot-width",
+      `${widthPx}px`
+    );
+  }
+
+  // 3) Sync scroll (horizontal and vertical) without feedback loops
+  let isSyncing = false;
+  cals.forEach((source, idx) => {
+    if (!source.scrollEl) return;
+    source.scrollEl.addEventListener(
+      "scroll",
+      (e) => {
+        if (isSyncing) return;
+        isSyncing = true;
+        const left = source.scrollEl.scrollLeft;
+        const top = source.scrollEl.scrollTop;
+        // apply to others
+        cals.forEach((target, j) => {
+          if (j === idx || !target.scrollEl) return;
+          target.scrollEl.scrollLeft = left;
+          target.scrollEl.scrollTop = top;
+        });
+        // small debounce to avoid chattiness
+        window.requestAnimationFrame(() => {
+          isSyncing = false;
+        });
+      },
+      { passive: true }
+    );
+
+    // wheel sync: when user uses mouse wheel horizontally on one, move others
+    source.scrollEl.addEventListener(
+      "wheel",
+      (ev) => {
+        // only care horizontal wheel (shift+wheel or trackpad horizontal)
+        if (
+          Math.abs(ev.deltaX) < 1 &&
+          Math.abs(ev.deltaY) > Math.abs(ev.deltaX)
+        ) {
+          // vertical wheel — sync vertical scroll of resource lists if present
+          // map to other calendars resource row scroll (if sidebars have their own scroll)
+          const top = source.scrollEl.scrollTop + ev.deltaY;
+          cals.forEach((target) => {
+            if (!target.scrollEl || target === source) return;
+            target.scrollEl.scrollTop = top;
+          });
+        } else {
+          // horizontal movement
+          const left = source.scrollEl.scrollLeft + ev.deltaX;
+          cals.forEach((target) => {
+            if (!target.scrollEl || target === source) return;
+            target.scrollEl.scrollLeft = left;
+          });
+        }
+        // let default behavior continue
+      },
+      { passive: true }
+    );
+  });
+
+  // 4) re-sync widths on resize / font load / collapse actions
+  let resizeTimer;
+  function handleResize() {
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      syncSidebarWidths();
+      // optionally re-set slot width if your slotWidth changes dynamically
+      // syncSlotWidth(220);
+    }, 120);
+  }
+  window.addEventListener("resize", handleResize);
+
+  // 5) call once to initialize
+  syncSidebarWidths();
+  syncSlotWidth(220); /* keep this same as your slotWidth: 220 */
+}
+
+/* Call syncAllCalendarsSetup once after calendars are created.
+   Place this call at the end of your loadShifts() (or directly after you instantiate all 4 calendar instances).
+*/
+syncAllCalendarsSetup();

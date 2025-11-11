@@ -5,39 +5,26 @@ body {
   background: #f6f7fb;
 }
 
-#calendar {
-  background: #f3f2f1;
-  padding: 0px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
 .ec-main {
   width: 100%;
 }
 
-#calendar .ec-timeline .ec-line {
+.ec-timeline .ec-line {
   border: none;
 }
 
-#calendar .ec-timeline .ec-days {
+.ec-timeline .ec-days {
   border: none !important;
   box-shadow: none !important;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 }
 
-#calendar .ec-timeline .ec-line,
+.ec-timeline .ec-line,
 .ec-timeline .ec-days,
 .ec-timeline .ec-slot {
   border: none !important;
   box-shadow: none !important;
-}
-
-.ec-container {
-  border: none !important;
-}
-.ec-content {
-  border-right: none !important;
 }
 
 .ec-timeline .ec-resource,
@@ -46,7 +33,11 @@ body {
   align-items: center;
   box-shadow: none !important;
 }
-
+.ec-resource-row {
+  height: 60px; /* or your preferred fixed height */
+  max-height: 60px;
+  overflow: hidden;
+}
 .ec-timeline .ec-days-header,
 .ec-timeline .ec-day-header {
   border: none !important;
@@ -59,27 +50,21 @@ body {
   box-shadow: none !important;
 }
 
-#calendar .ec-timeline .ec-today {
-  background-color: #dedde5;
+.ec-timeline .ec-today {
+  background-color: #dedde5 !important;
   /* font-size: 28px; */
-  color: #6068ab;
+  color: #6068ab !important;
 }
 
-/* #calendar .ec-timeline .ec-day,
-.day-week,
-.ec-timeline .ec-today {
-  color: #6068ab;
-} */
+.ec-toolbar {
+  display: none !important;
+}
 
-#calendar .ec-timeline .ec-day,
+.ec-timeline .ec-day,
 .day-week {
   color: #7a7979;
 }
 
-#calendar .ec-timeline .ec-day.ec-today,
-.day-week .ec-today {
-  color: #6068ab;
-}
 .ec-expander {
   display: none;
 }
@@ -91,7 +76,7 @@ body {
   display: flex;
   justify-content: space-between;
   /* padding: 2px; */
-  /* height: 100%; */
+  height: 100%;
   width: 100%;
   color: #3376d0;
   border-radius: 4px;
@@ -169,8 +154,8 @@ body {
   align-items: center;
 }
 
-#calendar .ec-timeline .ec-time {
-  width: 100%;
+.ec-timeline .ec-time {
+  width: 100% !important;
   padding: 12px;
   /* background: red; */
 }
@@ -178,11 +163,13 @@ body {
 .ec-sidebar {
   display: flex;
   flex-direction: column;
+  background-color: #f3f2f1;
   overflow: hidden;
 }
 
 .ec-content {
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .ec-resource-row[data-hidden="true"] {
@@ -234,7 +221,7 @@ body {
   margin-top: 0px !important;
 }
 
-#calendar .ec-events .ec-draggable {
+.ec-event .ec-draggable {
   color: #605e5c !important;
   margin-top: 0px !important;
 }
@@ -286,4 +273,97 @@ body {
   font-weight: 400;
   font-size: 18px;
   gap: 2px;
+}
+.group-header {
+  padding: 0% !important;
+  border: none;
+}
+.group-header-inner {
+  width: 100%;
+  background-color: #f3f2f1;
+  display: flex;
+}
+
+/* Hide sidebar content when no resources */
+.no-resources .ec-sidebar .ec-content {
+  display: none !important;
+}
+
+.no-resources .ec-header {
+  /* margin-left: 100px; */
+  background-color: #f3f2f1;
+}
+
+/* Hide main body when no resources */
+.no-resources .ec-main .ec-body {
+  display: none !important;
+}
+
+/* --- Sync helpers --- */
+
+/* 1) enforce uniform slot width (match slotWidth in calendar options) */
+:root {
+  --ec-slot-width: 220px; /* keep in sync with slotWidth option */
+}
+
+/* ensure each day cell respects the slot width */
+.ec-content .ec-slot,
+.ec-timeline .ec-slot {
+  flex: 0 0 var(--ec-slot-width) !important;
+  min-width: var(--ec-slot-width) !important;
+  max-width: var(--ec-slot-width) !important;
+  box-sizing: border-box;
+  overflow: hidden !important;
+}
+
+/* keep inner event HTML from expanding width */
+.ec-content .ec-event,
+.ec-content .events-blue,
+.ec-content .events-red,
+.ec-content .resource-user,
+.ec-content .resource-user * {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+/* 2) make sidebars a fixed width container we can sync */
+.ec-sidebar {
+  flex: 0 0 auto !important;
+  min-width: 200px; /* fallback */
+  max-width: 400px; /* prevents runaway */
+  overflow: hidden;
+  border: none !important;
+}
+
+/* 3) ensure the timeline area scrolls and hides overflow (scroll is used for sync) */
+.ec-content {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+/* scrollbars look consistent */
+.ec-content::-webkit-scrollbar {
+  height: 10px;
+}
+
+/* visual group header spacing */
+.group-header {
+  padding: 8px 12px;
+  background: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+/* if you hide resources (collapsed), keep layout stable */
+.no-resources .ec-sidebar {
+  width: calc(var(--ec-sidebar-width, 200px));
+}
+
+.ec-lines {
+  display: none !important;
+}
+.ec-sidebar-title {
+  display: none !important;
 }
