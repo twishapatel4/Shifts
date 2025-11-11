@@ -8,7 +8,11 @@
         "hours": 6
       },
       "children": [
-        { "id": 8, "title": "Open Shift", "extendedProps": { "isOpen": true } },
+        {
+          "id": 8,
+          "title": "Open Shift",
+          "extendedProps": { "isOpen": true, "shift": 2 }
+        },
         {
           "id": 1,
           "title": "Jack Thompson",
@@ -22,7 +26,7 @@
           "title": "Sarah Brown",
           "extendedProps": {
             "shift": 2,
-            "imgUrl": "./Assets/images/Jack.png"
+            "imgUrl": "./Assets/images/Emily.png"
           }
         }
       ]
@@ -42,7 +46,7 @@
           "title": "Liam Harris",
           "extendedProps": {
             "shift": 2,
-            "imgUrl": "./Assets/images/Jack.png"
+            "imgUrl": "./Assets/images/Liam.png"
           }
         },
         {
@@ -50,7 +54,7 @@
           "title": "Emily Johnson",
           "extendedProps": {
             "shift": 2,
-            "imgUrl": "./Assets/images/Jack.png"
+            "imgUrl": "./Assets/images/Emily.png"
           }
         },
         {
@@ -66,7 +70,7 @@
           "title": "Mia Patel",
           "extendedProps": {
             "shift": 2,
-            "imgUrl": "./Assets/images/Jack.png"
+            "imgUrl": "./Assets/images/Liam.png"
           }
         }
       ]
@@ -89,7 +93,7 @@
           "title": "Grace O'Connor",
           "extendedProps": {
             "shift": 2,
-            "imgUrl": "./Assets/images/Jack.png"
+            "imgUrl": "./Assets/images/Emily.png"
           }
         }
       ]

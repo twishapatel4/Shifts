@@ -62,7 +62,10 @@ body {
   /* font-size: 28px; */
   color: #6068ab !important;
 }
-
+/* 
+.ec-timeline .ec-today header .day-week {
+  color: #6068ab !important;
+} */
 .ec-toolbar {
   display: none !important;
 }
@@ -411,4 +414,15 @@ body {
 } */
 .ec-body {
   border: none !important;
+}
+
+.group-collapse-btn .icon-up {
+  display: none;
+}
+
+.group-collapse-btn.collapsed .icon-down {
+  display: none;
+}
+.group-collapse-btn.collapsed .icon-up {
+  display: inline;
 }

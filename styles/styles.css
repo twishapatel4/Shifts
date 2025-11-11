@@ -135,7 +135,6 @@ body {
 }
 
 .dropdown-content label {
-  font-weight: 500;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -173,6 +172,11 @@ body {
   gap: 16px;
   align-items: center;
   /* background: red; */
+}
+
+.startDate {
+  color: #72706f;
+  font-size: 14px;
 }
 
 .endDate {

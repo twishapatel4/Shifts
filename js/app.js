@@ -33,6 +33,8 @@ const fp = flatpickr(rangeInput, {
   dateFormat: "d M Y",
   numberofMonths: 2,
   showMonths: 2,
+  appendTo: document.querySelector(".left-filter"),
+  positionElement: calendarBtn,
   // maxDate: new Date().fp_incr(365),
   onReady: function (selectedDates, dateStr, instance) {
     addCustomButtons(instance);
