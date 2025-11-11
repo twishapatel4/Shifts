@@ -37,12 +37,14 @@ body {
 .ec-timeline .ec-sidebar .ec-resource {
   padding: 0px 20px;
   overflow: hidden;
-  min-height: 60px;
-  max-height: 90px;
+  /* min-height: 60px;
+  max-height: 90px; */
+  min-height: 3.8rem;
+  max-height: 5rem;
 }
 .ec-resource-row {
-  min-height: 60px; /* or your preferred fixed height */
-  max-height: 40px;
+  min-height: 3.8rem;
+  max-height: 5rem;
   overflow: hidden;
 }
 .ec-timeline .ec-days-header,
@@ -222,7 +224,6 @@ body {
   font-weight: 500;
   margin: 0 !important;
   height: 100%;
-  /* padding: 0%; */
 }
 
 .ec-events {
@@ -234,7 +235,9 @@ body {
   font-size: 14px;
   font-weight: 500;
   width: 100%;
-  min-height: 60px;
+  height: 100%;
+  min-height: 3rem;
+  max-height: 6rem;
   margin-top: 0px !important;
 }
 
@@ -347,7 +350,11 @@ body {
 
 /* 1) enforce uniform slot width (match slotWidth in calendar options) */
 :root {
-  --ec-slot-width: 220px; /* keep in sync with slotWidth option */
+  --ec-slot-width: clamp(
+    200px,
+    14vw,
+    300px
+  ); /* keep in sync with slotWidth option */
 }
 
 /* ensure each day cell respects the slot width */
@@ -367,7 +374,6 @@ body {
 .ec-content .resource-user,
 .ec-content .resource-user * {
   max-width: 100%;
-  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   box-sizing: border-box;
@@ -376,8 +382,7 @@ body {
 /* 2) make sidebars a fixed width container we can sync */
 .ec-sidebar {
   flex: 0 0 auto !important;
-  min-width: 200px; /* fallback */
-  max-width: 400px; /* prevents runaway */
+  min-width: 10vw;
   overflow: hidden;
   border: none !important;
 }
@@ -409,9 +414,12 @@ body {
   display: none !important;
 }
 
-/* .ec-sidebar-title {
-  display: none;
-} */
+.users {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
 .ec-body {
   border: none !important;
 }
