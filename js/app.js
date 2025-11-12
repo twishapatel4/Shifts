@@ -52,6 +52,11 @@ function handleSelection() {
   if (!selected.includes("Audiologist")) {
     document.getElementById("cal3").style.display = "none";
   }
+  if (selected.length === 0) {
+    document.getElementById("cal1").style.display = "block";
+    document.getElementById("cal2").style.display = "block";
+    document.getElementById("cal3").style.display = "block";
+  }
 }
 
 // Prevent closing when clicking inside dropdown content
