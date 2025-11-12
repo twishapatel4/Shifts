@@ -8,7 +8,12 @@ let cal2Collapsed = false;
 let cal3Instance;
 let cal3Resources;
 let cal3Collapsed = false;
-
+const defaultDate = new Date("2025-11-16");
+const initDateValue = defaultDate
+  ? defaultDate instanceof Date
+    ? defaultDate
+    : new Date(defaultDate)
+  : new Date();
 async function loadShifts() {
   const res = await fetch("./js/data/shifts.json");
   const data = await res.json();
@@ -37,13 +42,14 @@ async function loadShifts() {
   cal3Resources = audiologistGroup.resources;
 
   // Initialize calendars. For calendar resources we pass a flattened list WITHOUT parent rows
-  cal0Instance = initCalendar("cal0", [], [], true, null);
+  cal0Instance = initCalendar("cal0", [], [], true, null, initDateValue);
   cal1Instance = initCalendar(
     "cal1",
     flattenResources(clinicManagerGroup.resources),
     clinicManagerGroup.events,
     false, // use custom header for cal1
-    clinicManagerGroup // pass group meta so we can show header above calendar
+    clinicManagerGroup,
+    initDateValue // pass group meta so we can show header above calendar
   );
 
   cal2Instance = initCalendar(
@@ -51,7 +57,8 @@ async function loadShifts() {
     flattenResources(audiometristGroup.resources),
     audiometristGroup.events,
     false,
-    audiometristGroup
+    audiometristGroup,
+    initDateValue
   );
 
   cal3Instance = initCalendar(
@@ -59,7 +66,8 @@ async function loadShifts() {
     flattenResources(audiologistGroup.resources),
     audiologistGroup.events,
     false,
-    audiologistGroup
+    audiologistGroup,
+    initDateValue
   );
 }
 
@@ -82,10 +90,10 @@ function initCalendar(
   resources,
   events,
   useCustomHeader = false,
-  groupMeta = null
+  groupMeta = null,
+  initDateValue
 ) {
   const formattedEvents = events.map((ev) => {
-    const today = new Date(); // current reference date
     let dateStart = null;
     let dateEnd = null;
 
@@ -107,20 +115,6 @@ function initCalendar(
         dateStart = new Date(ev.start);
       } else if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(ev.start)) {
         dateStart = parseDate(ev.start); // handle 11/11/2025 format
-      } else if (ev.start === "SUN") {
-        const dayOfWeek = today.getDay();
-        dateStart = new Date(today);
-        dateStart.setDate(today.getDate() - dayOfWeek);
-      } else if (ev.start === "TODAY") {
-        dateStart = new Date(today);
-      } else if (ev.start.startsWith("DAY+")) {
-        const days = parseInt(ev.start.replace("DAY+", ""), 10);
-        dateStart = new Date(today);
-        dateStart.setDate(today.getDate() + days);
-      } else if (ev.start.startsWith("DAY-")) {
-        const days = parseInt(ev.start.replace("DAY-", ""), 10);
-        dateStart = new Date(today);
-        dateStart.setDate(today.getDate() - days);
       }
     }
 
@@ -130,10 +124,6 @@ function initCalendar(
         dateEnd = new Date(ev.end);
       } else if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(ev.end)) {
         dateEnd = parseDate(ev.end);
-      } else if (ev.end === "SUN+1W") {
-        const dayOfWeek = today.getDay();
-        dateEnd = new Date(today);
-        dateEnd.setDate(today.getDate() - dayOfWeek + 7);
       }
     }
 
@@ -155,21 +145,18 @@ function initCalendar(
     const calendarEl = document.getElementById(containerId);
     calendarEl.classList.add("no-resources");
   }
-
+  console.log(initDateValue);
   const calendarOptions = {
     view: "resourceTimelineWeek",
-    initialDate: new Date(),
+    initialDate: initDateValue,
     slotDuration: { days: 1 },
     headerToolbar: false,
-
     editable: false,
     eventStartEditable: false,
     eventDurationEditable: false,
     eventResourceEditable: false,
-
     resources,
     events: formattedEvents,
-
     resourceLabelContent: renderResources,
     eventContent: renderEventDetails,
     eventClick: function (info) {
@@ -185,6 +172,11 @@ function initCalendar(
     },
 
     viewDidMount() {
+      // quick debug - inspect resources and events passed to each calendar
+      console.group(`initCalendar ${containerId}`);
+      console.log("🧩 formattedEvents", formattedEvents);
+      console.log("🧩 resources", resources);
+
       const calendarEl = document.getElementById(containerId);
 
       // Add group header if provided
@@ -276,6 +268,34 @@ document.addEventListener("click", function (e) {
   ) {
     popup.style.display = "none";
   }
+});
+window.addEventListener("dateRangeChanged", (e) => {
+  const { start, end } = e.detail;
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+  const newDate = new Date("2025-11-17");
+
+  // cal0Instance.setOption("initialDate", newDate);
+  // cal1Instance.setOption("initialDate", newDate);
+  // cal2Instance.setOption("initialDate", newDate);
+  // cal3Instance.setOption("initialDate", newDate);
+  initCalendar("cal0", resources, events, false, groupMeta, "2025-11-17");
+  initCalendar("cal1", resources, events, false, groupMeta, "2025-11-17");
+  initCalendar("cal2", resources, events, false, groupMeta, "2025-11-17");
+  initCalendar("cal3", resources, events, false, groupMeta, "2025-11-17");
+
+  // Move all calendars to show the selected range
+  // [cal0Instance, cal1Instance, cal2Instance, cal3Instance].forEach((cal) => {
+  //   if (!cal) return;
+
+  //   const calEl = cal.el; // your calendar container
+  //   const scrollEl =
+  //     calEl.querySelector(".ec-body") || calEl.querySelector(".ec-content");
+
+  //   if (!scrollEl) return;
+
+  //   scrollToDate(scrollEl, startDate, cal);
+  // });
 });
 
 function isIsoDate(str) {

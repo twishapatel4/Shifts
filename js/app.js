@@ -102,6 +102,10 @@ const fp = flatpickr(rangeInput, {
         "en-US",
         options
       );
+      const event = new CustomEvent("dateRangeChanged", {
+        detail: { start, end },
+      });
+      window.dispatchEvent(event);
     }
   },
 });
@@ -164,10 +168,10 @@ calendarBtn.addEventListener("click", (e) => {
 
 calPrev.addEventListener("click", (e) => {
   e.stopPropagation();
-  calendar.prev();
+  // calendar.prev();
 });
 
 calNext.addEventListener("click", (e) => {
   e.stopPropagation();
-  calendar.next();
+  // calendar.next();
 });
