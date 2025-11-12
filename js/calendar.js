@@ -177,8 +177,10 @@ function initCalendar(
       const rect = info.el.getBoundingClientRect();
       // Position popup below the event
       popup.style.display = "block";
+      popup.style.width = rect.width - 6 + "px";
       popup.style.top = rect.bottom + window.scrollY + 6 + "px";
       popup.style.left = rect.left + window.scrollX + "px";
+      activePopupEvent = info.el;
       popup.style.display = "block";
     },
 
@@ -249,6 +251,31 @@ document.getElementById("calNext").addEventListener("click", () => {
   cal1Instance?.next();
   cal2Instance?.next();
   cal3Instance?.next();
+});
+
+window.addEventListener("scroll", repositionPopup, true);
+window.addEventListener("resize", repositionPopup);
+
+function repositionPopup() {
+  const popup = document.getElementById("event-popup");
+  if (!popup || popup.style.display !== "block" || !activePopupEvent) return;
+
+  const rect = activePopupEvent.getBoundingClientRect();
+  const width = Math.min(rect.width - 8, window.innerWidth * 0.95);
+  popup.style.width = width - 28 + "px";
+  popup.style.top = rect.bottom + window.scrollY + 6 + "px";
+  popup.style.left = rect.left + window.scrollX + "px";
+}
+
+document.addEventListener("click", function (e) {
+  const popup = document.getElementById("event-popup");
+  if (
+    popup.style.display === "block" &&
+    !popup.contains(e.target) &&
+    !e.target.closest(".ec-event")
+  ) {
+    popup.style.display = "none";
+  }
 });
 
 function isIsoDate(str) {
@@ -324,7 +351,6 @@ function ensureGroupHeader(calendarEl, groupMeta) {
       </svg>
       <div>2</div>
     </div>
-    <button class="dots">...</button>
   </div>
   <div class="right-header">
     <svg

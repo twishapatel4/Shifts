@@ -22,6 +22,38 @@ document.addEventListener("click", function (e) {
     .forEach((drop) => drop.classList.remove("show"));
 });
 
+document
+  .querySelectorAll("[data-dropdown] input[type='checkbox']")
+  .forEach((cb) => cb.addEventListener("change", handleSelection));
+function handleSelection() {
+  // Get all checked values
+  console.log("handle Select");
+  const checkboxes = document.querySelectorAll(
+    "[data-dropdown] .dropdown-content input[type='checkbox']"
+  );
+
+  const selected = Array.from(checkboxes)
+    .filter((cb) => cb.checked)
+    .map((cb) => cb.value);
+
+  document.getElementById("cal1").style.display = "block";
+  document.getElementById("cal2").style.display = "block";
+  document.getElementById("cal3").style.display = "block";
+
+  // Hide based on selection
+  if (!selected.includes("Clinic Service Officer")) {
+    document.getElementById("cal1").style.display = "none";
+  }
+
+  if (!selected.includes("Audiometrist")) {
+    document.getElementById("cal2").style.display = "none";
+  }
+
+  if (!selected.includes("Audiologist")) {
+    document.getElementById("cal3").style.display = "none";
+  }
+}
+
 // Prevent closing when clicking inside dropdown content
 document
   .querySelectorAll("[data-dropdown] .dropdown-content")
