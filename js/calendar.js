@@ -76,7 +76,7 @@ function flattenResources(resources) {
   });
   return out;
 }
-
+let activeHoveredEvent = null;
 function initCalendar(
   containerId,
   resources,
@@ -85,10 +85,10 @@ function initCalendar(
   groupMeta = null
 ) {
   const formattedEvents = events.map((ev) => {
-    const today = new Date(); // current reference date
     let dateStart = null;
     let dateEnd = null;
-
+    let activeHoveredEvent = null;
+    const rightEventDiv = document.querySelector(".right-event");
     // Helper to parse "MM/DD/YYYY" format safely
     function parseDate(str) {
       const parts = str.split("/");
@@ -107,20 +107,6 @@ function initCalendar(
         dateStart = new Date(ev.start);
       } else if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(ev.start)) {
         dateStart = parseDate(ev.start); // handle 11/11/2025 format
-      } else if (ev.start === "SUN") {
-        const dayOfWeek = today.getDay();
-        dateStart = new Date(today);
-        dateStart.setDate(today.getDate() - dayOfWeek);
-      } else if (ev.start === "TODAY") {
-        dateStart = new Date(today);
-      } else if (ev.start.startsWith("DAY+")) {
-        const days = parseInt(ev.start.replace("DAY+", ""), 10);
-        dateStart = new Date(today);
-        dateStart.setDate(today.getDate() + days);
-      } else if (ev.start.startsWith("DAY-")) {
-        const days = parseInt(ev.start.replace("DAY-", ""), 10);
-        dateStart = new Date(today);
-        dateStart.setDate(today.getDate() - days);
       }
     }
 
@@ -130,10 +116,6 @@ function initCalendar(
         dateEnd = new Date(ev.end);
       } else if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(ev.end)) {
         dateEnd = parseDate(ev.end);
-      } else if (ev.end === "SUN+1W") {
-        const dayOfWeek = today.getDay();
-        dateEnd = new Date(today);
-        dateEnd.setDate(today.getDate() - dayOfWeek + 7);
       }
     }
 
@@ -161,7 +143,6 @@ function initCalendar(
     initialDate: new Date(),
     slotDuration: { days: 1 },
     headerToolbar: false,
-
     editable: false,
     eventStartEditable: false,
     eventDurationEditable: false,
@@ -183,8 +164,87 @@ function initCalendar(
       activePopupEvent = info.el;
       popup.style.display = "block";
     },
+    eventDidMount: function (info) {
+      const eventEl = info.el;
 
+      const rightEventDiv = document.querySelector(".right-event");
+      if (!rightEventDiv) return;
+      // Mouse enters
+      eventEl.addEventListener("mouseenter", () => {
+        const rect = eventEl.getBoundingClientRect();
+        // activeHoveredEvent = eventEl;
+        // Update content
+        rightEventDiv.innerHTML = `
+      <div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" height="14" width="14">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+        </div>
+        <div>...</div>
+      </div>
+    `;
+
+        // Update styles
+        rightEventDiv.style.color = "#fff";
+        rightEventDiv.style.backgroundColor = "#5a5959";
+        rightEventDiv.style.padding = "4px 6px";
+        rightEventDiv.style.borderRadius = "4px";
+        rightEventDiv.style.zIndex = 9999;
+
+        // const rect = eventEl.getBoundingClientRect();
+        rightEventDiv.style.top = rect.top + window.scrollY + "px";
+        rightEventDiv.style.left = rect.right + 10 + window.scrollX + "px";
+
+        // Optional: highlight the hovered event itself
+        eventEl.style.backgroundColor = "#5a5959";
+        eventEl.style.color = "#fff";
+      });
+
+      eventEl.addEventListener("mousemove", () => {
+        const rect = eventEl.getBoundingClientRect();
+        rightEventDiv.style.top = rect.top + window.scrollY + "px";
+        rightEventDiv.style.left = rect.right + 10 + window.scrollX + "px";
+      });
+      // Mouse leaves
+      eventEl.addEventListener("mouseleave", () => {
+        // if (activeHoveredEvent === eventEl) {
+        // restore default content
+        rightEventDiv.textContent = "X3";
+        rightEventDiv.style.color = "";
+        rightEventDiv.style.backgroundColor = "";
+        rightEventDiv.style.padding = "";
+        rightEventDiv.style.borderRadius = "";
+        rightEventDiv.style.top = "";
+        rightEventDiv.style.left = "";
+
+        // reset event styles
+        eventEl.style.backgroundColor = "";
+        eventEl.style.color = "";
+
+        // activeHoveredEvent = null;
+        // }
+      });
+    },
     viewDidMount() {
+      // quick debug - inspect resources and events passed to each calendar
+      // console.group(`initCalendar ${containerId}`);
+      // console.log(
+      //   "resources (ids):",
+      //   resources.map((r) => ({ id: r.id, type: typeof r.id }))
+      // );
+      // console.log(
+      //   "events (resourceId):",
+      //   events.map((ev) => ({
+      //     resourceId: ev.resourceId,
+      //     type: typeof ev.resourceId,
+      //     start: ev.start,
+      //     title: ev.title,
+      //   }))
+      // );
+      // console.log("🧩 formattedEvents", formattedEvents);
+      // console.log("🧩 resources", resources);
+
       const calendarEl = document.getElementById(containerId);
 
       // Add group header if provided
@@ -247,10 +307,7 @@ document.getElementById("calPrev").addEventListener("click", () => {
 });
 
 document.getElementById("calNext").addEventListener("click", () => {
-  cal0Instance?.next();
-  cal1Instance?.next();
-  cal2Instance?.next();
-  cal3Instance?.next();
+  goNextWeek();
 });
 
 window.addEventListener("scroll", repositionPopup, true);
@@ -480,7 +537,7 @@ function renderEventDetails(arg) {
              <img src="./Assets/icons/TimeRed.svg" height="20" width="20" />
            </div>
          </div>
-         <div>X3</div>
+         <div class="right-event">X3</div>
        </div>
       `,
     };
@@ -497,7 +554,7 @@ function renderEventDetails(arg) {
           <img src="./Assets/icons/Time.svg" height="20" width="20" />
         </div>
       </div>
-      <div>X3</div>
+      <div class="right-event">X3</div>
     </div>
     `,
   };
