@@ -200,3 +200,97 @@ body {
   align-items: center;
   font-size: 12px;
 }
+
+.flatpickr-calendar {
+  transform: scale(0.85);
+  transform-origin: top left;
+}
+
+.flatpickr-calendar .flatpickr-innerContainer {
+  width: auto;
+}
+
+.left-filter {
+  overflow: visible;
+}
+
+/* Make the calendar smaller by default */
+/* .flatpickr-calendar {
+  width: 500px !important;
+  font-size: 12px;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+.flatpickr-months {
+  height: 28px;
+}
+
+.flatpickr-prev-month,
+.flatpickr-next-month {
+  width: 20px;
+  height: 20px;
+}
+
+.flatpickr-current-month {
+  font-size: 12px;
+}
+
+.numInputWrapper input {
+  height: 18px;
+  font-size: 11px;
+}
+
+.flatpickr-weekday {
+  font-size: 10px;
+  line-height: 18px;
+}
+
+.flatpickr-day {
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  font-size: 11px;
+  margin: 1px;
+}
+
+.fp-custom-btns button {
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+.flatpickr-innerContainer {
+  padding: 4px;
+}  */
+
+/* .cur-month {
+  font-size: 14px;
+}
+.numInputWrapper {
+  font-size: 14px;
+}
+
+.flatpickr-innerContainer {
+  height: 14rem;
+}
+.flatpickr-day {
+  margin-top: 0 !important;
+}
+.dayContainer {
+  height: 14rem;
+}
+
+.flatpickr-day.inRange {
+  height: 2rem;
+}
+.flatpickr-day.selected.startRange,
+.flatpickr-day.startRange.startRange,
+.flatpickr-day.endRange.startRange,
+.flatpickr-day.selected.endRange,
+.flatpickr-day.startRange.endRange,
+.flatpickr-day.endRange.endRange {
+  height: 2rem;
+}
+.flatpickr-day {
+  height: 2rem;
+} */

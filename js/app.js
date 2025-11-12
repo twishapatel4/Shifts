@@ -133,7 +133,7 @@ function addCustomButtons(instance) {
     cursor: pointer;
   `;
   clearBtn.onclick = () => {
-    instance.clear();
+    instance.close();
   };
 
   const applyBtn = document.createElement("button");
@@ -146,7 +146,12 @@ function addCustomButtons(instance) {
     border-radius: 4px;
     cursor: pointer;
   `;
+
   applyBtn.onclick = () => {
+    const selectedDates = instance.selectedDates;
+    if (selectedDates.length === 2) {
+      updateButtonText(selectedDates[0], selectedDates[1]);
+    }
     instance.close();
     // You can also trigger your logic here, like updating button text
   };
@@ -157,6 +162,18 @@ function addCustomButtons(instance) {
   calendar.appendChild(btnContainer);
 }
 
+function updateButtonText(start, end) {
+  const options = { day: "2-digit", month: "short", year: "numeric" };
+
+  document.getElementById("startDate").textContent = start.toLocaleDateString(
+    "en-US",
+    options
+  );
+  document.getElementById("endDate").textContent = end.toLocaleDateString(
+    "en-US",
+    options
+  );
+}
 calendarBtn.addEventListener("click", (e) => {
   e.stopPropagation();
   fp.open();
