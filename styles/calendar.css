@@ -63,8 +63,10 @@ body {
   background-color: #dedde5 !important;
   /* font-size: 28px; */
   color: #6068ab !important;
+  height: 4rem !important;
 }
 /* 
+
 .ec-timeline .ec-today header .day-week {
   color: #6068ab !important;
 } */
@@ -86,13 +88,14 @@ body {
   border: 2px solid #6d99d3;
   border-left: 4px solid #6d99d3;
   margin-left: 6px;
-  margin-top: 8px;
-  min-height: 60px;
+  margin-top: 16px;
+  height: auto !important;
+  min-height: 3.8rem;
+  max-height: none;
   display: flex;
   justify-content: space-between;
-  padding: 2px 8px;
+  padding: 0.3rem;
   width: 100%;
-  height: 100%;
   color: #3376d0;
   border-radius: 4px;
   font-size: 14px;
@@ -108,13 +111,14 @@ body {
   border: 2px solid #e58f95;
   border-left: 4px solid #e58f95;
   margin-left: 6px;
-  margin-top: 8px;
-  min-height: 60px;
+  margin-top: 16px;
+  height: auto !important;
+  min-height: 3.8rem;
+  max-height: none;
   display: flex;
   justify-content: space-between;
-  padding: 2px 8px;
+  padding: 0.3rem;
   width: 100%;
-  height: 100%;
   color: #e58f95;
   border-radius: 4px;
   font-size: 14px;
@@ -132,6 +136,12 @@ body {
   /* justify-content: start; */
   align-items: center;
   gap: 10px;
+}
+
+.left-event {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .resource-user {
@@ -235,10 +245,18 @@ body {
   font-size: 14px;
   font-weight: 500;
   width: 100%;
-  height: 100%;
-  min-height: 3rem;
-  max-height: 6rem;
+  height: auto !important;
+  min-height: 3.8rem;
+  max-height: none;
   margin-top: 0px !important;
+}
+
+.ec-resource-row,
+.ec-events {
+  /* height: 100% !important; */
+  height: auto !important;
+  min-height: 3.8rem;
+  max-height: none;
 }
 
 .ec-events:not(:has(article)) {
@@ -374,14 +392,14 @@ body {
   border: none !important;
 }
 
-.group-collapse-btn .icon-up {
+.group-collapse-btn .icon-down {
   display: none;
 }
 
-.group-collapse-btn.collapsed .icon-down {
+.group-collapse-btn.collapsed .icon-up {
   display: none;
 }
-.group-collapse-btn.collapsed .icon-up {
+.group-collapse-btn.collapsed .icon-down {
   display: inline;
 }
 

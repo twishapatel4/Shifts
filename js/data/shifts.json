@@ -97,24 +97,31 @@
           }
         }
       ]
-    },
-    {
-      "id": "new"
     }
   ],
   "events": [
-    { "start": "TODAY", "resourceId": 1, "title": "shift-blue" },
-    { "start": "DAY+1", "resourceId": 2, "title": "shift-red" },
-    { "start": "DAY+1", "resourceId": 8 },
-    { "start": "DAY+1", "resourceId": 6, "title": "shift-blue" },
-    { "start": "DAY+1", "resourceId": 4, "title": "shift-red" },
-    { "start": "DAY+5", "resourceId": 6, "title": "shift-red" },
-    { "start": "DAY+3", "resourceId": 7, "title": "shift-blue" },
-    { "start": "DAY+3", "resourceId": 3, "title": "shift-blue" },
-    { "start": "DAY+4", "resourceId": 3, "title": "shift-red" },
-    { "start": "DAY+2", "resourceId": 6, "title": "shift-red" },
-    { "start": "DAY+4", "resourceId": 5, "title": "shift-blue" },
-    { "start": "DAY+4", "resourceId": 11, "title": "shift-red" },
-    { "start": "DAY+3", "resourceId": 9, "title": "shift-blue" }
+    { "start": "11/10/2025", "resourceId": 1, "title": "shift-blue" },
+    { "start": "11/13/2025", "resourceId": 2, "title": "shift-red" },
+    { "start": "11/13/2025", "resourceId": 8 },
+    { "start": "11/13/2025", "resourceId": 6, "title": "shift-blue" },
+    { "start": "11/13/2025", "resourceId": 4, "title": "shift-red" },
+    { "start": "11/17/2025", "resourceId": 6, "title": "shift-red" },
+    { "start": "11/15/2025", "resourceId": 7, "title": "shift-blue" },
+    { "start": "11/15/2025", "resourceId": 3, "title": "shift-blue" },
+    { "start": "11/16/2025", "resourceId": 3, "title": "shift-red" },
+    { "start": "11/06/2025", "resourceId": 6, "title": "shift-red" },
+    { "start": "11/16/2025", "resourceId": 5, "title": "shift-blue" },
+    { "start": "11/16/2025", "resourceId": 9, "title": "shift-red" },
+    { "start": "11/15/2025", "resourceId": 9, "title": "shift-blue" },
+    { "start": "11/15/2025", "resourceId": 1, "title": "shift-blue" },
+    { "start": "11/18/2025", "resourceId": 2, "title": "shift-red" },
+    { "start": "11/12/2025", "resourceId": 8 },
+    { "start": "11/22/2025", "resourceId": 6, "title": "shift-blue" },
+    { "start": "11/14/2025", "resourceId": 4, "title": "shift-red" },
+    { "start": "11/14/2025", "resourceId": 7, "title": "shift-blue" },
+    { "start": "11/12/2025", "resourceId": 3, "title": "shift-blue" },
+    { "start": "11/18/2025", "resourceId": 6, "title": "shift-red" },
+    { "start": "11/06/2025", "resourceId": 9, "title": "shift-red" },
+    { "start": "11/16/2025", "resourceId": 2, "title": "shift-blue" }
   ]
 }

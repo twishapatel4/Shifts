@@ -84,38 +84,70 @@ function initCalendar(
   useCustomHeader = false,
   groupMeta = null
 ) {
-  const today = new Date();
-  const format = (date) => date.toISOString().split("T")[0];
-
   const formattedEvents = events.map((ev) => {
-    let dateStart = new Date();
+    const today = new Date(); // current reference date
+    let dateStart = null;
     let dateEnd = null;
 
-    if (ev.start === "SUN") {
-      const dayOfWeek = today.getDay();
-      dateStart.setDate(today.getDate() - dayOfWeek);
-    } else if (ev.start === "TODAY") {
-      dateStart = new Date();
-    } else if (ev.start && ev.start.startsWith("DAY+")) {
-      const days = parseInt(ev.start.replace("DAY+", ""), 10);
-      dateStart.setDate(today.getDate() + days);
+    // Helper to parse "MM/DD/YYYY" format safely
+    function parseDate(str) {
+      const parts = str.split("/");
+      if (parts.length === 3) {
+        const month = parseInt(parts[0], 10) - 1; // months are 0-indexed
+        const day = parseInt(parts[1], 10);
+        const year = parseInt(parts[2], 10);
+        return new Date(year, month, day);
+      }
+      return null;
     }
 
-    if (ev.end === "SUN+1W") {
-      const dayOfWeek = today.getDay();
-      dateEnd = new Date(today);
-      dateEnd.setDate(today.getDate() - dayOfWeek + 7);
+    // Determine start date
+    if (ev.start) {
+      if (isIsoDate(ev.start)) {
+        dateStart = new Date(ev.start);
+      } else if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(ev.start)) {
+        dateStart = parseDate(ev.start); // handle 11/11/2025 format
+      } else if (ev.start === "SUN") {
+        const dayOfWeek = today.getDay();
+        dateStart = new Date(today);
+        dateStart.setDate(today.getDate() - dayOfWeek);
+      } else if (ev.start === "TODAY") {
+        dateStart = new Date(today);
+      } else if (ev.start.startsWith("DAY+")) {
+        const days = parseInt(ev.start.replace("DAY+", ""), 10);
+        dateStart = new Date(today);
+        dateStart.setDate(today.getDate() + days);
+      } else if (ev.start.startsWith("DAY-")) {
+        const days = parseInt(ev.start.replace("DAY-", ""), 10);
+        dateStart = new Date(today);
+        dateStart.setDate(today.getDate() - days);
+      }
+    }
+
+    // Determine end date (if provided)
+    if (ev.end) {
+      if (isIsoDate(ev.end)) {
+        dateEnd = new Date(ev.end);
+      } else if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(ev.end)) {
+        dateEnd = parseDate(ev.end);
+      } else if (ev.end === "SUN+1W") {
+        const dayOfWeek = today.getDay();
+        dateEnd = new Date(today);
+        dateEnd.setDate(today.getDate() - dayOfWeek + 7);
+      }
+    }
+
+    function format(d) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
     }
 
     return {
       ...ev,
-      start: ev.start && isIsoDate(ev.start) ? ev.start : format(dateStart),
-      end:
-        ev.end && isIsoDate(ev.end)
-          ? ev.end
-          : dateEnd
-          ? format(dateEnd)
-          : ev.end,
+      start: dateStart ? format(dateStart) : ev.start,
+      end: dateEnd ? format(dateEnd) : ev.end,
     };
   });
 
@@ -415,7 +447,7 @@ function renderEventDetails(arg) {
     return {
       html: `
        <div class="events-red">
-         <div>
+         <div class="left-event">
            FT-North Sydney Cl...
            <div class="icons">
              <img src="./Assets/icons/CupRed.svg" height="20" width="20" />
@@ -432,7 +464,7 @@ function renderEventDetails(arg) {
   return {
     html: `
     <div class="events-blue">
-      <div>
+      <div class="left-event">
         PT-Sydney CBD
         <div class="icons">
           <img src="./Assets/icons/Cup.svg" height="20" width="20" />
