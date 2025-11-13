@@ -27,7 +27,7 @@ document
   .forEach((cb) => cb.addEventListener("change", handleSelection));
 function handleSelection() {
   // Get all checked values
-  console.log("handle Select");
+  // console.log("handle Select");
   const checkboxes = document.querySelectorAll(
     "[data-dropdown] .dropdown-content input[type='checkbox']"
   );

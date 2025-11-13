@@ -8,12 +8,6 @@ let cal2Collapsed = false;
 let cal3Instance;
 let cal3Resources;
 let cal3Collapsed = false;
-const defaultDate = new Date("2025-11-16");
-const initDateValue = defaultDate
-  ? defaultDate instanceof Date
-    ? defaultDate
-    : new Date(defaultDate)
-  : new Date();
 async function loadShifts() {
   const res = await fetch("./js/data/shifts.json");
   const data = await res.json();
@@ -40,16 +34,22 @@ async function loadShifts() {
   cal1Resources = clinicManagerGroup.resources;
   cal2Resources = audiometristGroup.resources;
   cal3Resources = audiologistGroup.resources;
-
   // Initialize calendars. For calendar resources we pass a flattened list WITHOUT parent rows
-  cal0Instance = initCalendar("cal0", [], [], true, null, initDateValue);
+  rendercalendars(clinicManagerGroup, audiometristGroup, audiologistGroup);
+}
+
+function rendercalendars(
+  clinicManagerGroup,
+  audiometristGroup,
+  audiologistGroup
+) {
+  cal0Instance = initCalendar("cal0", [], [], true, null);
   cal1Instance = initCalendar(
     "cal1",
     flattenResources(clinicManagerGroup.resources),
     clinicManagerGroup.events,
     false, // use custom header for cal1
-    clinicManagerGroup,
-    initDateValue // pass group meta so we can show header above calendar
+    clinicManagerGroup
   );
 
   cal2Instance = initCalendar(
@@ -57,8 +57,7 @@ async function loadShifts() {
     flattenResources(audiometristGroup.resources),
     audiometristGroup.events,
     false,
-    audiometristGroup,
-    initDateValue
+    audiometristGroup
   );
 
   cal3Instance = initCalendar(
@@ -66,8 +65,7 @@ async function loadShifts() {
     flattenResources(audiologistGroup.resources),
     audiologistGroup.events,
     false,
-    audiologistGroup,
-    initDateValue
+    audiologistGroup
   );
 }
 
@@ -90,10 +88,9 @@ function initCalendar(
   resources,
   events,
   useCustomHeader = false,
-  groupMeta = null,
-  initDateValue
+  groupMeta = null
 ) {
-  const formattedEvents = events.map((ev) => {
+  const allEvents = events.map((ev) => {
     let dateStart = null;
     let dateEnd = null;
 
@@ -101,7 +98,7 @@ function initCalendar(
     function parseDate(str) {
       const parts = str.split("/");
       if (parts.length === 3) {
-        const month = parseInt(parts[0], 10) - 1; // months are 0-indexed
+        const month = parseInt(parts[0], 10) - 1;
         const day = parseInt(parts[1], 10);
         const year = parseInt(parts[2], 10);
         return new Date(year, month, day);
@@ -114,11 +111,11 @@ function initCalendar(
       if (isIsoDate(ev.start)) {
         dateStart = new Date(ev.start);
       } else if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(ev.start)) {
-        dateStart = parseDate(ev.start); // handle 11/11/2025 format
+        dateStart = parseDate(ev.start);
       }
     }
 
-    // Determine end date (if provided)
+    // Determine end date
     if (ev.end) {
       if (isIsoDate(ev.end)) {
         dateEnd = new Date(ev.end);
@@ -131,7 +128,8 @@ function initCalendar(
       const y = d.getFullYear();
       const m = String(d.getMonth() + 1).padStart(2, "0");
       const day = String(d.getDate()).padStart(2, "0");
-      return `${y}-${m}-${day}`;
+      // return `${y}-${m}-${day}T00:00:00`;
+      return `${y}-${m}-${day}T00:00:00Z`;
     }
 
     return {
@@ -145,10 +143,10 @@ function initCalendar(
     const calendarEl = document.getElementById(containerId);
     calendarEl.classList.add("no-resources");
   }
-  console.log(initDateValue);
+
   const calendarOptions = {
     view: "resourceTimelineWeek",
-    initialDate: initDateValue,
+    initialDate: new Date(),
     slotDuration: { days: 1 },
     headerToolbar: false,
     editable: false,
@@ -156,26 +154,14 @@ function initCalendar(
     eventDurationEditable: false,
     eventResourceEditable: false,
     resources,
-    events: formattedEvents,
+    events: allEvents,
     resourceLabelContent: renderResources,
     eventContent: renderEventDetails,
-    eventClick: function (info) {
-      const popup = document.getElementById("event-popup");
-      const rect = info.el.getBoundingClientRect();
-      // Position popup below the event
-      popup.style.display = "block";
-      popup.style.width = rect.width - 6 + "px";
-      popup.style.top = rect.bottom + window.scrollY + 6 + "px";
-      popup.style.left = rect.left + window.scrollX + "px";
-      activePopupEvent = info.el;
-      popup.style.display = "block";
-    },
-
     viewDidMount() {
       // quick debug - inspect resources and events passed to each calendar
-      console.group(`initCalendar ${containerId}`);
-      console.log("🧩 formattedEvents", formattedEvents);
-      console.log("🧩 resources", resources);
+      console.log(`initCalendar ${containerId}`);
+      console.log("events", allEvents);
+      console.log("resources", resources);
 
       const calendarEl = document.getElementById(containerId);
 
@@ -219,16 +205,45 @@ function initCalendar(
         }
       });
     },
-  };
+    datesSet(info) {
+      const calendarEl = document.getElementById(containerId);
+      const titleMain = calendarEl.querySelector(
+        ".custom-sidebar-title .sidebar-title-main"
+      );
 
+      if (titleMain) {
+        const startDate = info.start; // start of current view range
+        const endDate = info.end; // end of current view range
+        const startMonth = startDate.toLocaleString("default", {
+          month: "long",
+        });
+        const startYear = startDate.getFullYear();
+        const endMonth = endDate.toLocaleString("default", { month: "long" });
+        const endYear = endDate.getFullYear();
+
+        // Handle cases where the week spans two months
+        let displayText;
+        if (startMonth === endMonth && startYear === endYear) {
+          displayText = `${startMonth} ${startYear}`;
+        } else if (startYear === endYear) {
+          displayText = `${startMonth} - ${endMonth} ${startYear}`;
+        } else {
+          displayText = `${startMonth} ${startYear} - ${endMonth} ${endYear}`;
+        }
+
+        titleMain.textContent = displayText;
+      }
+      // calendar.setOption("events", allEvents);
+    },
+  };
   if (useCustomHeader) {
     calendarOptions.dayHeaderFormat = CustomHeader;
   }
+  const calendarEl = document.getElementById(containerId);
 
-  return EventCalendar.create(
-    document.getElementById(containerId),
-    calendarOptions
-  );
+  const calendar = EventCalendar.create(calendarEl, calendarOptions);
+  console.log(calendar);
+  return calendar;
 }
 
 document.getElementById("calPrev").addEventListener("click", () => {
@@ -247,6 +262,17 @@ document.getElementById("calNext").addEventListener("click", () => {
 
 window.addEventListener("scroll", repositionPopup, true);
 window.addEventListener("resize", repositionPopup);
+
+// function filterEventsForRange(events, referenceDate) {
+//   const weekStart = new Date(referenceDate);
+//   const weekEnd = new Date(weekStart);
+//   weekEnd.setDate(weekStart.getDate() + 7);
+//   console.log("start", weekStart);
+//   console.log(weekEnd);
+//   return events.filter(
+//     (ev) => ev._startDate >= weekStart && ev._startDate < weekEnd
+//   );
+// }
 
 function repositionPopup() {
   const popup = document.getElementById("event-popup");
@@ -273,29 +299,12 @@ window.addEventListener("dateRangeChanged", (e) => {
   const { start, end } = e.detail;
   const startDate = new Date(start);
   const endDate = new Date(end);
-  const newDate = new Date("2025-11-17");
-
-  // cal0Instance.setOption("initialDate", newDate);
-  // cal1Instance.setOption("initialDate", newDate);
-  // cal2Instance.setOption("initialDate", newDate);
-  // cal3Instance.setOption("initialDate", newDate);
-  initCalendar("cal0", resources, events, false, groupMeta, "2025-11-17");
-  initCalendar("cal1", resources, events, false, groupMeta, "2025-11-17");
-  initCalendar("cal2", resources, events, false, groupMeta, "2025-11-17");
-  initCalendar("cal3", resources, events, false, groupMeta, "2025-11-17");
-
-  // Move all calendars to show the selected range
-  // [cal0Instance, cal1Instance, cal2Instance, cal3Instance].forEach((cal) => {
-  //   if (!cal) return;
-
-  //   const calEl = cal.el; // your calendar container
-  //   const scrollEl =
-  //     calEl.querySelector(".ec-body") || calEl.querySelector(".ec-content");
-
-  //   if (!scrollEl) return;
-
-  //   scrollToDate(scrollEl, startDate, cal);
-  // });
+  const newDate = new Date(start);
+  // filterEventsForRange(cal0Instance.events, newDate);
+  cal0Instance.setOption("date", newDate);
+  cal1Instance.setOption("date", newDate);
+  cal2Instance.setOption("date", newDate);
+  cal3Instance.setOption("date", newDate);
 });
 
 function isIsoDate(str) {
@@ -485,10 +494,9 @@ function renderResources(arg) {
 function renderEventDetails(arg) {
   const event = arg.event;
   const title = (event.title || "").toLowerCase();
-
   // Detect red vs blue from title (user requested event title detection)
   const isRed = title.includes("red") || title.includes("shift-red");
-
+  const id = event.resourceIds;
   if (isRed) {
     return {
       html: `
@@ -521,7 +529,7 @@ function renderEventDetails(arg) {
     html: `
     <div class="events-blue">
       <div class="left-event">
-        PT-Sydney CBD
+        PT-Sydney CBD ${id}
         <div class="icons">
           <img src="./Assets/icons/Cup.svg" height="20" width="20" />
           <img src="./Assets/icons/Time.svg" height="20" width="20" />
