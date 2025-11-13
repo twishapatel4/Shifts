@@ -124,11 +124,29 @@ body {
   overflow: hidden;
 }
 
+.right-event-x {
+  display: none;
+  background-color: #5a5959;
+  color: #fff;
+  padding: 4px 6px;
+  border-radius: 0.4rem;
+}
+
+.events-blue:hover .right-event-x,
+.events-red:hover .right-event-x {
+  display: block; /* or block depending on your layout */
+}
 .events-red:hover,
 .events-blue:hover {
   border: 2px solid #5a5959;
   border-left: 4px solid #5a5959;
 }
+
+.events-red:hover .right-event,
+.events-blue:hover .right-event {
+  display: none;
+}
+
 .icons {
   display: flex;
   /* margin-top: 10px; */
@@ -373,12 +391,11 @@ body {
   background: #fff;
   border: 1px solid #ccc;
   border-radius: 6px;
-  padding: 6px 10px;
+  padding: 2px 10px;
   width: auto;
   max-width: 95vw;
   max-height: 180px;
-  margin-left: 0.4rem;
-  margin-top: 0.4rem;
+  /* margin-top: 0.4rem; */
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
   z-index: 9999;
   display: none;
