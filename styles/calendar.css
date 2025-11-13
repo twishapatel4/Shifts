@@ -95,8 +95,8 @@ body {
   margin-left: 6px;
   margin-top: 16px;
   height: auto !important;
-  min-height: 3.4rem;
-  max-height: 3.8rem;
+  min-height: 3.6rem;
+  max-height: 3.6rem;
   display: flex;
   justify-content: space-between;
   padding: 0.3rem;
@@ -106,6 +106,9 @@ body {
   font-size: 14px;
   text-align: center;
   overflow: hidden;
+  box-sizing: border-box;
+  transform: none !important;
+  transition: none !important;
 }
 
 .events-red {
@@ -115,8 +118,8 @@ body {
   margin-left: 6px;
   margin-top: 16px;
   height: auto !important;
-  min-height: 3.4rem;
-  max-height: 3.8rem;
+  min-height: 3.6rem;
+  max-height: 3.6rem;
   display: flex;
   justify-content: space-between;
   padding: 0.3rem;
@@ -126,6 +129,9 @@ body {
   font-size: 14px;
   text-align: center;
   overflow: hidden;
+  box-sizing: border-box;
+  transform: none !important;
+  transition: none !important;
 }
 
 .right-event-x {
@@ -140,10 +146,14 @@ body {
 .events-red:hover .right-event-x {
   display: block; /* or block depending on your layout */
 }
+
 .events-red:hover,
 .events-blue:hover {
   border: 2px solid #5a5959;
   border-left: 4px solid #5a5959;
+  transform: none !important;
+  transition: none !important;
+  width: 100%;
 }
 
 .events-red:hover .right-event,
@@ -497,4 +507,20 @@ body {
 /* if you hide resources (collapsed), keep layout stable */
 .no-resources .ec-sidebar {
   width: calc(var(--ec-sidebar-width, 200px));
+}
+
+@media (max-width: 1250px) {
+  .right-event-x {
+    position: absolute;
+    padding: 2px 4px;
+    top: 50%;
+    left: 10px; /* adjust this to position over the left-event */
+    transform: translateY(-50%);
+    z-index: 10; /* ensures it appears on top */
+  }
+
+  .events-blue,
+  .events-red {
+    position: relative;
+  }
 }

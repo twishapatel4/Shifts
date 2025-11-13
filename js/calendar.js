@@ -274,27 +274,51 @@ window.addEventListener("resize", repositionPopup);
 //   );
 // }
 
+// function repositionPopup() {
+//   const popup = document.getElementById("event-popup");
+//   if (!popup || popup.style.display !== "block" || !activePopupEvent) return;
+
+//   const rect = activePopupEvent.getBoundingClientRect();
+//   const width = Math.min(rect.width - 8, window.innerWidth * 0.95);
+//   popup.style.width = width - 28 + "px";
+//   popup.style.top = rect.bottom + window.scrollY + 6 + "px";
+//   popup.style.left = rect.left + window.scrollX + "px";
+// }
+
+// document.addEventListener("click", function (e) {
+//   const popup = document.getElementById("event-popup");
+//   if (
+//     popup.style.display === "block" &&
+//     !popup.contains(e.target) &&
+//     !e.target.closest(".ec-event")
+//   ) {
+//     popup.style.display = "none";
+//   }
+// });
 function repositionPopup() {
   const popup = document.getElementById("event-popup");
   if (!popup || popup.style.display !== "block" || !activePopupEvent) return;
 
   const rect = activePopupEvent.getBoundingClientRect();
-  const width = Math.min(rect.width - 8, window.innerWidth * 0.95);
-  popup.style.width = width - 28 + "px";
+
+  // Check viewport width
+  if (window.innerWidth < 950) {
+    // On small screens → let popup size naturally
+    popup.style.width = "auto";
+    popup.style.maxWidth = "95vw"; // optional safety limit
+    popup.style.left = "10px"; // small margin from edge
+    popup.style.right = "10px"; // keep centered if possible
+  } else {
+    // On larger screens → use your constrained width logic
+    const width = Math.min(rect.width - 8, window.innerWidth * 0.95);
+    popup.style.width = width - 28 + "px";
+    popup.style.left = rect.left + window.scrollX + "px";
+  }
+
+  // Top position always follows the event
   popup.style.top = rect.bottom + window.scrollY + 6 + "px";
-  popup.style.left = rect.left + window.scrollX + "px";
 }
 
-document.addEventListener("click", function (e) {
-  const popup = document.getElementById("event-popup");
-  if (
-    popup.style.display === "block" &&
-    !popup.contains(e.target) &&
-    !e.target.closest(".ec-event")
-  ) {
-    popup.style.display = "none";
-  }
-});
 window.addEventListener("dateRangeChanged", (e) => {
   const { start, end } = e.detail;
   const startDate = new Date(start);
@@ -318,6 +342,7 @@ function ensureGroupHeader(calendarEl, groupMeta) {
   header.className = "group-header";
   const parent = groupMeta.resources.find((r) => r.extendedProps?.isParent);
   const title = parent ? parent.title : "Group";
+  const hours = parent.extendedProps.hours;
 
   header.innerHTML = `
     <div class="group-header-inner">
@@ -360,7 +385,7 @@ function ensureGroupHeader(calendarEl, groupMeta) {
       </svg>
     </button>
     <div class="group-title">${escapeHtml(title)}</div>
-    <div>117 Hrs</div>
+    <div>${escapeHtml(hours)} Hrs</div>
     <div class="users">
       <svg
         xmlns="http://www.w3.org/2000/svg"

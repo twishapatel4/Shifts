@@ -36,7 +36,6 @@
       "title": "Audiometrist",
       "extendedProps": {
         "isParent": true,
-
         "hours": 117
       },
       "children": [
@@ -80,7 +79,7 @@
       "title": "Audiologist",
       "extendedProps": {
         "isParent": true,
-        "hours": 117
+        "hours": 11
       },
       "children": [
         {
