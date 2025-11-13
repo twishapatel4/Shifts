@@ -196,9 +196,15 @@ body {
 
 .icon-name {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
   font-size: 12px;
+}
+
+.icon-name:hover {
+  border: 1px solid black;
+  padding: 0.2rem;
+  max-height: 1.6rem;
 }
 
 /* .flatpickr-calendar {
@@ -232,6 +238,7 @@ body {
 .events-red,
 .events-blue,
 .right-header,
-.group-collapse-btn {
+.group-collapse-btn,
+.icon-name {
   cursor: pointer;
 }
