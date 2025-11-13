@@ -228,6 +228,18 @@
       "end": "11/25/2025",
       "resourceId": 9,
       "title": "shift-red"
+    },
+    {
+      "start": "11/14/2025",
+      "end": "11/14/2025",
+      "resourceId": 1,
+      "title": "shift-blue"
+    },
+    {
+      "start": "11/14/2025",
+      "end": "11/14/2025",
+      "resourceId": 2,
+      "title": "shift-red"
     }
   ]
 }
