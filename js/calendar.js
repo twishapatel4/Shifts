@@ -500,7 +500,17 @@ function renderEventDetails(arg) {
              <img src="./Assets/icons/TimeRed.svg" height="20" width="20" />
            </div>
          </div>
-         <div>X3</div>
+         <div class="right-event">X3</div>
+          <div class="right-event-x">
+         <div class="">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" height="14" width="14">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+        </div>
+        <div class="dots">...</div>
+        </div>
+      </div>
+         <div> 
        </div>
       `,
     };
@@ -517,7 +527,15 @@ function renderEventDetails(arg) {
           <img src="./Assets/icons/Time.svg" height="20" width="20" />
         </div>
       </div>
-      <div>X3</div>
+       <div class="right-event">X3</div>
+         <div class="right-event-x">
+         <div class="">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" height="14" width="14">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+        </div>
+        <div class="dots">...</div>
+        </div>
     </div>
     `,
   };
@@ -565,6 +583,89 @@ document.getElementById("cal3-toggle")?.addEventListener("click", () => {
 
 // kick off data load
 loadShifts();
+
+document.addEventListener("DOMContentLoaded", () => {
+  const popup = document.getElementById("event-popup");
+  let activeEvent = null; // track which event the popup belongs to
+
+  // Handle click on dots
+  document.addEventListener("click", function (e) {
+    const dot = e.target.closest(".events-blue .dots, .events-red .dots");
+
+    if (dot) {
+      e.stopPropagation();
+      console.log("dots clicked");
+
+      const eventBox = dot.closest(".events-blue, .events-red");
+      if (!eventBox) return;
+
+      activeEvent = eventBox; // remember which event opened the popup
+
+      const rect = eventBox.getBoundingClientRect();
+      const popupPadding = 4;
+
+      popup.style.display = "block";
+      popup.style.opacity = "1";
+      popup.style.visibility = "visible";
+
+      // same width as the event box
+      popup.style.width = rect.width + "px";
+
+      // position popup just below the event
+      let left = rect.left + window.scrollX;
+      let top = rect.bottom + window.scrollY + popupPadding;
+
+      popup.style.left = left + "px";
+      popup.style.top = top + "px";
+
+      // keep inside viewport
+      const vpWidth = document.documentElement.clientWidth;
+      const vpHeight = document.documentElement.clientHeight;
+      const popupRect = popup.getBoundingClientRect();
+
+      if (popupRect.right > vpWidth - 8) {
+        left -= popupRect.right - (vpWidth - 8);
+        if (left < 8) left = 8;
+        popup.style.left = left + "px";
+      }
+
+      if (popupRect.bottom > vpHeight - 8) {
+        const aboveTop =
+          rect.top + window.scrollY - popupRect.height - popupPadding;
+        popup.style.top = Math.max(8, aboveTop) + "px";
+      }
+
+      return;
+    }
+
+    // don’t close if clicking inside popup
+    if (e.target.closest("#event-popup")) return;
+
+    // close if clicked outside
+    popup.style.display = "none";
+    activeEvent = null;
+  });
+
+  document.addEventListener("mouseover", function (e) {
+    const eventBox = e.target.closest(".events-blue, .events-red");
+
+    // ignore if hovering popup itself
+    if (e.target.closest("#event-popup")) return;
+
+    if (eventBox && popup.style.display === "block") {
+      // only hide if hovering a different event
+      if (activeEvent && eventBox !== activeEvent) {
+        popup.style.display = "none";
+        activeEvent = null;
+      }
+    }
+  });
+});
+
+document.addEventListener("click", function () {
+  const popup = document.getElementById("event-popup");
+  popup.style.display = "none";
+});
 
 /* ---------- Sync utilities for 4 stacked calendars ---------- */
 

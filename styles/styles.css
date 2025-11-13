@@ -200,3 +200,16 @@ body {
   align-items: center;
   font-size: 12px;
 }
+
+.flatpickr-calendar {
+  transform: scale(0.85);
+  transform-origin: top left;
+}
+
+.flatpickr-calendar .flatpickr-innerContainer {
+  width: auto;
+}
+
+.left-filter {
+  overflow: visible;
+}
