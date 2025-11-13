@@ -100,11 +100,11 @@
     }
   ],
   "events": [
-    { "start": "11/10/2025", "resourceId": 1, "type": "shift-blue" },
-    { "start": "11/13/2025", "resourceId": 2, "type": "shift-red" },
+    { "start": "11/10/2025", "resourceId": 1, "title": "shift-red" },
+    { "start": "11/13/2025", "resourceId": 2, "title": "shift-red" },
     { "start": "11/13/2025", "resourceId": 8 },
-    { "start": "11/13/2025", "resourceId": 6, "type": "shift-blue" },
-    { "start": "11/13/2025", "resourceId": 4, "type": "shift-red" },
+    { "start": "11/13/2025", "resourceId": 6, "title": "shift-blue" },
+    { "start": "11/13/2025", "resourceId": 4, "title": "shift-red" },
     { "start": "11/17/2025", "resourceId": 6, "title": "shift-red" },
     { "start": "11/15/2025", "resourceId": 7, "title": "shift-blue" },
     { "start": "11/15/2025", "resourceId": 3, "title": "shift-blue" },
