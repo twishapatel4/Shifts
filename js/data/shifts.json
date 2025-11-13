@@ -18,7 +18,7 @@
           "title": "Sarah Brown",
           "extendedProps": {
             "shift": 2,
-            "imgUrl": "./Assets/images/Jack.png"
+            "imgUrl": "./Assets/images/Sarah.png"
           }
         },
         {
@@ -26,7 +26,7 @@
           "title": "Luke Harris",
           "extendedProps": {
             "shift": 2,
-            "imgUrl": "./Assets/images/Emily.png"
+            "imgUrl": "./Assets/images/Jack.png"
           }
         }
       ]
@@ -45,7 +45,7 @@
           "title": "Leo Martin",
           "extendedProps": {
             "shift": 2,
-            "imgUrl": "./Assets/images/Liam.png"
+            "imgUrl": "./Assets/images/Jack.png"
           }
         },
         {
@@ -53,7 +53,7 @@
           "title": "Ben Dravis",
           "extendedProps": {
             "shift": 2,
-            "imgUrl": "./Assets/images/Emily.png"
+            "imgUrl": "./Assets/images/Ethan.png"
           }
         },
         {
@@ -61,7 +61,7 @@
           "title": "Eli Walker",
           "extendedProps": {
             "shift": 2,
-            "imgUrl": "./Assets/images/Jack.png"
+            "imgUrl": "./Assets/images/Mia.png"
           }
         },
         {
@@ -92,7 +92,7 @@
           "title": "James Wilson",
           "extendedProps": {
             "shift": 2,
-            "imgUrl": "./Assets/images/Emily.png"
+            "imgUrl": "./Assets/images/Ethan.png"
           }
         }
       ]
