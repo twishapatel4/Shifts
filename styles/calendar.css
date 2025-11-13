@@ -40,11 +40,11 @@ body {
   /* min-height: 60px;
   max-height: 90px; */
   min-height: 3.8rem;
-  max-height: 5rem;
+  max-height: 4.2rem;
 }
 .ec-resource-row {
   min-height: 3.8rem;
-  max-height: 5rem;
+  max-height: 4.2rem;
   overflow: hidden;
 }
 .ec-timeline .ec-days-header,
@@ -81,6 +81,10 @@ body {
 
 */ .ec-expander {
   display: none;
+}
+
+.ec-timeline .ec-body .ec-days {
+  max-height: 4.2rem !important;
 }
 
 .events-blue {
@@ -191,6 +195,7 @@ body {
 }
 
 .ec-content {
+  padding: 2px;
   overflow-x: hidden;
   overflow-y: hidden;
 }
