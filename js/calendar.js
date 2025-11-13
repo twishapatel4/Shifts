@@ -496,7 +496,6 @@ function renderEventDetails(arg) {
   const title = (event.title || "").toLowerCase();
   // Detect red vs blue from title (user requested event title detection)
   const isRed = title.includes("red") || title.includes("shift-red");
-  const id = event.resourceIds;
   if (isRed) {
     return {
       html: `
@@ -529,7 +528,7 @@ function renderEventDetails(arg) {
     html: `
     <div class="events-blue">
       <div class="left-event">
-        PT-Sydney CBD ${id}
+        PT-Sydney CBD 
         <div class="icons">
           <img src="./Assets/icons/Cup.svg" height="20" width="20" />
           <img src="./Assets/icons/Time.svg" height="20" width="20" />

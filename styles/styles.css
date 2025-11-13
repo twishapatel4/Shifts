@@ -239,6 +239,10 @@ body {
 .events-blue,
 .right-header,
 .group-collapse-btn,
-.icon-name {
+.icon-name,
+.startDate,
+.endDate,
+.calendar-btn img,
+.calendar-btn svg {
   cursor: pointer;
 }
