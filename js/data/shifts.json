@@ -15,7 +15,7 @@
         },
         {
           "id": 1,
-          "title": "Ben Davis",
+          "title": "Sarah Brown",
           "extendedProps": {
             "shift": 2,
             "imgUrl": "./Assets/images/Jack.png"
@@ -23,7 +23,7 @@
         },
         {
           "id": 2,
-          "title": "Sarah Brown",
+          "title": "Luke Harris",
           "extendedProps": {
             "shift": 2,
             "imgUrl": "./Assets/images/Emily.png"
@@ -51,7 +51,7 @@
         },
         {
           "id": 4,
-          "title": "Luke Harris",
+          "title": "Ben Dravis",
           "extendedProps": {
             "shift": 2,
             "imgUrl": "./Assets/images/Emily.png"
