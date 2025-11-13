@@ -228,3 +228,10 @@ body {
 .flatpickr-calendar.animate {
   transition: none !important;
 }
+
+.events-red,
+.events-blue,
+.right-header,
+.group-collapse-btn {
+  cursor: pointer;
+}
