@@ -35,7 +35,7 @@ body {
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
   background: #f3f2f1;
   border: 1px solid #ccc;
@@ -73,7 +73,7 @@ body {
   align-items: center;
   gap: 6px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
   color: #000;
 }
 
@@ -112,7 +112,7 @@ body {
   padding: 8px 12px;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -180,12 +180,12 @@ body {
 
 .startDate {
   color: #72706f;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .endDate {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .calendar-container {
