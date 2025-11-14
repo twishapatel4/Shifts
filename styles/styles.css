@@ -199,12 +199,12 @@ body {
   gap: 8px;
   align-items: center;
   font-size: 12px;
+  padding: 0.1rem;
+  max-height: 1.6rem;
 }
 
 .icon-name:hover {
   border: 1px solid black;
-  padding: 0.2rem;
-  max-height: 1.6rem;
 }
 
 /* .flatpickr-calendar {

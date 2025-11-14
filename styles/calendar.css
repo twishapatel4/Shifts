@@ -509,8 +509,14 @@ body {
   width: calc(var(--ec-sidebar-width, 200px));
 }
 
+.dots {
+  padding-bottom: 10rem;
+}
+
 @media (max-width: 1250px) {
   .right-event-x {
+    height: 3rem !important;
+    width: auto;
     position: absolute;
     padding: 2px 4px;
     top: 50%;
@@ -518,9 +524,17 @@ body {
     transform: translateY(-50%);
     z-index: 10; /* ensures it appears on top */
   }
+  .right-event-x svg {
+    width: auto;
+  }
 
   .events-blue,
   .events-red {
     position: relative;
+  }
+}
+@media (max-width: 1048px) {
+  .event-popup {
+    width: 120px !important;
   }
 }
