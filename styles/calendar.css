@@ -232,7 +232,7 @@ body {
 }
 
 .ec-content {
-  padding: 2px;
+  padding: 0px 2px;
   overflow-x: hidden 1;
   overflow-y: hidden;
 }
@@ -359,7 +359,8 @@ body {
 
 .group-header-inner {
   margin: 0 !important;
-  padding: 1rem;
+  padding: 1.2rem;
+  padding-bottom: 0.6rem !important;
   background-color: #f3f2f1;
   color: #72706f;
   font-size: 16px;
