@@ -250,6 +250,15 @@ body {
 .flatpickr-day.today {
   border-color: #569ff7 !important;
   background-color: #e6e6e6;
+  border-radius: none !important;
+}
+
+.popup-description {
+  margin: none !important;
+}
+
+.popup-content {
+  padding: 0.4rem !important;
 }
 
 .right-event-x,

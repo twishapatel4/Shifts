@@ -22,6 +22,39 @@ document.addEventListener("click", function (e) {
     .forEach((drop) => drop.classList.remove("show"));
 });
 
+document.querySelectorAll("[data-dropdown]").forEach((drop) => {
+  const allCheckbox = drop.querySelector(".select-all");
+  const checkboxes = drop.querySelectorAll(
+    ".dropdown-content input[type='checkbox']:not(.select-all)"
+  );
+
+  // Mark all as selected on page load
+  allCheckbox.checked = true;
+  checkboxes.forEach((cb) => (cb.checked = true));
+});
+// Handle Select All logic
+document.querySelectorAll("[data-dropdown]").forEach((dropdown) => {
+  const selectAll = dropdown.querySelector(".select-all");
+  const checkboxes = dropdown.querySelectorAll(
+    ".dropdown-content input[type='checkbox']:not(.select-all)"
+  );
+
+  // SELECT ALL → toggles everything
+  selectAll.addEventListener("change", () => {
+    checkboxes.forEach((cb) => (cb.checked = selectAll.checked));
+    handleSelection();
+  });
+
+  // Individual checkbox change
+  checkboxes.forEach((cb) => {
+    cb.addEventListener("change", () => {
+      const allChecked = [...checkboxes].every((c) => c.checked);
+      selectAll.checked = allChecked; // Auto adjust Select All
+      handleSelection();
+    });
+  });
+});
+
 document
   .querySelectorAll("[data-dropdown] input[type='checkbox']")
   .forEach((cb) => cb.addEventListener("change", handleSelection));
@@ -157,6 +190,7 @@ const fp = flatpickr(rangeInput, {
     }
   },
 });
+
 function freezeMonths(instance) {
   return {
     month: instance.currentMonth,
