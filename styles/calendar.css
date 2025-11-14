@@ -35,10 +35,10 @@ body {
   box-shadow: none !important;
 }
 .ec-timeline .ec-sidebar .ec-resource {
-  padding: 0px 20px;
   overflow: hidden;
   /* min-height: 60px;
   max-height: 90px; */
+  padding: 0rem 1.2rem !important;
   min-height: 4.2rem;
   max-height: 4.2rem;
 }
@@ -356,8 +356,10 @@ body {
   padding: 0% !important;
   border: none;
 }
+
 .group-header-inner {
-  padding: 20px;
+  margin: 0 !important;
+  padding: 1rem;
   background-color: #f3f2f1;
   color: #72706f;
   font-size: 16px;
@@ -499,7 +501,6 @@ body {
 
 /* visual group header spacing */
 .group-header {
-  padding: 8px 12px;
   background: #fff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
