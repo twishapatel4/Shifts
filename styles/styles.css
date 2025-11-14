@@ -247,6 +247,11 @@ body {
   transition: none !important;
 }
 
+.flatpickr-day.today {
+  border-color: #569ff7 !important;
+  background-color: #e6e6e6;
+}
+
 .right-event-x,
 .right-header,
 .group-collapse-btn,

@@ -72,6 +72,39 @@ const calendarBtn = document.getElementById("calendar-btn");
 const rangeInput = document.getElementById("calendarRange");
 const btnText = document.getElementById("calendar-btn-text");
 
+function formatDDMMYYYY(date) {
+  const dd = String(date.getDate()).padStart(2, "0");
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const yyyy = date.getFullYear();
+  return `${dd}/${mm}/${yyyy}`;
+}
+const { prevSundayObj, nextSaturdayObj, prevSundayStr, nextSaturdayStr } =
+  getDefaultRange();
+
+function getDefaultRange() {
+  const today = new Date();
+  const prevSundayObj = new Date(today);
+  const day = today.getDay(); // Sunday = 0
+  prevSundayObj.setDate(today.getDate() - day);
+
+  const nextSaturdayObj = new Date(today);
+  nextSaturdayObj.setDate(today.getDate() + (6 - today.getDay()));
+
+  const prevSundayStr = formatDDMMYYYY(prevSundayObj);
+  const nextSaturdayStr = formatDDMMYYYY(nextSaturdayObj);
+
+  return {
+    prevSundayObj,
+    nextSaturdayObj,
+    prevSundayStr,
+    nextSaturdayStr,
+  };
+}
+
+document.getElementById("startDate").textContent = prevSundayStr;
+
+document.getElementById("endDate").textContent = nextSaturdayStr;
+
 const fp = flatpickr(rangeInput, {
   mode: "range",
   dateFormat: "d M Y",
@@ -79,15 +112,28 @@ const fp = flatpickr(rangeInput, {
   showMonths: 2,
   appendTo: document.querySelector(".left-filter"),
   positionElement: calendarBtn,
-  // maxDate: new Date().fp_incr(365),
-  onReady: function (selectedDates, dateStr, instance) {
+
+  // Default full-week selection
+  defaultDate: [prevSundayObj, nextSaturdayObj],
+
+  onReady(selectedDates, dateStr, instance) {
     addCustomButtons(instance);
   },
-  onOpen: function (selectedDates, dateStr, instance) {
+
+  // ⭐ When user clicks ANY date → compute week → select whole week
+  onChange: function (selectedDates, dateStr, instance) {
+    if (selectedDates.length === 1) {
+      const selected = selectedDates[0];
+      setWeek(instance, selected);
+    }
+  },
+
+  onOpen(selectedDates, dateStr, instance) {
     if (!instance.calendarContainer.querySelector(".fp-custom-btns")) {
       addCustomButtons(instance);
     }
   },
+
   onClose: function (selectedDates) {
     if (selectedDates.length === 2) {
       const start = selectedDates[0];
@@ -102,13 +148,55 @@ const fp = flatpickr(rangeInput, {
         "en-US",
         options
       );
-      const event = new CustomEvent("dateRangeChanged", {
-        detail: { start, end },
-      });
-      window.dispatchEvent(event);
+
+      window.dispatchEvent(
+        new CustomEvent("dateRangeChanged", {
+          detail: { start, end },
+        })
+      );
     }
   },
 });
+function freezeMonths(instance) {
+  return {
+    month: instance.currentMonth,
+    year: instance.currentYear,
+  };
+}
+
+function restoreMonths(instance, saved) {
+  instance.currentMonth = saved.month;
+  instance.currentYear = saved.year;
+  instance.redraw();
+}
+
+function getWeekRange(date) {
+  const d = new Date(date);
+
+  // Sunday = 0
+  const start = new Date(d);
+  start.setDate(d.getDate() - d.getDay());
+
+  const end = new Date(d);
+  end.setDate(d.getDate() + (6 - d.getDay()));
+
+  return [start, end];
+}
+
+function setWeek(instance, date) {
+  const saved = freezeMonths(instance);
+  const [start, end] = getWeekRange(date);
+  const originalJump = instance.jumpToDate;
+  instance.jumpToDate = () => {};
+
+  instance.setDate([start, end], true);
+
+  // Restore visible months exactly as before
+  restoreMonths(instance, saved);
+
+  // Restore default jump
+  instance.jumpToDate = originalJump; // true = triggers change event
+}
 
 function addCustomButtons(instance) {
   const calendar = instance.calendarContainer;
