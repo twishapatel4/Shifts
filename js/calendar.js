@@ -226,8 +226,21 @@ function initCalendar(
         if (startMonth === endMonth && startYear === endYear) {
           displayText = `${startMonth} ${startYear}`;
         } else if (startYear === endYear) {
+          const startMonth = startDate.toLocaleString("default", {
+            month: "short",
+          });
+          const endMonth = endDate.toLocaleString("default", {
+            month: "short",
+          });
           displayText = `${startMonth} - ${endMonth} ${startYear}`;
         } else {
+          const startMonth = startDate.toLocaleString("default", {
+            month: "short",
+          });
+          const endMonth = endDate.toLocaleString("default", {
+            month: "short",
+          });
+          console.log(startMonth, endMonth);
           displayText = `${startMonth} ${startYear} - ${endMonth} ${endYear}`;
         }
 
@@ -539,7 +552,10 @@ function renderEventDetails(arg) {
             <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
           </svg>
         </div>
-        <div class="dots">...</div>
+        <div class="dots"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+</svg>
+</div>
         </div>
       </div>
          <div> 
@@ -566,7 +582,10 @@ function renderEventDetails(arg) {
             <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
           </svg>
         </div>
-        <div class="dots">...</div>
+        <div class="dots"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+</svg>
+</div>
         </div>
     </div>
     `,
