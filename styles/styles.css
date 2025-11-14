@@ -254,11 +254,21 @@ body {
 }
 
 .popup-description {
-  margin: none !important;
+  margin: none;
+  padding: 0.4rem;
+  border-bottom: 1px solid #cacac9;
+}
+.popup-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: none;
+  padding: 0.4rem;
 }
 
 .popup-content {
   padding: 0.4rem !important;
+  font-size: 12px;
 }
 
 .right-event-x,
