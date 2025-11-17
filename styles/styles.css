@@ -258,7 +258,7 @@ body {
   padding: 0.4rem;
   border-bottom: 1px solid #cacac9;
 }
-.popup-actions {
+.popup-action {
   display: flex;
   align-items: center;
   gap: 1rem;
