@@ -1,7 +1,3 @@
-/* =============================
-   DROPDOWN HANDLING
-============================= */
-
 document.addEventListener("click", function (e) {
   const isDropdownBtn = e.target.closest("[data-dropdown] .dropdown-btn");
 
@@ -55,10 +51,6 @@ document
   .forEach((content) =>
     content.addEventListener("click", (e) => e.stopPropagation())
   );
-
-/* =============================
-   SELECTION HANDLER
-============================= */
 
 function handleSelection() {
   const checkboxes = document.querySelectorAll(
@@ -282,4 +274,14 @@ Todaybtn.addEventListener("click", (e) => {
   fp.setDate([start, end], true); // update selection
   fp.jumpToDate(today); // move calendar view
   fp.open();
+});
+
+calPrev.addEventListener("click", (e) => {
+  e.stopPropagation();
+  // calendar.prev();
+});
+
+calNext.addEventListener("click", (e) => {
+  e.stopPropagation();
+  // calendar.next();
 });
