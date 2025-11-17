@@ -1,109 +1,95 @@
+/* =============================
+   DROPDOWN HANDLING
+============================= */
+
 document.addEventListener("click", function (e) {
   const isDropdownBtn = e.target.closest("[data-dropdown] .dropdown-btn");
 
   if (isDropdownBtn) {
     const dropdown = isDropdownBtn.closest("[data-dropdown]");
 
-    // Close all other dropdowns first
     document.querySelectorAll("[data-dropdown].show").forEach((drop) => {
       if (drop !== dropdown) drop.classList.remove("show");
     });
 
-    // Toggle the clicked dropdown
     dropdown.classList.toggle("show");
-
     e.stopPropagation();
     return;
   }
 
-  // If clicked outside → close all dropdowns
   document
     .querySelectorAll("[data-dropdown].show")
     .forEach((drop) => drop.classList.remove("show"));
 });
 
-document.querySelectorAll("[data-dropdown]").forEach((drop) => {
-  const allCheckbox = drop.querySelector(".select-all");
-  const checkboxes = drop.querySelectorAll(
-    ".dropdown-content input[type='checkbox']:not(.select-all)"
-  );
-
-  // Mark all as selected on page load
-  allCheckbox.checked = true;
-  checkboxes.forEach((cb) => (cb.checked = true));
-});
-// Handle Select All logic
+// Initialize all dropdown checkboxes
 document.querySelectorAll("[data-dropdown]").forEach((dropdown) => {
   const selectAll = dropdown.querySelector(".select-all");
   const checkboxes = dropdown.querySelectorAll(
     ".dropdown-content input[type='checkbox']:not(.select-all)"
   );
 
-  // SELECT ALL → toggles everything
+  // Mark all selected on load
+  selectAll.checked = true;
+  checkboxes.forEach((cb) => (cb.checked = true));
+
+  // SELECT ALL
   selectAll.addEventListener("change", () => {
     checkboxes.forEach((cb) => (cb.checked = selectAll.checked));
     handleSelection();
   });
 
-  // Individual checkbox change
+  // Individual checkboxes
   checkboxes.forEach((cb) => {
     cb.addEventListener("change", () => {
       const allChecked = [...checkboxes].every((c) => c.checked);
-      selectAll.checked = allChecked; // Auto adjust Select All
+      selectAll.checked = allChecked;
       handleSelection();
     });
   });
 });
 
+// Prevent dropdown from closing when clicking inside
 document
-  .querySelectorAll("[data-dropdown] input[type='checkbox']")
-  .forEach((cb) => cb.addEventListener("change", handleSelection));
+  .querySelectorAll("[data-dropdown] .dropdown-content")
+  .forEach((content) =>
+    content.addEventListener("click", (e) => e.stopPropagation())
+  );
+
+/* =============================
+   SELECTION HANDLER
+============================= */
+
 function handleSelection() {
-  // Get all checked values
-  // console.log("handle Select");
   const checkboxes = document.querySelectorAll(
     "[data-dropdown] .dropdown-content input[type='checkbox']"
   );
 
-  const selected = Array.from(checkboxes)
+  const selected = [...checkboxes]
     .filter((cb) => cb.checked)
     .map((cb) => cb.value);
 
-  document.getElementById("cal1").style.display = "block";
-  document.getElementById("cal2").style.display = "block";
-  document.getElementById("cal3").style.display = "block";
+  const c1 = document.getElementById("cal1");
+  const c2 = document.getElementById("cal2");
+  const c3 = document.getElementById("cal3");
 
-  // Hide based on selection
-  if (!selected.includes("Clinic Service Officer")) {
-    document.getElementById("cal1").style.display = "none";
-  }
+  c1.style.display = selected.includes("Clinic Service Officer")
+    ? "block"
+    : "none";
+  c2.style.display = selected.includes("Audiometrist") ? "block" : "none";
+  c3.style.display = selected.includes("Audiologist") ? "block" : "none";
 
-  if (!selected.includes("Audiometrist")) {
-    document.getElementById("cal2").style.display = "none";
-  }
-
-  if (!selected.includes("Audiologist")) {
-    document.getElementById("cal3").style.display = "none";
-  }
+  // If nothing selected → show all
   if (selected.length === 0) {
-    document.getElementById("cal1").style.display = "block";
-    document.getElementById("cal2").style.display = "block";
-    document.getElementById("cal3").style.display = "block";
+    c1.style.display = "block";
+    c2.style.display = "block";
+    c3.style.display = "block";
   }
 }
 
-// Prevent closing when clicking inside dropdown content
-document
-  .querySelectorAll("[data-dropdown] .dropdown-content")
-  .forEach((content) => {
-    content.addEventListener("click", (e) => {
-      e.stopPropagation();
-    });
-  });
-
-const calendarBtn = document.getElementById("calendar-btn");
-const rangeInput = document.getElementById("calendarRange");
-const btnText = document.getElementById("calendar-btn-text");
+/* =============================
+   DATE UTILITIES
+============================= */
 
 function formatDDMMYYYY(date) {
   const dd = String(date.getDate()).padStart(2, "0");
@@ -111,85 +97,83 @@ function formatDDMMYYYY(date) {
   const yyyy = date.getFullYear();
   return `${dd}/${mm}/${yyyy}`;
 }
-const { prevSundayObj, nextSaturdayObj, prevSundayStr, nextSaturdayStr } =
-  getDefaultRange();
 
 function getDefaultRange() {
   const today = new Date();
-  const prevSundayObj = new Date(today);
-  const day = today.getDay(); // Sunday = 0
-  prevSundayObj.setDate(today.getDate() - day);
+  const prevSunday = new Date(today);
+  prevSunday.setDate(today.getDate() - today.getDay());
 
-  const nextSaturdayObj = new Date(today);
-  nextSaturdayObj.setDate(today.getDate() + (6 - today.getDay()));
-
-  const prevSundayStr = formatDDMMYYYY(prevSundayObj);
-  const nextSaturdayStr = formatDDMMYYYY(nextSaturdayObj);
+  const nextSaturday = new Date(today);
+  nextSaturday.setDate(today.getDate() + (6 - today.getDay()));
 
   return {
-    prevSundayObj,
-    nextSaturdayObj,
-    prevSundayStr,
-    nextSaturdayStr,
+    prevSundayObj: prevSunday,
+    nextSaturdayObj: nextSaturday,
+    prevSundayStr: formatDDMMYYYY(prevSunday),
+    nextSaturdayStr: formatDDMMYYYY(nextSaturday),
   };
 }
 
-document.getElementById("startDate").textContent = prevSundayStr;
+const { prevSundayObj, nextSaturdayObj, prevSundayStr, nextSaturdayStr } =
+  getDefaultRange();
 
+document.getElementById("startDate").textContent = prevSundayStr;
 document.getElementById("endDate").textContent = nextSaturdayStr;
+
+/* =============================
+   FLATPICKR SETUP
+============================= */
+
+const calendarBtn = document.getElementById("calendar-btn");
+const rangeInput = document.getElementById("calendarRange");
 
 const fp = flatpickr(rangeInput, {
   mode: "range",
   dateFormat: "d M Y",
-  numberofMonths: 2,
+  numberOfMonths: 2,
   showMonths: 2,
   appendTo: document.querySelector(".left-filter"),
   positionElement: calendarBtn,
-
-  // Default full-week selection
   defaultDate: [prevSundayObj, nextSaturdayObj],
 
-  onReady(selectedDates, dateStr, instance) {
+  onReady(_, __, instance) {
     addCustomButtons(instance);
   },
 
-  // ⭐ When user clicks ANY date → compute week → select whole week
-  onChange: function (selectedDates, dateStr, instance) {
+  onChange(selectedDates, _, instance) {
     if (selectedDates.length === 1) {
-      const selected = selectedDates[0];
-      setWeek(instance, selected);
+      setWeek(instance, selectedDates[0]);
     }
   },
 
-  onOpen(selectedDates, dateStr, instance) {
+  onOpen(_, __, instance) {
     if (!instance.calendarContainer.querySelector(".fp-custom-btns")) {
       addCustomButtons(instance);
     }
   },
 
-  onClose: function (selectedDates) {
-    if (selectedDates.length === 2) {
-      const start = selectedDates[0];
-      const end = selectedDates[1];
+  onClose(selectedDates) {
+    if (selectedDates.length !== 2) return;
 
-      const options = { day: "2-digit", month: "short", year: "numeric" };
+    const options = { day: "2-digit", month: "short", year: "numeric" };
 
-      document.getElementById("startDate").textContent =
-        start.toLocaleDateString("en-US", options);
+    document.getElementById("startDate").textContent =
+      selectedDates[0].toLocaleDateString("en-US", options);
 
-      document.getElementById("endDate").textContent = end.toLocaleDateString(
-        "en-US",
-        options
-      );
+    document.getElementById("endDate").textContent =
+      selectedDates[1].toLocaleDateString("en-US", options);
 
-      window.dispatchEvent(
-        new CustomEvent("dateRangeChanged", {
-          detail: { start, end },
-        })
-      );
-    }
+    window.dispatchEvent(
+      new CustomEvent("dateRangeChanged", {
+        detail: { start: selectedDates[0], end: selectedDates[1] },
+      })
+    );
   },
 });
+
+/* =============================
+   WEEK SELECTION LOGIC
+============================= */
 
 function freezeMonths(instance) {
   return {
@@ -206,8 +190,6 @@ function restoreMonths(instance, saved) {
 
 function getWeekRange(date) {
   const d = new Date(date);
-
-  // Sunday = 0
   const start = new Date(d);
   start.setDate(d.getDate() - d.getDay());
 
@@ -218,78 +200,58 @@ function getWeekRange(date) {
 }
 
 function setWeek(instance, date) {
-  const saved = freezeMonths(instance);
+  const savedMonths = freezeMonths(instance);
   const [start, end] = getWeekRange(date);
+
   const originalJump = instance.jumpToDate;
-  instance.jumpToDate = () => {};
+  instance.jumpToDate = () => {}; // disable auto-jumps
 
   instance.setDate([start, end], true);
 
-  // Restore visible months exactly as before
-  restoreMonths(instance, saved);
-
-  // Restore default jump
-  instance.jumpToDate = originalJump; // true = triggers change event
+  restoreMonths(instance, savedMonths);
+  instance.jumpToDate = originalJump;
 }
+
+/* =============================
+   CUSTOM FOOTER BUTTONS
+============================= */
 
 function addCustomButtons(instance) {
   const calendar = instance.calendarContainer;
 
-  const btnContainer = document.createElement("div");
-  btnContainer.className = "fp-custom-btns";
-  btnContainer.style.cssText = `
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    padding: 8px 12px;
-    border-top: 1px solid #ddd;
+  const container = document.createElement("div");
+  container.className = "fp-custom-btns";
+  container.style.cssText = `
+    display:flex; justify-content:flex-end; gap:10px;
+    padding:8px 12px; border-top:1px solid #ddd;
   `;
 
-  // Clear Button
-  const clearBtn = document.createElement("button");
-  clearBtn.textContent = "Cancel";
-  clearBtn.style.cssText = `
-    background: #c0c0c0;
-    border:none;
-    font-size:14px;
-    font-weight:700;
-    color:#1d1d1d;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
+  const cancel = document.createElement("button");
+  cancel.textContent = "Cancel";
+  cancel.style.cssText = `
+    background:#c0c0c0; font-weight:700;
+    padding:8px 12px; border-radius:4px; cursor:pointer;
   `;
-  clearBtn.onclick = () => {
+  cancel.onclick = () => instance.close();
+
+  const apply = document.createElement("button");
+  apply.textContent = "Apply";
+  apply.style.cssText = `
+    background:#007bff; color:white;
+    padding:8px 12px; border-radius:4px; cursor:pointer;
+  `;
+  apply.onclick = () => {
+    const sd = instance.selectedDates;
+    if (sd.length === 2) updateButtonText(sd[0], sd[1]);
     instance.close();
   };
 
-  const applyBtn = document.createElement("button");
-  applyBtn.textContent = "Apply";
-  applyBtn.style.cssText = `
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 5px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-  `;
-  applyBtn.onclick = () => {
-    const selectedDates = instance.selectedDates;
-    if (selectedDates.length === 2) {
-      updateButtonText(selectedDates[0], selectedDates[1]);
-    }
-    instance.close();
-    // You can also trigger your logic here, like updating button text
-  };
-
-  btnContainer.appendChild(clearBtn);
-  btnContainer.appendChild(applyBtn);
-
-  calendar.appendChild(btnContainer);
+  container.append(cancel, apply);
+  calendar.appendChild(container);
 }
 
 function updateButtonText(start, end) {
   const options = { day: "2-digit", month: "short", year: "numeric" };
-
   document.getElementById("startDate").textContent = start.toLocaleDateString(
     "en-US",
     options
@@ -300,17 +262,24 @@ function updateButtonText(start, end) {
   );
 }
 
+/* =============================
+   BUTTON EVENTS
+============================= */
+
 calendarBtn.addEventListener("click", (e) => {
   e.stopPropagation();
   fp.open();
 });
 
-calPrev.addEventListener("click", (e) => {
-  e.stopPropagation();
-  // calendar.prev();
-});
+const Todaybtn = document.getElementById("today-btn");
 
-calNext.addEventListener("click", (e) => {
+Todaybtn.addEventListener("click", (e) => {
   e.stopPropagation();
-  // calendar.next();
+
+  const today = new Date();
+  const [start, end] = getWeekRange(today);
+
+  fp.setDate([start, end], true); // update selection
+  fp.jumpToDate(today); // move calendar view
+  fp.open();
 });
