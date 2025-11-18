@@ -254,6 +254,31 @@ function initCalendar(
       });
     },
     datesSet(info) {
+      const start = new Date(info.start);
+      const end = new Date(info.end);
+      end.setDate(end.getDate() - 1); // fix: FullCalendar end is exclusive
+
+      // Format: "Nov 22 2025"
+      function formatMMMDDYYYY(d) {
+        const months = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+        return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+      }
+
+      document.getElementById("startDate").textContent = formatMMMDDYYYY(start);
+      document.getElementById("endDate").textContent = formatMMMDDYYYY(end);
       const calendarEl = document.getElementById(containerId);
       const titleMain = calendarEl.querySelector(
         ".custom-sidebar-title .sidebar-title-main"

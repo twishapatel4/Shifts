@@ -83,13 +83,6 @@ function handleSelection() {
    DATE UTILITIES
 ============================= */
 
-function formatDDMMYYYY(date) {
-  const dd = String(date.getDate()).padStart(2, "0");
-  const mm = String(date.getMonth() + 1).padStart(2, "0");
-  const yyyy = date.getFullYear();
-  return `${dd}/${mm}/${yyyy}`;
-}
-
 function getDefaultRange() {
   const today = new Date();
   const prevSunday = new Date(today);
@@ -101,16 +94,10 @@ function getDefaultRange() {
   return {
     prevSundayObj: prevSunday,
     nextSaturdayObj: nextSaturday,
-    prevSundayStr: formatDDMMYYYY(prevSunday),
-    nextSaturdayStr: formatDDMMYYYY(nextSaturday),
   };
 }
 
-const { prevSundayObj, nextSaturdayObj, prevSundayStr, nextSaturdayStr } =
-  getDefaultRange();
-
-document.getElementById("startDate").textContent = prevSundayStr;
-document.getElementById("endDate").textContent = nextSaturdayStr;
+const { prevSundayObj, nextSaturdayObj } = getDefaultRange();
 
 /* =============================
    FLATPICKR SETUP
@@ -272,8 +259,14 @@ Todaybtn.addEventListener("click", (e) => {
   const [start, end] = getWeekRange(today);
 
   fp.setDate([start, end], true); // update selection
-  fp.jumpToDate(today); // move calendar view
-  fp.open();
+  // fp.jumpToDate(today); // move calendar view
+  // fp.open();
+  updateButtonText(start, end);
+  window.dispatchEvent(
+    new CustomEvent("dateRangeChanged", {
+      detail: { start: start, end: end },
+    })
+  );
 });
 
 calPrev.addEventListener("click", (e) => {
