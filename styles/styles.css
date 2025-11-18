@@ -144,6 +144,20 @@ body {
   color: #000000;
 }
 
+/* Ensure dropdowns-row defaults to a horizontal layout on larger screens
+   so the three dropdowns appear side-by-side for widths above ~1248px. */
+.dropdowns-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  width: auto;
+}
+
+.dropdowns-row .dropdown {
+  width: auto;
+  flex: 0 0 auto;
+}
+
 .dropdown.show .dropdown-content {
   display: block;
 }
@@ -461,10 +475,21 @@ h3 svg {
   }
 
   /* Dropdowns: allow three side-by-side if space permits */
-  .left-filter .dropdown {
+  /* Ensure the intermediate .dropdowns-row lays out children horizontally
+     so the three dropdowns can appear side-by-side (even after wrapping them
+     in a .dropdowns-row in HTML). */
+  .left-filter .dropdowns-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    width: 100%;
+    order: 2;
+    box-sizing: border-box;
+  }
+
+  .left-filter .dropdowns-row .dropdown {
     min-width: 8rem;
     flex: 0 1 calc(33.333% - 0.5rem);
-    order: 2;
     box-sizing: border-box;
   }
 
@@ -513,5 +538,78 @@ h3 svg {
   .filter-btn svg,
   .view-btn svg {
     display: none !important;
+  }
+}
+
+/* Tablet tweak: ensure calendar stays on first row and
+   the three dropdowns + Filter/View icons share a second row */
+@media (max-width: 860px) {
+  .filter-container {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-auto-rows: auto;
+    gap: 0.5rem;
+    align-items: start;
+  }
+
+  .left-filter {
+    grid-column: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0;
+  }
+
+  /* Make calendar button occupy the full first row */
+  .left-filter .calendar-btn {
+    width: 100%;
+    order: 0;
+    padding: 0.35rem 0.5rem;
+  }
+
+  /* Place dropdowns in the left column, second row */
+  .left-filter .dropdowns-row {
+    display: flex;
+    gap: 0.35rem;
+    align-items: center;
+    flex-wrap: nowrap;
+    width: 100%;
+  }
+
+  .left-filter .dropdowns-row .dropdown {
+    min-width: 5.5rem;
+    flex: 1 1 auto;
+    padding: 0.28rem 0.45rem;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+  }
+
+  /* Right filter occupies the right column and aligns with dropdowns */
+  .right-filter {
+    grid-column: 2;
+    align-self: start;
+    display: flex;
+    gap: 0.35rem;
+    padding: 0.25rem 0.35rem;
+    margin: 0;
+  }
+
+  /* Make filter/view compact (icon-only) to save horizontal space */
+  .filter-btn,
+  .view-btn {
+    width: 36px !important;
+    height: 36px !important;
+    padding: 0.15rem !important;
+    font-size: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .filter-btn img,
+  .view-btn img {
+    width: 16px !important;
+    height: 16px !important;
+    display: block !important;
   }
 }
