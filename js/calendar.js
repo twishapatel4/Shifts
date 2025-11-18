@@ -8,6 +8,8 @@ let cal2Collapsed = false;
 let cal3Instance;
 let cal3Resources;
 let cal3Collapsed = false;
+// currently shown popup target (used by repositionPopup)
+let activePopupEvent = null;
 async function loadShifts() {
   const res = await fetch("./js/data/shifts.json");
   const data = await res.json();
@@ -349,8 +351,13 @@ window.addEventListener("scroll", repositionPopup, true);
 window.addEventListener("resize", repositionPopup);
 
 function repositionPopup() {
-  const popup = document.getElementById("event-popup");
-  if (!popup || popup.style.display !== "block" || !activePopupEvent) return;
+  // Find the first visible popup (event / resource / empty)
+  const popupIds = ["event-popup", "resource-shift-popup", "empty-popup"];
+  const popups = popupIds
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
+  const popup = popups.find((p) => p.style.display === "block");
+  if (!popup || !activePopupEvent) return;
 
   const rect = activePopupEvent.getBoundingClientRect();
 
@@ -580,7 +587,7 @@ function renderEventDetails(arg) {
       html: `
        <div class="events-red" data-resource-id="${resourceId}">
          <div class="left-event">
-           FT-North Sydney Cl...
+           FT-North Sydney
            <div class="icons">
              <img src="./Assets/icons/CupRed.svg" height="20" width="20" />
              <img src="./Assets/icons/TimeRed.svg" height="20" width="20" />
@@ -700,17 +707,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // 2. EMPTY CELL?
       if (!eventBox) {
-        // const tinyBox = dot.closest(".empty-event");
-        eventBox = dot.closest(".ec-empty-cell");
+        // Prefer the inner `.empty-event` element for correct positioning
+        const tinyBox =
+          dot.closest(".empty-event") || dot.closest(".ec-empty-cell");
+        eventBox = tinyBox;
         isEmptyCell = true;
-        console.log(isEmptyCell);
-        console.log(dot.closest(".ec-empty-cell"));
       }
 
       console.log("eventBox:", eventBox);
 
       if (!eventBox) return;
       activeEvent = eventBox;
+      // keep repositionPopup in sync
+      activePopupEvent = eventBox;
 
       let resId = null;
       if (!isEmptyCell) {
@@ -739,7 +748,9 @@ document.addEventListener("DOMContentLoaded", () => {
       popupToShow.style.display = "block";
       popupToShow.style.width = rect.width + "px";
 
-      popupToShow.style.left = rect.left + window.scrollX + "px";
+      // compute numeric left so we can adjust for viewport overflow
+      let left = rect.left + window.scrollX;
+      popupToShow.style.left = left + "px";
       popupToShow.style.top = rect.bottom + window.scrollY + 4 + "px";
 
       console.log(popupToShow.style);
@@ -749,7 +760,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const popupRect = popupToShow.getBoundingClientRect();
 
       if (popupRect.right > vpWidth - 8) {
-        left -= popupRect.right - (vpWidth - 8);
+        left = left - (popupRect.right - (vpWidth - 8));
         popupToShow.style.left = Math.max(8, left) + "px";
       }
 
@@ -772,6 +783,7 @@ document.addEventListener("DOMContentLoaded", () => {
     eventPopup.style.display = "none";
     resourcePopup.style.display = "none";
     activeEvent = null;
+    activePopupEvent = null;
   });
 
   // HOVER HANDLING
@@ -792,6 +804,7 @@ document.addEventListener("DOMContentLoaded", () => {
         eventPopup.style.display = "none";
         resourcePopup.style.display = "none";
         activeEvent = null;
+        activePopupEvent = null;
       }
     }
   });
@@ -800,6 +813,7 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("click", function () {
   const popup = document.getElementById("event-popup");
   popup.style.display = "none";
+  activePopupEvent = null;
 });
 
 /* ---------- Sync utilities for 4 stacked calendars ---------- */

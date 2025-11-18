@@ -376,3 +376,17 @@ h3 svg {
 h3 svg {
   transition: 0.2s ease;
 }
+
+/* Responsive: keep filter controls on one line under 1400px */
+@media (max-width: 1400px) {
+  .right-filter {
+    padding: 8px 32px;
+  }
+  .dropdown-btn {
+    width: 150px;
+    padding: 3px 6px !important;
+    gap: 2px;
+  }
+}
+@media (max-width: 1224px) {
+}
