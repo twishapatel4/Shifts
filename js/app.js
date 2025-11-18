@@ -285,3 +285,53 @@ calNext.addEventListener("click", (e) => {
   e.stopPropagation();
   // calendar.next();
 });
+
+const FilterBtn = document.getElementById("filter-btn");
+filterDropdown = document.getElementById("filter-dropdown");
+FilterBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  filterDropdown.classList.toggle("show");
+});
+
+const viewBtn = document.getElementById("view-btn");
+viewDropdown = document.getElementById("view-dropdown");
+viewBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  viewDropdown.classList.toggle("show");
+});
+
+document.addEventListener("click", (e) => {
+  if (!filterDropdown.contains(e.target) && !FilterBtn.contains(e.target)) {
+    filterDropdown.classList.remove("show");
+  }
+  if (!viewDropdown.contains(e.target) && !viewBtn.contains(e.target)) {
+    viewDropdown.classList.remove("show");
+  }
+});
+
+document.addEventListener("click", (e) => {
+  const item = e.target.closest(".dropdown-item");
+  if (!item) return;
+
+  // toggle selection
+  item.classList.toggle("selected");
+});
+
+document.getElementById("Shifts").addEventListener("click", (e) => {
+  const section = e.target.closest(".section1");
+  section.classList.toggle("collapsed");
+});
+
+document.getElementById("Groups").addEventListener("click", (e) => {
+  const section = e.target.closest(".section2");
+  section.classList.toggle("collapsed");
+});
+document.getElementById("QuickAccess").addEventListener("click", (e) => {
+  const section = e.target.closest(".section1");
+  section.classList.toggle("collapsed");
+});
+
+document.getElementById("Show").addEventListener("click", (e) => {
+  const section = e.target.closest(".section2");
+  section.classList.toggle("collapsed");
+});

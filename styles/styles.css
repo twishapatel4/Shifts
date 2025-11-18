@@ -74,12 +74,13 @@ body {
   align-items: center;
   justify-content: end;
   gap: 12px;
-  padding: 8px 12px;
+  padding: 8px 48px;
   border-radius: 8px;
   margin-bottom: 12px;
   flex-wrap: wrap;
   flex: 1 1 auto;
 }
+
 .right-filter div {
   display: flex;
   align-items: center;
@@ -280,4 +281,97 @@ body {
 .calendar-btn img,
 .calendar-btn svg {
   cursor: pointer;
+}
+
+.filter-wrapper {
+  position: relative;
+  display: inline-block;
+  padding: 0.6rem;
+  align-items: start;
+}
+.view-wrapper {
+  position: relative;
+  display: inline-block;
+  padding: 0.6rem;
+  align-items: start;
+}
+
+#filter-dropdown,
+#view-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fff;
+  min-width: 8rem;
+  max-width: 10rem;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  z-index: 10;
+  align-items: center;
+  padding: 5%;
+}
+
+#filter-dropdown.show,
+#view-dropdown.show {
+  display: block;
+}
+
+.section1,
+.section2 {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: start !important;
+}
+.grouped-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: start !important;
+}
+.section1 h3,
+.section2 h3 {
+  font-weight: 600;
+  margin: 1%;
+  padding: 1%;
+  font-size: 14px;
+}
+h3 svg {
+  transform: rotate(-180deg);
+}
+.section1 p,
+.section2 p {
+  margin: 0%;
+  padding: 5% 10%;
+  font-size: 14px;
+}
+
+.dropdown-item {
+  padding: 4px 6px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.dropdown-item:hover {
+  background: #f2f2f2;
+}
+
+.dropdown-item.selected {
+  background: #e6f0ff;
+  border-left: 3px solid #1a73e8;
+}
+
+.collapsed .grouped-content {
+  display: none;
+}
+
+.collapsed h3 svg {
+  transform: rotate(0deg);
+  transition: 0.2s ease;
+}
+
+h3 svg {
+  transition: 0.2s ease;
 }

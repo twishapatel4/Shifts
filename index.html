@@ -269,8 +269,9 @@
           </div>
         </div>
       </div>
-      <div class="right-filter">
-        <div>
+      <div class="right-filter ">
+        <div class="filter-wrapper">    
+          <div class="filter-btn" id="filter-btn">
           <img src="./Assets/icons/filter.svg" height="20" />
           Filter
           <svg
@@ -290,28 +291,123 @@
               d="m19.5 8.25-7.5 7.5-7.5-7.5"
             />
           </svg>
+          </div>
+          <div class="filter-dropdown" id="filter-dropdown">
+              <div class="section1">
+                <h3><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  width="14"
+                  height="14"
+                  id="Shifts"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                  />
+                </svg> Shifts:</h3>  <div class="grouped-content">
+                <p class="dropdown-item">All active</p>
+                <p class="dropdown-item">Time off</p></div>
+              </div>
+              <hr>
+              <div class="section2">
+                <h3><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  width="14"
+                  height="14"
+                  id="Groups"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                  />
+                </svg> Groups:</h3>
+                <div class="grouped-content">
+                <p class="dropdown-item">Audiologist</p>
+                <p class="dropdown-item">Audiometrist</p>
+                <p class="dropdown-item">Client Service Officer</p>
+              </div>
+              </div>
+          </div>
         </div>
-        <div>
-          <img src="./Assets/icons/view.svg" height="20" />
-          View
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            width="18"
-            height="18"
-            class="view-icon"
-            id="view-icon"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m19.5 8.25-7.5 7.5-7.5-7.5"
-            />
-          </svg>
+        <div class="view-wrapper">
+           <div class="view-btn" id="view-btn">
+                <img src="./Assets/icons/view.svg" height="20" />
+                View
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  width="14"
+                  height="14"
+                  class="view-icon"
+                  id="view-icon"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                  />
+                </svg>
+          </div>
+           <div class="view-dropdown" id="view-dropdown">
+              <div class="section1">
+                <h3><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  width="14"
+                  height="14"
+                  id="QuickAccess"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                  />
+                </svg> Quick Access:</h3><div class="grouped-content">
+                <p class="dropdown-item"> Your Shifts</p>
+                <p class="dropdown-item">Team Shifts</p></div>
+              </div>
+              <hr>
+              <div class="section2">
+                <h3><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  width="14"
+                  height="14"
+                  id="Show"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                  />
+                </svg> Show:</h3><div class="grouped-content">
+                <p class="dropdown-item">Open Shifts</p>
+                <p class="dropdown-item">Profile Pictures</p></div>
+              </div>
+          </div>
         </div>
+      </div>
+
+        
       </div>
     </div>
     <div class="calendar-container">
