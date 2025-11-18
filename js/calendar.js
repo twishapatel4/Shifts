@@ -701,8 +701,10 @@ document.addEventListener("DOMContentLoaded", () => {
       // 2. EMPTY CELL?
       if (!eventBox) {
         // const tinyBox = dot.closest(".empty-event");
-        eventBox = dot.closest(".empty-event");
+        eventBox = dot.closest(".ec-empty-cell");
         isEmptyCell = true;
+        console.log(isEmptyCell);
+        console.log(dot.closest(".ec-empty-cell"));
       }
 
       console.log("eventBox:", eventBox);
@@ -734,13 +736,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const rect = eventBox.getBoundingClientRect();
       console.log(rect);
-
       popupToShow.style.display = "block";
       popupToShow.style.width = rect.width + "px";
 
       popupToShow.style.left = rect.left + window.scrollX + "px";
       popupToShow.style.top = rect.bottom + window.scrollY + 4 + "px";
 
+      console.log(popupToShow.style);
       // Prevent leaving screen
       const vpWidth = document.documentElement.clientWidth;
       const vpHeight = document.documentElement.clientHeight;

@@ -283,6 +283,7 @@ const FilterBtn = document.getElementById("filter-btn");
 filterDropdown = document.getElementById("filter-dropdown");
 FilterBtn.addEventListener("click", (e) => {
   e.stopPropagation();
+  viewDropdown.classList.remove("show");
   filterDropdown.classList.toggle("show");
 });
 
@@ -290,6 +291,7 @@ const viewBtn = document.getElementById("view-btn");
 viewDropdown = document.getElementById("view-dropdown");
 viewBtn.addEventListener("click", (e) => {
   e.stopPropagation();
+  filterDropdown.classList.remove("show");
   viewDropdown.classList.toggle("show");
 });
 

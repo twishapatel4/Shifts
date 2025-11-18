@@ -76,7 +76,7 @@
         <div id="calendar-btn" class="calendar-btn">
           <img src="./Assets/icons/calendar.svg" height="24" width="24" />
 
-          <span id="startDate" class="startDate">Today</span>
+           <button id="today-btn" class="today-btn">Today</button>
 
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -113,10 +113,10 @@
               d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
             />
           </svg>
+          <div id="startDate" class="startDate">Today</div>-
+          <div id="endDate" class="endDate">11/12/2025</div>
 
-          <span id="endDate" class="endDate">11/12/2025</span>
-
-          <svg
+          <!-- <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -130,11 +130,11 @@
               stroke-linejoin="round"
               d="m19.5 8.25-7.5 7.5-7.5-7.5"
             />
-          </svg>
+          </svg> -->
 
           <input type="text" id="calendarRange" style="display: none" />
         </div>
-        <button id="today-btn" class="today-btn">Today</button>
+       
         <!-- id="territoryDropdown" onclick="toggleDropdown()" -->
         <div class="dropdown" data-dropdown>
           <button class="dropdown-btn">
@@ -419,7 +419,8 @@
       <!-- <button id="cal3-toggle">Audiologist</button> -->
       <div id="cal3"></div>
     </div>
-    <div id="event-popup" class="event-popup" style="display: none">
+
+    <div id="event-popup" class="event-popup" >
       <div class="popup-content">
         <!-- <span id="popup-close" class="popup-close">&times;</span> -->
         <div id="popup-description" class="popup-description">
@@ -528,7 +529,6 @@
     <div
       id="resource-shift-popup"
       class="resource-shift-popup"
-      style="display: none"
     >
       <div class="popup-content">
         <!-- <span id="popup-close" class="popup-close">&times;</span> -->
@@ -618,9 +618,9 @@
         </div>
       </div>
     </div>
-    <div id="empty-popup" class="empty-popup" style="display: none">
+
+    <div id="empty-popup" class="empty-popup">
       <div class="popup-content">
-        <!-- <span id="popup-close" class="popup-close">&times;</span> -->
         <div id="popup-description" class="popup-description">
           <div class="icon-name">
             <svg
@@ -641,7 +641,6 @@
             </svg>
             <p>Empty popup</p>
           </div>
-        </div>
         </div>
       </div>
     </div>
