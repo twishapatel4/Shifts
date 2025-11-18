@@ -295,6 +295,76 @@ viewBtn.addEventListener("click", (e) => {
   viewDropdown.classList.toggle("show");
 });
 
+// Ensure dropdowns fit inside the viewport when opened
+function fitDropdownIntoView(dropdown, anchor) {
+  if (!dropdown) return;
+
+  // reset any inline positioning first
+  dropdown.style.left = '';
+  dropdown.style.right = '';
+  dropdown.style.top = '';
+  dropdown.style.bottom = '';
+
+  const rect = dropdown.getBoundingClientRect();
+  const anchorRect = anchor ? anchor.getBoundingClientRect() : null;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+
+  // Horizontal overflow: prefer anchoring to right edge of anchor
+  // Horizontal overflow: prefer anchoring to right edge of anchor
+  if (rect.right > vw) {
+    // Align dropdown's right edge with anchor's right edge
+    dropdown.style.left = 'auto';
+    dropdown.style.right = '0px';
+  } else {
+    // default: align left edge
+    dropdown.style.left = '0px';
+    dropdown.style.right = '';
+  }
+
+  // Vertical overflow: if dropdown extends beyond viewport bottom, show above anchor
+  if (rect.bottom > vh && anchorRect) {
+    dropdown.style.top = 'auto';
+    dropdown.style.bottom = '100%';
+  } else {
+    dropdown.style.top = '';
+    dropdown.style.bottom = '';
+  }
+}
+
+// Call fit when filter/view toggle and when any left dropdown toggles
+FilterBtn.addEventListener('click', (e) => {
+  setTimeout(() => fitDropdownIntoView(filterDropdown, FilterBtn), 0);
+});
+viewBtn.addEventListener('click', (e) => {
+  setTimeout(() => fitDropdownIntoView(viewDropdown, viewBtn), 0);
+});
+
+// Also handle left dropdowns (territory/site/category)
+document.querySelectorAll('[data-dropdown]').forEach((dd) => {
+  const btn = dd.querySelector('.dropdown-btn');
+  const content = dd.querySelector('.dropdown-content');
+  if (!btn || !content) return;
+  btn.addEventListener('click', () => {
+    setTimeout(() => fitDropdownIntoView(content, dd), 0);
+  });
+});
+
+// Reposition open dropdowns on resize/scroll
+window.addEventListener('resize', () => {
+  document.querySelectorAll('.filter-dropdown.show, .view-dropdown.show, [data-dropdown].show .dropdown-content').forEach((d) => {
+    // determine anchor: parent .filter-wrapper/.view-wrapper or closest [data-dropdown]
+    const parent = d.closest('.filter-wrapper') || d.closest('.view-wrapper') || d.closest('[data-dropdown]');
+    fitDropdownIntoView(d, parent);
+  });
+});
+window.addEventListener('scroll', () => {
+  document.querySelectorAll('.filter-dropdown.show, .view-dropdown.show, [data-dropdown].show .dropdown-content').forEach((d) => {
+    const parent = d.closest('.filter-wrapper') || d.closest('.view-wrapper') || d.closest('[data-dropdown]');
+    fitDropdownIntoView(d, parent);
+  });
+});
+
 document.addEventListener("click", (e) => {
   if (!filterDropdown.contains(e.target) && !FilterBtn.contains(e.target)) {
     filterDropdown.classList.remove("show");
