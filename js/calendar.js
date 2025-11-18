@@ -157,11 +157,62 @@ function initCalendar(
     events: allEvents,
     resourceLabelContent: renderResources,
     eventContent: renderEventDetails,
-    viewDidMount() {
+    viewDidMount(info) {
       // quick debug - inspect resources and events passed to each calendar
 
       const calendarEl = document.getElementById(containerId);
-
+      setTimeout(() => {
+        document.querySelectorAll(".ec-events").forEach((cell) => {
+          const hasEvent = cell.querySelector(".ec-event");
+          if (!hasEvent) {
+            cell.classList.add("ec-empty-cell");
+            if (!cell.querySelector(".empty-event")) {
+              cell.insertAdjacentHTML(
+                "beforeend",
+                `
+                <div class="empty-event" id="empty-event">
+      <div class="right-empty">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-6"
+          height="14"
+          width="14"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+          />
+        </svg>
+        <div class="dots">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6" height="14"
+          width="14"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+            />
+          </svg>
+        </div>
+      </div>
+  </div>
+              `
+              );
+            }
+          }
+        });
+      });
       // Add group header if provided
       if (groupMeta) {
         ensureGroupHeader(calendarEl, groupMeta);
@@ -249,7 +300,6 @@ function initCalendar(
     calendarOptions.dayHeaderFormat = CustomHeader;
   }
   const calendarEl = document.getElementById(containerId);
-
   const calendar = EventCalendar.create(calendarEl, calendarOptions);
   return calendar;
 }
@@ -270,27 +320,6 @@ document.getElementById("calNext").addEventListener("click", () => {
 
 window.addEventListener("scroll", repositionPopup, true);
 window.addEventListener("resize", repositionPopup);
-
-function openPopupBasedOnResource(resId, anchorElement) {
-  const eventPopup = document.getElementById("event-popup");
-  const resourcePopup = document.getElementById("resource-shift-popup");
-
-  console.log("openPopupBasedOnResource", resId);
-  // Hide all popups first
-  eventPopup.style.display = "none";
-  resourcePopup.style.display = "none";
-
-  // OPEN-SHIFT POPUP → for specific resource IDs
-  const eventPopupIDs = [8, 9, 10];
-
-  if (eventPopupIDs.includes(Number(resId))) {
-    eventPopup.style.display = "block";
-    positionPopup(eventPopup, anchorElement);
-  } else {
-    resourcePopup.style.display = "block";
-    positionPopup(resourcePopup, anchorElement);
-  }
-}
 
 function repositionPopup() {
   const popup = document.getElementById("event-popup");
@@ -516,9 +545,9 @@ function renderEventDetails(arg) {
   const event = arg.event;
   const title = (event.title || "").toLowerCase();
   const resourceId = event.resourceIds[0];
-  console.log("renderEventDetails", title, resourceId);
   // Detect red vs blue from title (user requested event title detection)
   const isRed = title.includes("red") || title.includes("shift-red");
+  const isBlue = title.includes("blue") || title.includes("shift-blue");
   if (isRed) {
     return {
       html: `
@@ -550,8 +579,9 @@ function renderEventDetails(arg) {
   }
 
   // default -> blue style
-  return {
-    html: `
+  if (isBlue) {
+    return {
+      html: `
     <div class="events-blue" data-resource-id="${resourceId}">
       <div class="left-event">
         PT-Sydney CBD 
@@ -574,7 +604,8 @@ function renderEventDetails(arg) {
         </div>
     </div>
     `,
-  };
+    };
+  }
 }
 
 // Simple helper to escape HTML content when injecting into templates
@@ -620,130 +651,68 @@ document.getElementById("cal3-toggle")?.addEventListener("click", () => {
 // kick off data load
 loadShifts();
 
-// document.addEventListener("DOMContentLoaded", () => {
-//   const popup = document.getElementById("event-popup");
-//   let activeEvent = null; // track which event the popup belongs to
-
-//   // Handle click on dots
-//   document.addEventListener("click", function (e) {
-//     const dot = e.target.closest(".events-blue .dots, .events-red .dots");
-
-//     if (dot) {
-//       e.stopPropagation();
-
-//       const eventBox = dot.closest(".events-blue, .events-red");
-//       if (!eventBox) return;
-
-//       activeEvent = eventBox; // remember which event opened the popup
-
-//       const rect = eventBox.getBoundingClientRect();
-//       const popupPadding = 4;
-
-//       popup.style.display = "block";
-//       popup.style.opacity = "1";
-//       popup.style.visibility = "visible";
-
-//       // same width as the event box
-//       popup.style.width = rect.width + "px";
-
-//       // position popup just below the event
-//       let left = rect.left + window.scrollX;
-//       let top = rect.bottom + window.scrollY + popupPadding;
-
-//       popup.style.left = left + "px";
-//       popup.style.top = top + "px";
-
-//       // keep inside viewport
-//       const vpWidth = document.documentElement.clientWidth;
-//       const vpHeight = document.documentElement.clientHeight;
-//       const popupRect = popup.getBoundingClientRect();
-
-//       if (popupRect.right > vpWidth - 8) {
-//         left -= popupRect.right - (vpWidth - 8);
-//         if (left < 8) left = 8;
-//         popup.style.left = left + "px";
-//       }
-
-//       if (popupRect.bottom > vpHeight - 8) {
-//         const aboveTop =
-//           rect.top + window.scrollY - popupRect.height - popupPadding;
-//         popup.style.top = Math.max(8, aboveTop) + "px";
-//       }
-
-//       return;
-//     }
-
-//     // don’t close if clicking inside popup
-//     if (e.target.closest("#event-popup")) return;
-
-//     // close if clicked outside
-//     popup.style.display = "none";
-//     activeEvent = null;
-//   });
-
-//   document.addEventListener("mouseover", function (e) {
-//     const eventBox = e.target.closest(".events-blue, .events-red");
-
-//     // ignore if hovering popup itself
-//     if (e.target.closest("#event-popup")) return;
-
-//     if (eventBox && popup.style.display === "block") {
-//       // only hide if hovering a different event
-//       if (activeEvent && eventBox !== activeEvent) {
-//         popup.style.display = "none";
-//         activeEvent = null;
-//       }
-//     }
-//   });
-// });
 document.addEventListener("DOMContentLoaded", () => {
   const eventPopup = document.getElementById("event-popup");
   const resourcePopup = document.getElementById("resource-shift-popup");
+  const emptyPopup = document.getElementById("empty-popup");
 
   let activeEvent = null;
 
   document.addEventListener("click", function (e) {
-    const dot = e.target.closest(".events-blue .dots, .events-red .dots");
-
+    const dot = e.target.closest(
+      ".events-blue .dots, .events-red .dots,.ec-empty-cell .dots"
+    );
     // CLICKED ON DOT
     if (dot) {
       e.stopPropagation();
+      console.log("click");
 
-      const eventBox = dot.closest(".events-blue, .events-red");
+      // 1. REAL EVENT?
+      let eventBox = dot.closest(".events-blue, .events-red");
+      let isEmptyCell = false;
+
+      // 2. EMPTY CELL?
+      if (!eventBox) {
+        // const tinyBox = dot.closest(".empty-event");
+        eventBox = dot.closest(".empty-event");
+        isEmptyCell = true;
+      }
+
+      console.log("eventBox:", eventBox);
+
       if (!eventBox) return;
       activeEvent = eventBox;
 
-      // --- GET RESOURCE ID FROM BOX (VERY IMPORTANT) ---
-      const resId = eventBox.getAttribute("data-resource-id");
+      let resId = null;
+      if (!isEmptyCell) {
+        resId = eventBox.getAttribute("data-resource-id");
+      }
+
       console.log("Clicked dot for resource:", resId);
 
-      // --- DECIDE WHICH POPUP TO OPEN ---
-      const eventPopupIDs = [8, 9, 10];
-
-      // Close both first
       eventPopup.style.display = "none";
       resourcePopup.style.display = "none";
+      emptyPopup.style.display = "none";
 
-      // Find position anchor (event box position)
+      let popupToShow;
+
+      if (isEmptyCell) {
+        popupToShow = emptyPopup;
+      } else {
+        const eventPopupIDs = [8, 9, 10];
+        popupToShow = eventPopupIDs.includes(Number(resId))
+          ? eventPopup
+          : resourcePopup;
+      }
+
       const rect = eventBox.getBoundingClientRect();
-
-      // PICK POPUP
-      const popupToShow = eventPopupIDs.includes(Number(resId))
-        ? eventPopup
-        : resourcePopup;
+      console.log(rect);
 
       popupToShow.style.display = "block";
-      popupToShow.style.opacity = "1";
-      popupToShow.style.visibility = "visible";
-
-      // WIDTH SAME AS EVENT
       popupToShow.style.width = rect.width + "px";
 
-      let left = rect.left + window.scrollX;
-      let top = rect.bottom + window.scrollY + 4;
-
-      popupToShow.style.left = left + "px";
-      popupToShow.style.top = top + "px";
+      popupToShow.style.left = rect.left + window.scrollX + "px";
+      popupToShow.style.top = rect.bottom + window.scrollY + 4 + "px";
 
       // Prevent leaving screen
       const vpWidth = document.documentElement.clientWidth;
@@ -759,14 +728,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const aboveTop = rect.top + window.scrollY - popupRect.height - 4;
         popupToShow.style.top = Math.max(8, aboveTop) + "px";
       }
-
       return;
     }
 
     // CLICK INSIDE POPUP → do nothing
     if (
       e.target.closest("#event-popup") ||
-      e.target.closest("#resource-shift-popup")
+      e.target.closest("#resource-shift-popup") ||
+      e.target.closest("#empty-popup")
     )
       return;
 
