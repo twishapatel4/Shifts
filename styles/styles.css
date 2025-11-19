@@ -346,9 +346,9 @@ body {
 #view-dropdown {
   display: none;
   position: absolute;
-  top: 100%;
+  top: 80%;
   left: auto !important;
-  right: 5%;
+  right: 0%;
   background-color: #fff;
   width: 10rem !important;
   margin-top: 0.625rem;
