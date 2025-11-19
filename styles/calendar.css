@@ -253,6 +253,7 @@ body {
   padding: 12px;
   gap: 4px;
   border-top: 1px solid var(--ec-border-color);
+  border-right: 1px solid var(--ec-border-color);
 }
 
 .sidebar-title-main {

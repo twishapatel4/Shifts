@@ -211,7 +211,25 @@ function addCustomButtons(instance) {
     background:#c0c0c0; font-weight:700;
     padding:8px 12px; border-radius:4px; cursor:pointer;
   `;
-  cancel.onclick = () => instance.close();
+  cancel.onclick = () => {
+    const today = new Date();
+    const [start, end] = getWeekRange(today);
+
+    // Update flatpickr selection
+    instance.setDate([start, end], true);
+
+    // Update button text
+    updateButtonText(start, end);
+
+    // Dispatch calendar update event
+    window.dispatchEvent(
+      new CustomEvent("dateRangeChanged", {
+        detail: { start, end },
+      })
+    );
+
+    instance.close();
+  };
 
   const apply = document.createElement("button");
   apply.textContent = "Apply";
