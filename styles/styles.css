@@ -467,8 +467,8 @@ h3 svg {
 @media (max-width: 1024px) {
   #cal0 {
     position: sticky;
-    top: 6rem;
-    z-index: 80;
+    top: 0;
+    z-index: 90;
   }
   .filter-container {
     display: grid;

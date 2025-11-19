@@ -443,3 +443,32 @@ document.getElementById("Groups").addEventListener("click", (e) => {
 //   const section = e.target.closest(".section2");
 //   section.classList.toggle("collapsed");
 // });
+function adjustCalTop() {
+  const filter = document.querySelector(".filter-container");
+  const cal = document.getElementById("cal0");
+
+  if (!filter || !cal) return;
+
+  // total height including padding, margin, borders
+  const rect = filter.getBoundingClientRect();
+  const style = getComputedStyle(filter);
+
+  // Height + margins
+  const totalHeight =
+    rect.height + parseFloat(style.marginTop) + parseFloat(style.marginBottom);
+
+  // Apply to #cal0 sticky top
+  cal.style.top = totalHeight + "px";
+}
+window.addEventListener("load", adjustCalTop);
+window.addEventListener("resize", adjustCalTop);
+
+// In case dropdown expands filter-container height
+window.addEventListener("click", () => {
+  setTimeout(adjustCalTop, 10);
+});
+
+// When page scroll height changes dynamically
+new ResizeObserver(adjustCalTop).observe(
+  document.querySelector(".filter-container")
+);
