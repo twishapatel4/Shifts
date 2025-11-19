@@ -751,7 +751,17 @@ document.addEventListener("DOMContentLoaded", () => {
       // compute numeric left so we can adjust for viewport overflow
       let left = rect.left + window.scrollX;
       popupToShow.style.left = left + "px";
-      popupToShow.style.top = rect.bottom + window.scrollY + 4 + "px";
+      // popupToShow.style.top = rect.bottom + window.scrollY + 4 + "px";
+      let offset = 4; // base offset for all popups
+
+      if (isEmptyCell) {
+        // Adjust for extra padding/margin inside empty cell
+        const style = getComputedStyle(eventBox);
+        const paddingTop = parseFloat(style.paddingTop) || 0;
+        offset -= paddingTop; // reduce offset if cell has top padding
+      }
+
+      popupToShow.style.top = rect.bottom + window.scrollY + offset + "px";
 
       console.log(popupToShow.style);
       // Prevent leaving screen
@@ -782,6 +792,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // CLICK OUTSIDE → close all
     eventPopup.style.display = "none";
     resourcePopup.style.display = "none";
+    emptyPopup.style.display = "none";
     activeEvent = null;
     activePopupEvent = null;
   });

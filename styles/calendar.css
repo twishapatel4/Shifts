@@ -542,6 +542,7 @@ body {
 .ec-sidebar {
   flex: 0 0 auto !important;
   min-width: 10vw;
+  max-width: 10vw;
   overflow: hidden;
   border: none !important;
 }
@@ -598,7 +599,7 @@ body {
 
 /* if you hide resources (collapsed), keep layout stable */
 .no-resources .ec-sidebar {
-  width: calc(var(--ec-sidebar-width, 200px));
+  width: calc(var(--ec-sidebar-width, 186px));
 }
 
 .dots {
@@ -626,13 +627,7 @@ body {
   }
 }
 
-@media (max-width: 1048px) {
-  .event-popup {
-    width: 120px !important;
-  }
-}
-
-@media (max-width: 820px) {
+@media (max-width: 1024px) {
   /* Only header + main scroll */
   .ec-main,
   .ec-header {
