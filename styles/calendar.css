@@ -19,8 +19,8 @@ body {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 }
+
 .ec-content {
-  /* overflow-x: auto !important; */
   overflow-y: hidden;
 }
 
@@ -34,23 +34,23 @@ body {
 .ec-timeline .ec-resource,
 .ec-timeline .ec-resource-label {
   border: none !important;
-  /* margin: 20px; */
   align-items: center;
   box-shadow: none !important;
 }
+
 .ec-timeline .ec-sidebar .ec-resource {
   overflow: hidden;
-  /* min-height: 60px;
-  max-height: 90px; */
   padding: 0rem 1.2rem !important;
   min-height: 4.2rem;
   max-height: 4.2rem;
 }
+
 .ec-resource-row {
   min-height: 3.8rem;
   max-height: 4.2rem;
   overflow: hidden;
 }
+
 .ec-timeline .ec-days-header,
 .ec-timeline .ec-day-header {
   border: none !important;
@@ -65,15 +65,10 @@ body {
 
 .ec-timeline .ec-today {
   background-color: #dedde5 !important;
-  /* font-size: 28px; */
   color: #6068ab !important;
   height: 4rem !important;
 }
-/*
- 
-.ec-timeline .ec-today header .day-week {
-  color: #6068ab !important;
-} */
+
 .ec-toolbar {
   display: none !important;
 }
@@ -83,7 +78,7 @@ body {
   color: #7a7979;
 }
 
-*/ .ec-expander {
+.ec-expander {
   display: none;
 }
 
@@ -148,7 +143,7 @@ body {
 
 .events-blue:hover .right-event-x,
 .events-red:hover .right-event-x {
-  display: block; /* or block depending on your layout */
+  display: block;
 }
 
 .events-red:hover,
@@ -167,9 +162,6 @@ body {
 
 .icons {
   display: flex;
-  /* margin-top: 10px; */
-  /* margin-bottom: 2px;  */
-  /* justify-content: start; */
   align-items: center;
   gap: 10px;
 }
@@ -225,7 +217,6 @@ body {
 .ec-timeline .ec-time {
   width: 100% !important;
   padding: 8px;
-  /* background: red; */
 }
 
 .ec-sidebar {
@@ -237,7 +228,6 @@ body {
 
 .ec-content {
   padding: 0px 2px;
-  /* Allow horizontal scrolling inside each calendar's timeline area. */
   overflow-x: auto;
   overflow-y: hidden;
 }
@@ -296,7 +286,6 @@ body {
 
 .ec-resource-row,
 .ec-events {
-  /* height: 100% !important; */
   height: auto !important;
   min-height: 3.8rem;
   max-height: none;
@@ -336,7 +325,6 @@ body {
   align-self: baseline;
   margin-bottom: 0%;
   margin-top: 40% !important;
-  /* background-color: #3376d0; */
 }
 
 .ec-empty-cell:hover .empty-event {
@@ -361,19 +349,23 @@ body {
   flex-direction: column;
   align-items: flex-start;
 }
+
 .date {
   font-weight: 700;
 }
+
 .icon {
   display: flex;
   align-items: center;
   gap: 4px;
 }
+
 .svg-hrs {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 .parent-title-hours {
   display: flex;
   justify-content: space-evenly;
@@ -394,6 +386,7 @@ body {
   font-size: 18px;
   gap: 2px;
 }
+
 .group-header {
   padding: 0% !important;
   border: none;
@@ -437,7 +430,6 @@ body {
 }
 
 .no-resources .ec-header {
-  /* margin-left: 100px; */
   background-color: #f3f2f1;
 }
 
@@ -456,7 +448,6 @@ body {
   width: auto;
   max-width: 95vw;
   max-height: 200px;
-  /* margin-top: 0.4rem; */
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
   z-index: 9999;
   display: none;
@@ -538,7 +529,6 @@ body {
 .ec-content .resource-user,
 .ec-content .resource-user * {
   max-width: 100%;
-  /* text-overflow: ellipsis; */
   white-space: nowrap;
   box-sizing: border-box;
 }
@@ -566,19 +556,18 @@ body {
   box-sizing: border-box;
   padding: 2px 0;
   background: transparent;
-  position: relative; /* ensure it's positioned */
-  z-index: 9999; /* ensure it's above other content if needed */
+  position: relative;
+  z-index: 9999;
   -webkit-overflow-scrolling: touch;
 }
 
 .ec-master-scroller-inner {
   height: 10px;
   display: block;
-  min-width: 20px; /* avoid zero width */
+  min-width: 20px;
 }
 
 .ec-content {
-  /* overflow-x: auto !important; */
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   white-space: nowrap;
@@ -610,28 +599,6 @@ body {
 .dots {
   padding-bottom: 10rem;
 }
-
-/* CSS for icon to left
- @media (max-width: 1250px) {
-  .right-event-x {
-    height: 2.4rem !important;
-    width: auto;
-    position: absolute;
-    padding: 2px 4px;
-    top: 50%;
-    left: 10px;
-    transform: translateY(-50%);
-    z-index: 10; 
-  }
-  .right-event-x svg {
-    width: auto;
-  }
-
-  .events-blue,
-  .events-red {
-    position: relative;
-  }
-} */
 
 @media (max-width: 1024px) {
   /* Only header + main scroll */

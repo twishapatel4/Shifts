@@ -322,7 +322,6 @@ function initCalendar(
 
         titleMain.textContent = displayText;
       }
-      // calendar.setOption("events", allEvents);
     },
   };
   if (useCustomHeader) {
@@ -346,38 +345,6 @@ document.getElementById("calNext").addEventListener("click", () => {
   cal2Instance?.next();
   cal3Instance?.next();
 });
-
-// window.addEventListener("scroll", repositionPopup, true);
-// window.addEventListener("resize", repositionPopup);
-
-// function repositionPopup() {
-//   // Find the first visible popup (event / resource / empty)
-//   const popupIds = ["event-popup", "resource-shift-popup", "empty-popup"];
-//   const popups = popupIds
-//     .map((id) => document.getElementById(id))
-//     .filter(Boolean);
-//   const popup = popups.find((p) => p.style.display === "block");
-//   if (!popup || !activePopupEvent) return;
-
-//   const rect = activePopupEvent.getBoundingClientRect();
-
-//   // Check viewport width
-//   if (window.innerWidth < 950) {
-//     // On small screens → let popup size naturally
-//     popup.style.width = "auto";
-//     popup.style.maxWidth = "95vw"; // optional safety limit
-//     popup.style.left = "10px"; // small margin from edge
-//     popup.style.right = "10px"; // keep centered if possible
-//   } else {
-//     // On larger screens → use your constrained width logic
-//     const width = Math.min(rect.width - 8, window.innerWidth * 0.95);
-//     popup.style.width = width - 28 + "px";
-//     popup.style.left = rect.left + window.scrollX + "px";
-//   }
-
-//   // Top position always follows the event
-//   popup.style.top = rect.bottom + window.scrollY + 6 + "px";
-// }
 
 window.addEventListener("dateRangeChanged", (e) => {
   const { start, end } = e.detail;
@@ -487,9 +454,7 @@ function ensureGroupHeader(calendarEl, groupMeta) {
 </div>
  
   `;
-
   calendarEl.insertBefore(header, calendarEl.firstChild);
-
   const btn = header.querySelector(".group-collapse-btn");
 
   btn.addEventListener("click", () => {
@@ -504,7 +469,7 @@ function ensureGroupHeader(calendarEl, groupMeta) {
         calendarEl.classList.remove("no-resources");
       }
 
-      // ✅ Toggle icon state
+      // Toggle icon state
       btn.classList.toggle("collapsed", collapsed);
     }
 
@@ -696,10 +661,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const dot = e.target.closest(
       ".events-blue .dots, .events-red .dots,.ec-empty-cell .dots"
     );
-    // CLICKED ON DOT
     if (dot) {
       e.stopPropagation();
-      // console.log("click");
 
       // 1. REAL EVENT?
       let eventBox = dot.closest(".events-blue, .events-red");
@@ -714,8 +677,6 @@ document.addEventListener("DOMContentLoaded", () => {
         isEmptyCell = true;
       }
 
-      // console.log("eventBox:", eventBox);
-
       if (!eventBox) return;
       activeEvent = eventBox;
       // keep repositionPopup in sync
@@ -725,8 +686,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!isEmptyCell) {
         resId = eventBox.getAttribute("data-resource-id");
       }
-
-      // console.log("Clicked dot for resource:", resId);
 
       eventPopup.style.display = "none";
       resourcePopup.style.display = "none";
@@ -744,7 +703,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const rect = eventBox.getBoundingClientRect();
-      // console.log(rect);
       popupToShow.style.display = "block";
       popupToShow.style.width = rect.width + "px";
 
@@ -760,12 +718,10 @@ document.addEventListener("DOMContentLoaded", () => {
         offset = -6;
         const paddingTop = parseFloat(style.paddingTop) || 0;
         offset -= paddingTop; // reduce offset if cell has top padding
-        // console.log(offset);
       }
 
       popupToShow.style.top = rect.bottom + window.scrollY + offset + "px";
 
-      // console.log(popupToShow.style);
       // Prevent leaving screen
       const vpWidth = document.documentElement.clientWidth;
       const vpHeight = document.documentElement.clientHeight;

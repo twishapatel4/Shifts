@@ -104,9 +104,7 @@ body {
   align-items: center;
   justify-content: end;
   gap: 12px;
-  /* padding: 0.5rem 0.75rem; */
   border-radius: 0.5rem;
-  /* margin-bottom: 0.75rem; */
   flex-wrap: wrap;
   flex: 1 1 auto;
 }
@@ -233,7 +231,6 @@ body {
   display: flex;
   gap: 16px;
   align-items: center;
-  /* background: red; */
 }
 
 .startDate {
@@ -265,18 +262,6 @@ body {
   border: 1px solid black;
 }
 
-/* .flatpickr-calendar {
-  transform: scale(0.85);
-  transform-origin: top left;
-}
- 
-.flatpickr-calendar .flatpickr-innerContainer {
-  width: auto;
-}
- 
-.left-filter {
-  overflow: visible;
-} */
 .flatpickr-calendar {
   transform: scale(0.85) !important;
   transform-origin: top left !important;
@@ -301,9 +286,8 @@ body {
 
 .popup-description {
   margin: none;
-  /* padding: 0.4rem; */
-  /* border-bottom: 1px solid #cacac9; */
 }
+
 .popup-action {
   display: flex;
   align-items: center;
@@ -332,13 +316,12 @@ body {
 .filter-wrapper {
   position: relative;
   display: inline-flex;
-  /* padding: 0.4rem 0.6rem; */
   align-items: center;
 }
+
 .view-wrapper {
   position: relative;
   display: inline-flex;
-  /* padding: 0.4rem 0.6rem; */
   align-items: center;
 }
 
@@ -371,12 +354,14 @@ body {
   gap: 8px;
   align-items: start !important;
 }
+
 .grouped-content {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: start !important;
 }
+
 .section1 h3,
 .section2 h3 {
   font-weight: 600;
@@ -384,9 +369,11 @@ body {
   padding: 1%;
   font-size: 14px;
 }
+
 h3 svg {
   transform: rotate(-180deg);
 }
+
 .section1 p,
 .section2 p {
   margin: 0%;
@@ -425,9 +412,6 @@ h3 svg {
 
 /* Responsive: keep filter controls on one line under 1400px */
 @media (max-width: 1400px) {
-  /* .right-filter {
-    padding: 0.5rem 2rem;
-  } */
   .dropdown-btn {
     width: 10rem;
     padding: 0.18rem 0.375rem !important;
@@ -456,12 +440,6 @@ h3 svg {
     width: 14px !important;
     height: 14px !important;
   }
-
-  /* hide any SVG arrows (if still present) */
-  /* .filter-btn svg,
-  .view-btn svg {
-    display: none !important;
-  } */
 }
 
 @media (max-width: 1024px) {
@@ -472,7 +450,6 @@ h3 svg {
   }
   .filter-container {
     display: grid;
-    /* grid-template-columns: 1fr auto; */
     grid-auto-rows: auto;
     gap: 0.5rem;
     align-items: start;
@@ -491,13 +468,11 @@ h3 svg {
   .left-filter .calendar-btn {
     width: 100%;
     order: 0;
-    /* padding: 0.35rem 0.5rem; */
   }
 
   /* Place dropdowns in the left column, second row */
   .left-filter .dropdowns-row {
     display: flex;
-    /* gap: 0.35rem; */
     align-items: center;
     flex-wrap: nowrap;
     width: 100%;
@@ -508,7 +483,6 @@ h3 svg {
   .left-filter .dropdowns-row .dropdown {
     min-width: 5.5rem;
     flex: 1 1 auto;
-    /* padding: 0.28rem 0.45rem; */
     font-size: 0.95rem;
     box-sizing: border-box;
   }
@@ -554,9 +528,7 @@ h3 svg {
   .left-filter .dropdown-btn {
     padding: 0.4rem 1rem !important;
   }
-  /* .dropdown-btn svg {
-    display: none !important;
-  } */
+
   .filter-btn svg,
   .view-btn svg {
     display: none !important;

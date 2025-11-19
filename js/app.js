@@ -1,3 +1,4 @@
+// Add Event Listener to the dropdown to open it
 document.addEventListener("click", function (e) {
   const isDropdownBtn = e.target.closest("[data-dropdown] .dropdown-btn");
 
@@ -79,10 +80,7 @@ function handleSelection() {
   }
 }
 
-/* =============================
-   DATE UTILITIES
-============================= */
-
+//  DATE UTILITIES
 function getDefaultRange() {
   const today = new Date();
   const prevSunday = new Date(today);
@@ -96,13 +94,9 @@ function getDefaultRange() {
     nextSaturdayObj: nextSaturday,
   };
 }
-
 const { prevSundayObj, nextSaturdayObj } = getDefaultRange();
 
-/* =============================
-   FLATPICKR SETUP
-============================= */
-
+//  FLATPICKR SETUP
 const calendarBtn = document.getElementById("calendar-btn");
 const rangeInput = document.getElementById("calendarRange");
 
@@ -153,7 +147,6 @@ const fp = flatpickr(rangeInput, {
 /* =============================
    WEEK SELECTION LOGIC
 ============================= */
-
 function freezeMonths(instance) {
   return {
     month: instance.currentMonth,
@@ -191,10 +184,7 @@ function setWeek(instance, date) {
   instance.jumpToDate = originalJump;
 }
 
-/* =============================
-   CUSTOM FOOTER BUTTONS
-============================= */
-
+//  CUSTOM FOOTER BUTTONS
 function addCustomButtons(instance) {
   const calendar = instance.calendarContainer;
 
@@ -273,7 +263,6 @@ function updateButtonText(start, end) {
 /* =============================
    BUTTON EVENTS
 ============================= */
-
 calendarBtn.addEventListener("click", (e) => {
   e.stopPropagation();
   fp.open();
@@ -288,8 +277,7 @@ Todaybtn.addEventListener("click", (e) => {
   const [start, end] = getWeekRange(today);
 
   fp.setDate([start, end], true); // update selection
-  // fp.jumpToDate(today); // move calendar view
-  // fp.open();
+
   updateButtonText(start, end);
   window.dispatchEvent(
     new CustomEvent("dateRangeChanged", {
@@ -300,12 +288,10 @@ Todaybtn.addEventListener("click", (e) => {
 
 calPrev.addEventListener("click", (e) => {
   e.stopPropagation();
-  // calendar.prev();
 });
 
 calNext.addEventListener("click", (e) => {
   e.stopPropagation();
-  // calendar.next();
 });
 
 const FilterBtn = document.getElementById("filter-btn");
@@ -434,15 +420,8 @@ document.getElementById("Groups").addEventListener("click", (e) => {
   const section = e.target.closest(".section2");
   section.classList.toggle("collapsed");
 });
-// document.getElementById("QuickAccess").addEventListener("click", (e) => {
-//   const section = e.target.closest(".section1");
-//   section.classList.toggle("collapsed");
-// });
 
-// document.getElementById("Show").addEventListener("click", (e) => {
-//   const section = e.target.closest(".section2");
-//   section.classList.toggle("collapsed");
-// });
+// Adjust the top for date so that the date header stays sticky
 function adjustCalTop() {
   const filter = document.querySelector(".filter-container");
   const cal = document.getElementById("cal0");
