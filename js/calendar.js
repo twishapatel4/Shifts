@@ -424,7 +424,7 @@ function ensureGroupHeader(calendarEl, groupMeta) {
           d="m19.5 8.25-7.5 7.5-7.5-7.5"
         />
       </svg>
-
+ 
       <!-- UP icon (shown when collapsed) -->
       <svg
         class="icon-up"
@@ -485,7 +485,7 @@ function ensureGroupHeader(calendarEl, groupMeta) {
     <div>Add People</div>
   </div>
 </div>
-
+ 
   `;
 
   calendarEl.insertBefore(header, calendarEl.firstChild);
@@ -606,7 +606,7 @@ function renderEventDetails(arg) {
 </div>
         </div>
       </div>
-         <div> 
+         <div>
        </div>
       `,
     };
@@ -618,7 +618,7 @@ function renderEventDetails(arg) {
       html: `
     <div class="events-blue" data-resource-id="${resourceId}">
       <div class="left-event">
-        PT-Sydney CBD 
+        PT-Sydney CBD
         <div class="icons">
           <img src="./Assets/icons/Cup.svg" height="20" width="20" />
           <img src="./Assets/icons/Time.svg" height="20" width="20" />
@@ -817,12 +817,9 @@ document.addEventListener("click", function () {
 });
 
 /* ---------- Sync utilities for 4 stacked calendars ---------- */
-
 function syncAllCalendarsSetup() {
-  // ids of calendar containers
   const calIds = ["cal0", "cal1", "cal2", "cal3"];
 
-  // gather elements for each calendar
   const cals = calIds
     .map((id) => {
       const el = document.getElementById(id);
@@ -839,9 +836,32 @@ function syncAllCalendarsSetup() {
     })
     .filter(Boolean);
 
-  if (cals.length < 2) return; // nothing to sync
+  if (cals.length < 2) return;
+  // cals must exist and each item should have .scrollEl (the actual scrollable timeline element)
+  if (!Array.isArray(cals) || cals.length === 0) return;
 
-  // 1) set a common sidebar width based on the widest sidebar
+  // create master scroller (insert after the calendar container so it's visually aligned)
+  let masterScroller = document.getElementById("ec-master-scroller");
+  if (!masterScroller) {
+    masterScroller = document.createElement("div");
+    masterScroller.id = "ec-master-scroller";
+    masterScroller.className = "ec-master-scroller";
+    const inner = document.createElement("div");
+    inner.className = "ec-master-scroller-inner";
+    masterScroller.appendChild(inner);
+
+    const calendarContainer = document.querySelector(".calendar-container");
+    if (calendarContainer && calendarContainer.parentNode) {
+      // insert after the container to keep alignment
+      calendarContainer.parentNode.insertBefore(
+        masterScroller,
+        calendarContainer.nextSibling
+      );
+    } else {
+      document.body.insertBefore(masterScroller, document.body.firstChild);
+    }
+  }
+
   function syncSidebarWidths() {
     let maxW = 0;
     cals.forEach((c) => {
@@ -867,7 +887,7 @@ function syncAllCalendarsSetup() {
     );
   }
 
-  // 2) set slot width CSS var to match your slotWidth option (if you change slotWidth, update var)
+  // helper to set css var
   function syncSlotWidth(widthPx) {
     document.documentElement.style.setProperty(
       "--ec-slot-width",
@@ -875,79 +895,176 @@ function syncAllCalendarsSetup() {
     );
   }
 
-  // 3) Sync scroll (horizontal and vertical) without feedback loops
+  // make sure the masterInner width is updated safely (call when layout stable)
+  const masterInner = document.querySelector(".ec-master-scroller-inner");
+  const master = document.getElementById("ec-master-scroller");
+
+  function updateMasterWidth() {
+    const primaryScrollEl = cals[0]?.scrollEl;
+    if (!masterInner || !primaryScrollEl) return;
+    // use scrollWidth of the element that contains the timeline content
+    masterInner.style.width = primaryScrollEl.scrollWidth + "px";
+  }
+
+  // Sync scroll without feedback loops
   let isSyncing = false;
+  let isMasterSyncing = false;
+
   cals.forEach((source, idx) => {
-    if (!source.scrollEl) return;
-    source.scrollEl.addEventListener(
+    if (!source || !source.scrollEl) return;
+    const srcEl = source.scrollEl;
+
+    // when a calendar scrolls, set others
+    srcEl.addEventListener(
       "scroll",
-      (e) => {
+      () => {
         if (isSyncing) return;
         isSyncing = true;
-        const left = source.scrollEl.scrollLeft;
-        const top = source.scrollEl.scrollTop;
-        // apply to others
+        const left = srcEl.scrollLeft;
+        const top = srcEl.scrollTop;
+
+        // sync to other calendars
         cals.forEach((target, j) => {
-          if (j === idx || !target.scrollEl) return;
-          target.scrollEl.scrollLeft = left;
-          target.scrollEl.scrollTop = top;
+          if (j === idx || !target || !target.scrollEl) return;
+          // set via requestAnimationFrame to reduce layout thrash
+          requestAnimationFrame(() => {
+            target.scrollEl.scrollLeft = left;
+            target.scrollEl.scrollTop = top;
+          });
         });
-        // small debounce to avoid chattiness
-        window.requestAnimationFrame(() => {
+
+        // update master scroller position
+        if (master && !isMasterSyncing) {
+          isMasterSyncing = true;
+          requestAnimationFrame(() => {
+            master.scrollLeft = left;
+            isMasterSyncing = false;
+          });
+        }
+
+        requestAnimationFrame(() => {
           isSyncing = false;
         });
       },
       { passive: true }
     );
 
-    // wheel sync: when user uses mouse wheel horizontally on one, move others
-    source.scrollEl.addEventListener(
+    // wheel sync (horizontal and vertical)
+    srcEl.addEventListener(
       "wheel",
       (ev) => {
-        // only care horizontal wheel (shift+wheel or trackpad horizontal)
-        if (
-          Math.abs(ev.deltaX) < 1 &&
-          Math.abs(ev.deltaY) > Math.abs(ev.deltaX)
-        ) {
-          // vertical wheel — sync vertical scroll of resource lists if present
-          // map to other calendars resource row scroll (if sidebars have their own scroll)
-          const top = source.scrollEl.scrollTop + ev.deltaY;
+        // don't prevent default; we just mirror
+        const horizontal = Math.abs(ev.deltaX) >= Math.abs(ev.deltaY);
+        if (horizontal) {
+          const left = srcEl.scrollLeft + ev.deltaX;
           cals.forEach((target) => {
-            if (!target.scrollEl || target === source) return;
-            target.scrollEl.scrollTop = top;
-          });
-        } else {
-          // horizontal movement
-          const left = source.scrollEl.scrollLeft + ev.deltaX;
-          cals.forEach((target) => {
-            if (!target.scrollEl || target === source) return;
+            if (!target || !target.scrollEl || target === source) return;
             target.scrollEl.scrollLeft = left;
           });
+          // also update master
+          if (master && !isMasterSyncing) master.scrollLeft = left;
+        } else {
+          const top = srcEl.scrollTop + ev.deltaY;
+          cals.forEach((target) => {
+            if (!target || !target.scrollEl || target === source) return;
+            target.scrollEl.scrollTop = top;
+          });
         }
-        // let default behavior continue
       },
       { passive: true }
     );
   });
 
-  // 4) re-sync widths on resize / font load / collapse actions
+  // wire master scroll -> all calendars
+  if (master) {
+    master.addEventListener(
+      "scroll",
+      () => {
+        if (isMasterSyncing) return;
+        isMasterSyncing = true;
+        const left = master.scrollLeft;
+        requestAnimationFrame(() => {
+          cals.forEach((target) => {
+            if (!target || !target.scrollEl) return;
+            target.scrollEl.scrollLeft = left;
+          });
+          isMasterSyncing = false;
+        });
+      },
+      { passive: true }
+    );
+  }
+
+  // handle resize / layout changes; debounce
   let resizeTimer;
   function handleResize() {
     if (resizeTimer) clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
-      syncSidebarWidths();
-      // optionally re-set slot width if your slotWidth changes dynamically
+      // ensure any sidebars/slot widths are recomputed in your app
+      if (typeof syncSidebarWidths === "function") syncSidebarWidths();
+      // keep slot width in sync (if used)
       // syncSlotWidth(220);
+      syncSlotWidth(
+        getComputedStyle(document.documentElement).getPropertyValue(
+          "--ec-day-width"
+        )
+      );
+
+      // update masterInner width
+      updateMasterWidth();
+
+      // keep master scroller positioned to current timeline scrollLeft
+      const primary = cals[0]?.scrollEl;
+      if (master && primary) master.scrollLeft = primary.scrollLeft;
     }, 120);
   }
+
   window.addEventListener("resize", handleResize);
 
-  // 5) call once to initialize
-  syncSidebarWidths();
-  syncSlotWidth(220); /* keep this same as your slotWidth: 220 */
+  // update once initially and again after fonts/images load
+  updateMasterWidth();
+  // in case fonts/images alter layout after initial render
+  window.addEventListener("load", updateMasterWidth);
+  // if your calendars render asynchronously, call updateMasterWidth() after render completes
+
+  // initialize vars
+  syncSidebarWidths && syncSidebarWidths();
+  syncSlotWidth(220);
+  // set initial master inner width & align scroller
+  if (masterInner && cals[0] && cals[0].scrollEl) {
+    masterInner.style.width = cals[0].scrollEl.scrollWidth + "px";
+    master.scrollLeft = cals[0].scrollEl.scrollLeft || 0;
+  }
 }
 
-/* Call syncAllCalendarsSetup once after calendars are created.
-   Place this call at the end of your loadShifts() (or directly after you instantiate all 4 calendar instances).
-*/
+// call after calendars created
 syncAllCalendarsSetup();
+
+function syncScroll() {
+  const headers = document.querySelectorAll(".ec-header");
+  const mains = document.querySelectorAll(".ec-main");
+
+  function link(a, b) {
+    let lock = false;
+
+    a.addEventListener("scroll", () => {
+      if (lock) return;
+      lock = true;
+      b.scrollLeft = a.scrollLeft;
+      lock = false;
+    });
+
+    b.addEventListener("scroll", () => {
+      if (lock) return;
+      lock = true;
+      a.scrollLeft = b.scrollLeft;
+      lock = false;
+    });
+  }
+
+  for (let i = 0; i < headers.length; i++) {
+    link(headers[i], mains[i]);
+  }
+}
+
+setTimeout(syncScroll, 300); // wait for calendar render

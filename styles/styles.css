@@ -12,7 +12,7 @@ body {
   justify-content: flex-start;
   gap: 0.75rem;
   background: #f3f2f1;
-  padding: 0.5rem 0rem;
+  padding: 0.5rem 0.5rem;
   border-radius: 0.5rem;
   box-shadow: 0 0.125rem 0.375rem rgba(0, 0, 0, 0.08);
 }
@@ -129,6 +129,8 @@ body {
 .dropdown-content {
   display: none;
   position: absolute;
+  top: 100%;
+  left: 0;
   background-color: #fff;
   min-width: 11.25rem;
   margin-top: 0.625rem;
@@ -142,10 +144,9 @@ body {
 
 .dropdown {
   color: #000000;
+  position: relative;
 }
 
-/* Ensure dropdowns-row defaults to a horizontal layout on larger screens
-   so the three dropdowns appear side-by-side for widths above ~1248px. */
 .dropdowns-row {
   display: flex;
   gap: 0.75rem;
@@ -268,11 +269,11 @@ body {
   transform: scale(0.85);
   transform-origin: top left;
 }
-
+ 
 .flatpickr-calendar .flatpickr-innerContainer {
   width: auto;
 }
-
+ 
 .left-filter {
   overflow: visible;
 } */
@@ -345,15 +346,16 @@ body {
   display: none;
   position: absolute;
   top: 100%;
-  left: 0;
+  left: auto !important;
+  right: 5%;
   background-color: #fff;
-  width: 10rem;
+  width: 8rem;
   margin-top: 0.625rem;
   border: 1px solid #ccc;
   border-radius: 0.5rem;
   z-index: 10;
   align-items: center;
-  padding: 5%;
+  padding: 2%;
 }
 
 #filter-dropdown.show,
@@ -443,10 +445,6 @@ h3 svg {
   }
 } */
 
-/* At <=1024px: make the filter container three stacked rows
-   1) calendar (today/start/end)
-   2) the three dropdowns (territory/site/category) in one row
-   3) filter and view buttons on their own row */
 @media (max-width: 1024px) {
   .filter-container {
     flex-direction: row;
@@ -455,7 +453,6 @@ h3 svg {
     gap: 0.5rem;
   }
 
-  /* Left side: keep items inline and allow wrapping; right side stays to the right */
   .left-filter {
     display: flex;
     flex: 1 1 auto;
@@ -464,7 +461,6 @@ h3 svg {
     flex-wrap: wrap;
   }
 
-  /* Make calendar button compact and align with dropdowns */
   .left-filter .calendar-btn {
     display: flex;
     align-items: center;
@@ -611,5 +607,17 @@ h3 svg {
     width: 16px !important;
     height: 16px !important;
     display: block !important;
+  }
+}
+@media (max-width: 980px) {
+  .dropdown-btn {
+    width: fit-content;
+  }
+  .dropdown-btn svg {
+    display: none !important;
+  }
+  .filter-btn svg,
+  .view-btn svg {
+    display: none !important;
   }
 }
