@@ -212,8 +212,19 @@ function addCustomButtons(instance) {
     padding:8px 12px; border-radius:4px; cursor:pointer;
   `;
   cancel.onclick = () => {
-    const today = new Date();
-    const [start, end] = getWeekRange(today);
+    // Read dates from HTML
+    const startText = document.getElementById("startDate").textContent.trim();
+    const endText = document.getElementById("endDate").textContent.trim();
+
+    // Convert to Date objects
+    const start = new Date(startText);
+    const end = new Date(endText);
+
+    if (isNaN(start) || isNaN(end)) {
+      console.error("Invalid dates in startDate/endDate elements");
+      instance.close();
+      return;
+    }
 
     // Update flatpickr selection
     instance.setDate([start, end], true);
