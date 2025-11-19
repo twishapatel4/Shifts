@@ -699,7 +699,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // CLICKED ON DOT
     if (dot) {
       e.stopPropagation();
-      console.log("click");
+      // console.log("click");
 
       // 1. REAL EVENT?
       let eventBox = dot.closest(".events-blue, .events-red");
@@ -714,7 +714,7 @@ document.addEventListener("DOMContentLoaded", () => {
         isEmptyCell = true;
       }
 
-      console.log("eventBox:", eventBox);
+      // console.log("eventBox:", eventBox);
 
       if (!eventBox) return;
       activeEvent = eventBox;
@@ -726,7 +726,7 @@ document.addEventListener("DOMContentLoaded", () => {
         resId = eventBox.getAttribute("data-resource-id");
       }
 
-      console.log("Clicked dot for resource:", resId);
+      // console.log("Clicked dot for resource:", resId);
 
       eventPopup.style.display = "none";
       resourcePopup.style.display = "none";
@@ -744,7 +744,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const rect = eventBox.getBoundingClientRect();
-      console.log(rect);
+      // console.log(rect);
       popupToShow.style.display = "block";
       popupToShow.style.width = rect.width + "px";
 
@@ -763,7 +763,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       popupToShow.style.top = rect.bottom + window.scrollY + offset + "px";
 
-      console.log(popupToShow.style);
+      // console.log(popupToShow.style);
       // Prevent leaving screen
       const vpWidth = document.documentElement.clientWidth;
       const vpHeight = document.documentElement.clientHeight;

@@ -325,9 +325,10 @@ body {
   padding: 4px 6px;
   border-radius: 0.4rem;
   display: flex;
+  justify-content: space-between;
   background-color: #5a5959;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
 }
 
 .dots {
@@ -606,16 +607,17 @@ body {
   padding-bottom: 10rem;
 }
 
-@media (max-width: 1250px) {
+/* CSS for icon to left
+ @media (max-width: 1250px) {
   .right-event-x {
     height: 2.4rem !important;
     width: auto;
     position: absolute;
     padding: 2px 4px;
     top: 50%;
-    left: 10px; /* adjust this to position over the left-event */
+    left: 10px;
     transform: translateY(-50%);
-    z-index: 10; /* ensures it appears on top */
+    z-index: 10; 
   }
   .right-event-x svg {
     width: auto;
@@ -625,7 +627,7 @@ body {
   .events-red {
     position: relative;
   }
-}
+} */
 
 @media (max-width: 1024px) {
   /* Only header + main scroll */

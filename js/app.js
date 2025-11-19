@@ -405,12 +405,12 @@ document.getElementById("Groups").addEventListener("click", (e) => {
   const section = e.target.closest(".section2");
   section.classList.toggle("collapsed");
 });
-document.getElementById("QuickAccess").addEventListener("click", (e) => {
-  const section = e.target.closest(".section1");
-  section.classList.toggle("collapsed");
-});
+// document.getElementById("QuickAccess").addEventListener("click", (e) => {
+//   const section = e.target.closest(".section1");
+//   section.classList.toggle("collapsed");
+// });
 
-document.getElementById("Show").addEventListener("click", (e) => {
-  const section = e.target.closest(".section2");
-  section.classList.toggle("collapsed");
-});
+// document.getElementById("Show").addEventListener("click", (e) => {
+//   const section = e.target.closest(".section2");
+//   section.classList.toggle("collapsed");
+// });

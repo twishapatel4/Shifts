@@ -301,8 +301,8 @@ body {
 
 .popup-description {
   margin: none;
-  padding: 0.4rem;
-  border-bottom: 1px solid #cacac9;
+  /* padding: 0.4rem; */
+  /* border-bottom: 1px solid #cacac9; */
 }
 .popup-action {
   display: flex;
@@ -323,6 +323,7 @@ body {
 .icon-name,
 .startDate,
 .endDate,
+.right-empty,
 .calendar-btn img,
 .calendar-btn svg {
   cursor: pointer;
@@ -349,13 +350,13 @@ body {
   left: auto !important;
   right: 5%;
   background-color: #fff;
-  width: 8rem;
+  width: 10rem !important;
   margin-top: 0.625rem;
   border: 1px solid #ccc;
   border-radius: 0.5rem;
   z-index: 10;
   align-items: center;
-  padding: 2%;
+  padding: 1rem 0.5rem;
 }
 
 #filter-dropdown.show,
@@ -389,12 +390,11 @@ h3 svg {
 .section1 p,
 .section2 p {
   margin: 0%;
-  padding: 5% 10%;
-  font-size: 14px;
 }
 
 .dropdown-item {
-  padding: 4px 6px;
+  padding: 4px 24px;
+  font-size: 14px;
   cursor: pointer;
   border-radius: 4px;
 }
@@ -434,79 +434,6 @@ h3 svg {
     gap: 0.125rem;
   }
 }
-/* Hide down-arrow svgs on dropdowns and filter/view buttons at narrower widths
-@media (max-width: 1224px) {
-  .dropdown-btn svg {
-    display: none !important;
-  }
-  .filter-btn svg,
-  .view-btn svg {
-    display: none !important;
-  }
-} */
-
-@media (max-width: 1024px) {
-  .filter-container {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-  }
-
-  .left-filter {
-    display: flex;
-    flex: 1 1 auto;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-
-  .left-filter .calendar-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex: 1 1 100%;
-    order: 1;
-    width: 100%;
-  }
-
-  /* Dropdowns: allow three side-by-side if space permits */
-  /* Ensure the intermediate .dropdowns-row lays out children horizontally
-     so the three dropdowns can appear side-by-side (even after wrapping them
-     in a .dropdowns-row in HTML). */
-  .left-filter .dropdowns-row {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    width: 100%;
-    order: 2;
-    box-sizing: border-box;
-  }
-
-  .left-filter .dropdowns-row .dropdown {
-    min-width: 8rem;
-    flex: 0 1 calc(33.333% - 0.5rem);
-    box-sizing: border-box;
-  }
-
-  /* Keep right-filter on the same row */
-  .right-filter {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.25rem 0.5rem;
-    margin-left: auto;
-    order: 3;
-  }
-
-  /* Ensure filter/view buttons keep their compact appearance */
-  .filter-btn,
-  .view-btn {
-    font-size: 0.9rem;
-    padding: 0.4rem 0.6rem;
-  }
-}
 
 /* At <=1170px show only the icon images for Filter and View (hide labels) */
 @media (max-width: 1298px) {
@@ -531,21 +458,20 @@ h3 svg {
   }
 
   /* hide any SVG arrows (if still present) */
-  .filter-btn svg,
+  /* .filter-btn svg,
   .view-btn svg {
     display: none !important;
-  }
+  } */
 }
 
-/* Tablet tweak: ensure calendar stays on first row and
-   the three dropdowns + Filter/View icons share a second row */
-@media (max-width: 920px) {
+@media (max-width: 1024px) {
   .filter-container {
     display: grid;
-    grid-template-columns: 1fr auto;
+    /* grid-template-columns: 1fr auto; */
     grid-auto-rows: auto;
     gap: 0.5rem;
     align-items: start;
+    justify-content: space-between;
   }
 
   .left-filter {
@@ -571,7 +497,9 @@ h3 svg {
     flex-wrap: nowrap;
     width: 100%;
   }
-
+  .left-filter .dropdown-btn {
+    padding: 0.4rem;
+  }
   .left-filter .dropdowns-row .dropdown {
     min-width: 5.5rem;
     flex: 1 1 auto;
@@ -608,15 +536,22 @@ h3 svg {
     height: 16px !important;
     display: block !important;
   }
+  .filter-btn svg,
+  .view-btn svg {
+    display: none !important;
+  }
 }
 
 @media (max-width: 980px) {
   .dropdown-btn {
     width: fit-content;
   }
-  .dropdown-btn svg {
-    display: none !important;
+  .left-filter .dropdown-btn {
+    padding: 0.4rem 1rem !important;
   }
+  /* .dropdown-btn svg {
+    display: none !important;
+  } */
   .filter-btn svg,
   .view-btn svg {
     display: none !important;
