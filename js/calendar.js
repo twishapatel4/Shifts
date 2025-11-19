@@ -347,37 +347,37 @@ document.getElementById("calNext").addEventListener("click", () => {
   cal3Instance?.next();
 });
 
-window.addEventListener("scroll", repositionPopup, true);
-window.addEventListener("resize", repositionPopup);
+// window.addEventListener("scroll", repositionPopup, true);
+// window.addEventListener("resize", repositionPopup);
 
-function repositionPopup() {
-  // Find the first visible popup (event / resource / empty)
-  const popupIds = ["event-popup", "resource-shift-popup", "empty-popup"];
-  const popups = popupIds
-    .map((id) => document.getElementById(id))
-    .filter(Boolean);
-  const popup = popups.find((p) => p.style.display === "block");
-  if (!popup || !activePopupEvent) return;
+// function repositionPopup() {
+//   // Find the first visible popup (event / resource / empty)
+//   const popupIds = ["event-popup", "resource-shift-popup", "empty-popup"];
+//   const popups = popupIds
+//     .map((id) => document.getElementById(id))
+//     .filter(Boolean);
+//   const popup = popups.find((p) => p.style.display === "block");
+//   if (!popup || !activePopupEvent) return;
 
-  const rect = activePopupEvent.getBoundingClientRect();
+//   const rect = activePopupEvent.getBoundingClientRect();
 
-  // Check viewport width
-  if (window.innerWidth < 950) {
-    // On small screens → let popup size naturally
-    popup.style.width = "auto";
-    popup.style.maxWidth = "95vw"; // optional safety limit
-    popup.style.left = "10px"; // small margin from edge
-    popup.style.right = "10px"; // keep centered if possible
-  } else {
-    // On larger screens → use your constrained width logic
-    const width = Math.min(rect.width - 8, window.innerWidth * 0.95);
-    popup.style.width = width - 28 + "px";
-    popup.style.left = rect.left + window.scrollX + "px";
-  }
+//   // Check viewport width
+//   if (window.innerWidth < 950) {
+//     // On small screens → let popup size naturally
+//     popup.style.width = "auto";
+//     popup.style.maxWidth = "95vw"; // optional safety limit
+//     popup.style.left = "10px"; // small margin from edge
+//     popup.style.right = "10px"; // keep centered if possible
+//   } else {
+//     // On larger screens → use your constrained width logic
+//     const width = Math.min(rect.width - 8, window.innerWidth * 0.95);
+//     popup.style.width = width - 28 + "px";
+//     popup.style.left = rect.left + window.scrollX + "px";
+//   }
 
-  // Top position always follows the event
-  popup.style.top = rect.bottom + window.scrollY + 6 + "px";
-}
+//   // Top position always follows the event
+//   popup.style.top = rect.bottom + window.scrollY + 6 + "px";
+// }
 
 window.addEventListener("dateRangeChanged", (e) => {
   const { start, end } = e.detail;
@@ -752,13 +752,15 @@ document.addEventListener("DOMContentLoaded", () => {
       let left = rect.left + window.scrollX;
       popupToShow.style.left = left + "px";
       // popupToShow.style.top = rect.bottom + window.scrollY + 4 + "px";
-      let offset = 4; // base offset for all popups
+      let offset = 0; // base offset for all popups
 
       if (isEmptyCell) {
         // Adjust for extra padding/margin inside empty cell
         const style = getComputedStyle(eventBox);
+        offset = -6;
         const paddingTop = parseFloat(style.paddingTop) || 0;
         offset -= paddingTop; // reduce offset if cell has top padding
+        // console.log(offset);
       }
 
       popupToShow.style.top = rect.bottom + window.scrollY + offset + "px";
@@ -775,8 +777,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       if (popupRect.bottom > vpHeight - 8) {
-        const aboveTop = rect.top + window.scrollY - popupRect.height - 4;
-        popupToShow.style.top = Math.max(8, aboveTop) + "px";
+        const aboveTop = rect.top + window.scrollY - popupRect.height - 19;
+        popupToShow.style.top = Math.max(4, aboveTop) + "px";
       }
       return;
     }
@@ -790,13 +792,18 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
 
     // CLICK OUTSIDE → close all
-    eventPopup.style.display = "none";
-    resourcePopup.style.display = "none";
-    emptyPopup.style.display = "none";
+    disablePopup();
     activeEvent = null;
     activePopupEvent = null;
   });
 
+  function disablePopup() {
+    eventPopup.style.display = "none";
+    resourcePopup.style.display = "none";
+    emptyPopup.style.display = "none";
+  }
+  window.addEventListener("scroll", disablePopup, true);
+  window.addEventListener("resize", disablePopup);
   // HOVER HANDLING
   document.addEventListener("mouseover", function (e) {
     const eventBox = e.target.closest(".events-blue, .events-red");
