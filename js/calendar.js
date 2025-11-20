@@ -800,24 +800,34 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("resize", disablePopup);
   // HOVER HANDLING
   document.addEventListener("mouseover", function (e) {
-    const eventBox = e.target.closest(".events-blue, .events-red");
+    const eventBox = e.target.closest(
+      ".events-blue, .events-red, .ec-empty-cell, .empty-event"
+    );
     if (
       e.target.closest("#event-popup") ||
-      e.target.closest("#resource-shift-popup")
+      e.target.closest("#resource-shift-popup") ||
+      e.target.closest("#empty-popup") ||
+      e.target.closest("#empty-open-popup")
     )
       return;
 
+    const box = e.target.closest(
+      ".events-blue, .events-red, .ec-empty-cell, .empty-event"
+    );
+
+    // If mouse moved onto a different box while popup is open → CLOSE them
     if (
-      eventBox &&
+      box &&
+      activeEvent &&
+      box !== activeEvent &&
       (eventPopup.style.display === "block" ||
-        resourcePopup.style.display === "block")
+        resourcePopup.style.display === "block" ||
+        emptyPopup.style.display === "block" ||
+        emptyOpenPopup.style.display === "block")
     ) {
-      if (activeEvent && eventBox !== activeEvent) {
-        eventPopup.style.display = "none";
-        resourcePopup.style.display = "none";
-        activeEvent = null;
-        activePopupEvent = null;
-      }
+      disablePopup();
+      activeEvent = null;
+      activePopupEvent = null;
     }
   });
 });
