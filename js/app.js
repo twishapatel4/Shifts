@@ -99,6 +99,7 @@ const { prevSundayObj, nextSaturdayObj } = getDefaultRange();
 //  FLATPICKR SETUP
 const calendarBtn = document.getElementById("calendar-btn");
 const rangeInput = document.getElementById("calendarRange");
+const positionElement = document.getElementById("calendar-icon");
 
 const fp = flatpickr(rangeInput, {
   mode: "range",
@@ -106,7 +107,7 @@ const fp = flatpickr(rangeInput, {
   numberOfMonths: 2,
   showMonths: 2,
   appendTo: document.querySelector(".left-filter"),
-  positionElement: calendarBtn,
+  positionElement: positionElement,
   defaultDate: [prevSundayObj, nextSaturdayObj],
 
   onReady(_, __, instance) {
