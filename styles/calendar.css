@@ -458,7 +458,9 @@ body {
 
 /* Empty popup uses same visual rules as other popups (positioned, hidden by default) */
 #empty-popup,
-.empty-popup {
+.empty-popup,
+#empty-open-popup,
+.empty-open-popup {
   position: absolute;
   background: #fff;
   border: 1px solid #ccc;

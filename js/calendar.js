@@ -161,7 +161,6 @@ function initCalendar(
     eventContent: renderEventDetails,
     viewDidMount(info) {
       // quick debug - inspect resources and events passed to each calendar
-
       const calendarEl = document.getElementById(containerId);
       setTimeout(() => {
         document.querySelectorAll(".ec-events").forEach((cell) => {
@@ -215,6 +214,12 @@ function initCalendar(
               );
             }
           }
+        });
+        const emptyEvents = document.querySelectorAll(".empty-event");
+
+        emptyEvents.forEach((cell) => {
+          const rid = getResourceIdFromCell(cell);
+          cell.dataset.resourceId = rid;
         });
       });
       // Add group header if provided
@@ -324,6 +329,32 @@ function initCalendar(
       }
     },
   };
+
+  function getResourceIdFromCell(cell) {
+    // find the row (ec-days)
+    const row = cell.closest(".ec-days");
+    if (!row) return null;
+
+    // find index of the row among all rows
+    const rows = [
+      ...document.querySelectorAll(".ec-main .ec-body .ec-content .ec-days"),
+    ];
+    const index = rows.indexOf(row);
+    if (index === -1) return null;
+
+    // match to resource at same index
+    const resources = [
+      ...document.querySelectorAll(".ec-sidebar .ec-resource"),
+    ];
+
+    const res = resources[index];
+    if (!res) return null;
+
+    // get the id from span
+    const span = res.querySelector("span .resource-user");
+    return span?.dataset.resourceId || null;
+  }
+
   if (useCustomHeader) {
     calendarOptions.dayHeaderFormat = CustomHeader;
   }
@@ -517,13 +548,13 @@ function renderResources(arg) {
   const shift = resource.extendedProps?.shift || 0;
   const parent = resource.extendedProps?.isParent;
   const open = resource.extendedProps?.isOpen;
-
+  const id = resource.id;
   // We do not render parent as a calendar row; parents were removed from resources list.
   if (parent) return {};
 
   return {
     html: `
-      <div class="resource-user">
+      <div class="resource-user" data-resource-id=${id}>
         ${
           img
             ? `<img src="${img}" style="border-radius:50%; width:40px; height:40px; object-fit:cover;"/>`
@@ -654,9 +685,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const eventPopup = document.getElementById("event-popup");
   const resourcePopup = document.getElementById("resource-shift-popup");
   const emptyPopup = document.getElementById("empty-popup");
+  const emptyOpenPopup = document.getElementById("empty-open-popup");
 
   let activeEvent = null;
-
   document.addEventListener("click", function (e) {
     const dot = e.target.closest(
       ".events-blue .dots, .events-red .dots,.ec-empty-cell .dots"
@@ -683,18 +714,23 @@ document.addEventListener("DOMContentLoaded", () => {
       activePopupEvent = eventBox;
 
       let resId = null;
+      resId = eventBox.getAttribute("data-resource-id");
       if (!isEmptyCell) {
         resId = eventBox.getAttribute("data-resource-id");
       }
-
       eventPopup.style.display = "none";
       resourcePopup.style.display = "none";
       emptyPopup.style.display = "none";
+      emptyOpenPopup.style.display = "none";
 
       let popupToShow;
 
       if (isEmptyCell) {
-        popupToShow = emptyPopup;
+        const openPopupID = [8, 9, 10];
+        popupToShow = openPopupID.includes(Number(resId))
+          ? emptyOpenPopup
+          : emptyPopup;
+        // popupToShow = emptyPopup;
       } else {
         const eventPopupIDs = [8, 9, 10];
         popupToShow = eventPopupIDs.includes(Number(resId))
@@ -743,7 +779,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (
       e.target.closest("#event-popup") ||
       e.target.closest("#resource-shift-popup") ||
-      e.target.closest("#empty-popup")
+      e.target.closest("#empty-popup") ||
+      e.target.closest("#empty-open-popup")
     )
       return;
 
@@ -757,6 +794,7 @@ document.addEventListener("DOMContentLoaded", () => {
     eventPopup.style.display = "none";
     resourcePopup.style.display = "none";
     emptyPopup.style.display = "none";
+    emptyOpenPopup.style.display = "none";
   }
   window.addEventListener("scroll", disablePopup, true);
   window.addEventListener("resize", disablePopup);
