@@ -418,7 +418,7 @@ h3 svg {
 /* Responsive: keep filter controls on one line under 1400px */
 @media (max-width: 1400px) {
   .dropdown-btn {
-    width: 10rem;
+    /* width: 12rem; */
     padding: 0.18rem 0.375rem !important;
     gap: 0.125rem;
   }
