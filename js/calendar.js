@@ -1,6 +1,7 @@
 let calInstances = []; // store calendar instances (cal1, cal2, cal3...)
 let calResources = {}; // store resources for each group
 let calCollapsed = {}; // store collapse state of each calendar section
+const calendarMap = {};
 let activePopupEvent = null;
 
 async function loadShifts() {
@@ -64,19 +65,6 @@ async function loadShifts() {
           { id: 10, title: "Open Shift", extendedProps: { isOpen: true } },
           {
             id: 7,
-            title: "James Wilson",
-            extendedProps: { shift: 2, imgUrl: "./Assets/images/Ethan.png" },
-          },
-        ],
-      },
-      {
-        id: "Extraa",
-        title: "Extraa",
-        extendedProps: { isParent: true, hours: 11 },
-        children: [
-          { id: 11, title: "Open Shift", extendedProps: { isOpen: true } },
-          {
-            id: 12,
             title: "James Wilson",
             extendedProps: { shift: 2, imgUrl: "./Assets/images/Ethan.png" },
           },
@@ -157,21 +145,10 @@ async function loadShifts() {
         title: "shift-blue",
       },
       {
-        start: "11/23/2025",
-        resourceId: 11,
-        title: "shift-blue",
-      },
-      {
         start: "11/09/2025",
         end: "11/09/2025",
         resourceId: 9,
         title: "shift-red",
-      },
-      {
-        start: "11/26/2025",
-        end: "11/26/2025",
-        resourceId: 12,
-        title: "shift-blue",
       },
       {
         start: "11/01/2025",
@@ -250,15 +227,43 @@ async function loadShifts() {
 
   // INITIALIZE CALENDARS DYNAMICALLY
   renderCalendars(groups);
+  renderCategoryDropdown(groups);
+  initCategoryDropdown();
+  handleSelection();
 }
+
+function renderCategoryDropdown(groups) {
+  const dropdown = document.getElementById("CategorydropdownContent");
+  dropdown.innerHTML = ""; // clear old content
+
+  // --- Select All ---
+  dropdown.innerHTML += `
+    <label>
+      <input type="checkbox" class="select-all" />
+      <span>Select All</span>
+    </label>
+  `;
+
+  // --- Dynamic group titles ---
+  groups.forEach((group) => {
+    dropdown.innerHTML += `
+      <label>
+        <input type="checkbox" value="${group.title}" data-group-id="${group.id}" />
+        <span>${group.title}</span>
+      </label>
+    `;
+  });
+}
+document
+  .querySelectorAll("[data-dropdown] .dropdown-content")
+  .forEach((content) =>
+    content.addEventListener("click", (e) => e.stopPropagation())
+  );
 
 function renderCalendars(groups) {
   const wrapper = document.getElementById("calendar-container");
   wrapper.innerHTML = ""; // clear previous calendars
 
-  // ----------------------------------------------------
-  // 1. Create CAL0 (header-only)
-  // ----------------------------------------------------
   createCalendarContainer(0, wrapper);
 
   calInstances[0] = initCalendar(
@@ -269,9 +274,6 @@ function renderCalendars(groups) {
     { title: "Header", id: "header" }
   );
 
-  // ----------------------------------------------------
-  // 2. Create all calendars for the groups
-  // ----------------------------------------------------
   groups.forEach((group, index) => {
     const calIndex = index + 1; // cal1, cal2, cal3...
     createCalendarContainer(calIndex, wrapper);
@@ -286,21 +288,10 @@ function renderCalendars(groups) {
         hours: group.hours,
       }
     );
+    calendarMap[group.title] = `cal${calIndex}`;
   });
 }
 
-// function getResourceFromId(id, data) {
-//   for (const parent of data.resources) {
-//     if (String(parent.id) === String(id)) return parent;
-
-//     if (parent.children) {
-//       for (const child of parent.children) {
-//         if (String(child.id) === String(id)) return child;
-//       }
-//     }
-//   }
-//   return null;
-// }
 function createCalendarContainer(index, wrapper) {
   const div = document.createElement("div");
   div.id = `cal${index}`;
@@ -321,7 +312,59 @@ function flattenResources(resources) {
   });
   return out;
 }
+function initCategoryDropdown() {
+  const dropdown = document
+    .querySelector("#CategorydropdownContent")
+    .closest("[data-dropdown]");
+  const selectAll = dropdown.querySelector(".select-all");
+  const checkboxes = dropdown.querySelectorAll(
+    "input[type='checkbox']:not(.select-all)"
+  );
 
+  // Mark all selected on load
+  selectAll.checked = true;
+  checkboxes.forEach((cb) => (cb.checked = true));
+
+  // Select All logic
+  selectAll.addEventListener("change", () => {
+    checkboxes.forEach((cb) => (cb.checked = selectAll.checked));
+    handleSelection();
+  });
+
+  // Individual checkbox logic
+  checkboxes.forEach((cb) => {
+    cb.addEventListener("change", () => {
+      selectAll.checked = [...checkboxes].every((c) => c.checked);
+      handleSelection();
+    });
+  });
+}
+
+function handleSelection() {
+  const categoryCheckboxes = document.querySelectorAll(
+    "#CategorydropdownContent input[type='checkbox']:not(.select-all)"
+  );
+
+  const selectedTitles = [...categoryCheckboxes]
+    .filter((cb) => cb.checked)
+    .map((cb) => cb.value);
+
+  // Loop through calendarMap
+  Object.entries(calendarMap).forEach(([title, calId]) => {
+    const el = document.getElementById(calId);
+    if (!el) return;
+
+    el.style.display = selectedTitles.includes(title) ? "block" : "none";
+  });
+
+  // If nothing selected → show ALL calendars
+  if (selectedTitles.length === 0) {
+    Object.values(calendarMap).forEach((calId) => {
+      const el = document.getElementById(calId);
+      if (el) el.style.display = "block";
+    });
+  }
+}
 function initCalendar(
   containerId,
   resources,
