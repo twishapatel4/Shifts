@@ -1,74 +1,141 @@
-let cal0Instance;
-let cal1Instance;
-let cal1Resources;
-let cal1Collapsed = false;
-let cal2Instance;
-let cal2Resources;
-let cal2Collapsed = false;
-let cal3Instance;
-let cal3Resources;
-let cal3Collapsed = false;
-// currently shown popup target (used by repositionPopup)
+// let cal0Instance;
+// let cal1Instance;
+// let cal1Resources;
+// let cal1Collapsed = false;
+// let cal2Instance;
+// let cal2Resources;
+// let cal2Collapsed = false;
+// let cal3Instance;
+// let cal3Resources;
+// let cal3Collapsed = false;
+// // currently shown popup target (used by repositionPopup)
+// let activePopupEvent = null;
+// async function loadShifts() {
+//   const res = await fetch("./js/data/shifts.json");
+//   const data = await res.json();
+
+//   // Build groups (resources array still contains parent objects)
+//   const clinicManagerGroup = {
+//     resources: data.resources.filter((r) => r.id === "CLINIC_MANAGER"),
+//     events: data.events.filter((e) => [1, 2, 8].includes(Number(e.resourceId))),
+//   };
+
+//   const audiometristGroup = {
+//     resources: data.resources.filter((r) => r.id === "AUDIOMETRIST"),
+//     events: data.events.filter((e) =>
+//       [3, 4, 5, 6, 9].includes(Number(e.resourceId))
+//     ),
+//   };
+
+//   const audiologistGroup = {
+//     resources: data.resources.filter((r) => r.id === "AUDIOLOGIST"),
+//     events: data.events.filter((e) => [7, 10].includes(Number(e.resourceId))),
+//   };
+
+//   // Store original resources (including parents) for toggling UI
+//   cal1Resources = clinicManagerGroup.resources;
+//   cal2Resources = audiometristGroup.resources;
+//   cal3Resources = audiologistGroup.resources;
+//   // Initialize calendars. For calendar resources we pass a flattened list WITHOUT parent rows
+//   rendercalendars(clinicManagerGroup, audiometristGroup, audiologistGroup);
+// }
+let calInstances = []; // store calendar instances (cal1, cal2, cal3...)
+let calResources = {}; // store resources for each group
+let calCollapsed = {}; // store collapse state of each calendar section
 let activePopupEvent = null;
+
 async function loadShifts() {
   const res = await fetch("./js/data/shifts.json");
   const data = await res.json();
 
-  // Build groups (resources array still contains parent objects)
-  const clinicManagerGroup = {
-    resources: data.resources.filter((r) => r.id === "CLINIC_MANAGER"),
-    events: data.events.filter((e) => [1, 2, 8].includes(Number(e.resourceId))),
-  };
+  // -------------------------------
+  //  DYNAMIC GROUPING
+  // -------------------------------
+  const groups = data.resources
+    .filter((r) => r.extendedProps?.isParent) // detect parent groups
+    .map((parent) => {
+      const childIds = parent.children.map((c) => Number(c.id));
 
-  const audiometristGroup = {
-    resources: data.resources.filter((r) => r.id === "AUDIOMETRIST"),
-    events: data.events.filter((e) =>
-      [3, 4, 5, 6, 9].includes(Number(e.resourceId))
-    ),
-  };
+      return {
+        id: parent.id,
+        title: parent.title,
+        resources: parent.children, // children only
+        events: data.events.filter((e) =>
+          childIds.includes(Number(e.resourceId))
+        ),
+      };
+    });
 
-  const audiologistGroup = {
-    resources: data.resources.filter((r) => r.id === "AUDIOLOGIST"),
-    events: data.events.filter((e) => [7, 10].includes(Number(e.resourceId))),
-  };
+  // Store resources in a flexible object
+  groups.forEach((group, index) => {
+    calResources[group.id] = group.resources;
+    calCollapsed[group.id] = false;
+  });
 
-  // Store original resources (including parents) for toggling UI
-  cal1Resources = clinicManagerGroup.resources;
-  cal2Resources = audiometristGroup.resources;
-  cal3Resources = audiologistGroup.resources;
-  // Initialize calendars. For calendar resources we pass a flattened list WITHOUT parent rows
-  rendercalendars(clinicManagerGroup, audiometristGroup, audiologistGroup);
+  // INITIALIZE CALENDARS DYNAMICALLY
+  renderCalendars(groups);
 }
 
-function rendercalendars(
-  clinicManagerGroup,
-  audiometristGroup,
-  audiologistGroup
-) {
-  cal0Instance = initCalendar("cal0", [], [], true, null);
-  cal1Instance = initCalendar(
-    "cal1",
-    flattenResources(clinicManagerGroup.resources),
-    clinicManagerGroup.events,
-    false, // use custom header for cal1
-    clinicManagerGroup
-  );
+// function rendercalendars(
+//   clinicManagerGroup,
+//   audiometristGroup,
+//   audiologistGroup
+// ) {
+//   cal0Instance = initCalendar("cal0", [], [], true, null);
+//   cal1Instance = initCalendar(
+//     "cal1",
+//     flattenResources(clinicManagerGroup.resources),
+//     clinicManagerGroup.events,
+//     false, // use custom header for cal1
+//     clinicManagerGroup
+//   );
 
-  cal2Instance = initCalendar(
-    "cal2",
-    flattenResources(audiometristGroup.resources),
-    audiometristGroup.events,
-    false,
-    audiometristGroup
-  );
+//   cal2Instance = initCalendar(
+//     "cal2",
+//     flattenResources(audiometristGroup.resources),
+//     audiometristGroup.events,
+//     false,
+//     audiometristGroup
+//   );
 
-  cal3Instance = initCalendar(
-    "cal3",
-    flattenResources(audiologistGroup.resources),
-    audiologistGroup.events,
-    false,
-    audiologistGroup
-  );
+//   cal3Instance = initCalendar(
+//     "cal3",
+//     flattenResources(audiologistGroup.resources),
+//     audiologistGroup.events,
+//     false,
+//     audiologistGroup
+//   );
+// }
+function renderCalendars(groups) {
+  groups.forEach((group, index) => {
+    const containerId = `cal${index}`; // cal0, cal1, cal2...
+
+    // store calendar instance in global list
+    // calInstances[index] = initCalendar(
+    //   containerId,
+    //   group.resources,
+    //   group.events,
+    //   index === 0, // first calendar gets custom header
+    //   {
+    //     title: group.title,
+    //     id: group.id,
+    //   }
+    // );
+    const useCustomHeader = index === 0;
+
+    // Create calendar instance
+    const instance = initCalendar(
+      containerId,
+      group.resources,
+      group.events,
+      useCustomHeader,
+      {
+        title: group.title,
+        id: group.id,
+      }
+    );
+    calInstances[index] = instance;
+  });
 }
 
 // Helper: flatten resource arrays by replacing parent entries with their children
@@ -363,18 +430,26 @@ function initCalendar(
   return calendar;
 }
 
+// document.getElementById("calPrev").addEventListener("click", () => {
+//   cal0Instance?.prev();
+//   cal1Instance?.prev();
+//   cal2Instance?.prev();
+//   cal3Instance?.prev();
+// });
+
+// document.getElementById("calNext").addEventListener("click", () => {
+//   cal0Instance?.next();
+//   cal1Instance?.next();
+//   cal2Instance?.next();
+//   cal3Instance?.next();
+// });
+
 document.getElementById("calPrev").addEventListener("click", () => {
-  cal0Instance?.prev();
-  cal1Instance?.prev();
-  cal2Instance?.prev();
-  cal3Instance?.prev();
+  calInstances.forEach((cal) => cal?.prev());
 });
 
 document.getElementById("calNext").addEventListener("click", () => {
-  cal0Instance?.next();
-  cal1Instance?.next();
-  cal2Instance?.next();
-  cal3Instance?.next();
+  calInstances.forEach((cal) => cal?.next());
 });
 
 window.addEventListener("dateRangeChanged", (e) => {
@@ -392,129 +467,264 @@ function isIsoDate(str) {
   return typeof str === "string" && /^\d{4}-\d{2}-\d{2}/.test(str);
 }
 
+// function ensureGroupHeader(calendarEl, groupMeta) {
+//   if (calendarEl.querySelector(".group-header")) return;
+
+//   const header = document.createElement("div");
+//   header.className = "group-header";
+//   const parent = groupMeta.resources.find((r) => r.extendedProps?.isParent);
+//   const title = parent ? parent.title : "Group";
+//   const hours = parent.extendedProps.hours;
+
+//   header.innerHTML = `
+//     <div class="group-header-inner">
+//   <div class="left-header">
+//     <button type="button" class="group-collapse-btn">
+//       <!-- DOWN icon (default) -->
+//       <svg
+//         class="icon-down"
+//         xmlns="http://www.w3.org/2000/svg"
+//         fill="none"
+//         viewBox="0 0 24 24"
+//         stroke-width="1.5"
+//         stroke="currentColor"
+//         width="18"
+//         height="18"
+//       >
+//         <path
+//           stroke-linecap="round"
+//           stroke-linejoin="round"
+//           d="m19.5 8.25-7.5 7.5-7.5-7.5"
+//         />
+//       </svg>
+
+//       <!-- UP icon (shown when collapsed) -->
+//       <svg
+//         class="icon-up"
+//         xmlns="http://www.w3.org/2000/svg"
+//         fill="none"
+//         viewBox="0 0 24 24"
+//         stroke-width="1.5"
+//         stroke="currentColor"
+//         width="18"
+//         height="18"
+//       >
+//         <path
+//           stroke-linecap="round"
+//           stroke-linejoin="round"
+//           d="m4.5 15.75 7.5-7.5 7.5 7.5"
+//         />
+//       </svg>
+//     </button>
+//     <div class="group-title">${escapeHtml(title)}</div>
+//     <div>${escapeHtml(hours)} Hrs</div>
+//     <div class="users">
+//       <svg
+//         xmlns="http://www.w3.org/2000/svg"
+//         fill="none"
+//         viewBox="0 0 24 24"
+//         stroke-width="1.5"
+//         stroke="currentColor"
+//         class="size-6"
+//         height="20"
+//         width="20"
+//       >
+//         <path
+//           stroke-linecap="round"
+//           stroke-linejoin="round"
+//           d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
+//         />
+//       </svg>
+//       <div>2</div>
+//     </div>
+//   </div>
+//   <div class="right-header">
+//     <svg
+//       xmlns="http://www.w3.org/2000/svg"
+//       fill="none"
+//       viewBox="0 0 24 24"
+//       stroke-width="1.5"
+//       stroke="currentColor"
+//       class="size-6"
+//       height="24"
+//       width="24"
+//     >
+//       <path
+//         stroke-linecap="round"
+//         stroke-linejoin="round"
+//         d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z"
+//       />
+//     </svg>
+//     <div>Add People</div>
+//   </div>
+// </div>
+
+//   `;
+
+//   calendarEl.insertBefore(header, calendarEl.firstChild);
+//   const btn = header.querySelector(".group-collapse-btn");
+//     btn.addEventListener("click", () => {
+//       const calId = calendarEl.id;
+//       function toggleGroup(collapsed, instance, resourceStore, calendarEl) {
+//         const updated = collapsed ? [] : flattenResources(resourceStore);
+//         instance.setOption("resources", updated);
+
+//         if (collapsed) {
+//           calendarEl.classList.add("no-resources");
+//         } else {
+//           calendarEl.classList.remove("no-resources");
+//         }
+
+//         // Toggle icon state
+//         btn.classList.toggle("collapsed", collapsed);
+//       }
+
+//       if (calId === "cal1" && cal1Instance && cal1Resources) {
+//         cal1Collapsed = !cal1Collapsed;
+//         toggleGroup(cal1Collapsed, cal1Instance, cal1Resources, calendarEl);
+//       } else if (calId === "cal2" && cal2Instance && cal2Resources) {
+//         cal2Collapsed = !cal2Collapsed;
+//         toggleGroup(cal2Collapsed, cal2Instance, cal2Resources, calendarEl);
+//       } else if (calId === "cal3" && cal3Instance && cal3Resources) {
+//         cal3Collapsed = !cal3Collapsed;
+//         toggleGroup(cal3Collapsed, cal3Instance, cal3Resources, calendarEl);
+//       }
+//     });
+// }
 function ensureGroupHeader(calendarEl, groupMeta) {
   if (calendarEl.querySelector(".group-header")) return;
 
   const header = document.createElement("div");
   header.className = "group-header";
+
   const parent = groupMeta.resources.find((r) => r.extendedProps?.isParent);
   const title = parent ? parent.title : "Group";
-  const hours = parent.extendedProps.hours;
+  const hours = parent?.extendedProps?.hours || 0;
 
   header.innerHTML = `
     <div class="group-header-inner">
-  <div class="left-header">
-    <button type="button" class="group-collapse-btn">
-      <!-- DOWN icon (default) -->
-      <svg
-        class="icon-down"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        width="18"
-        height="18"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="m19.5 8.25-7.5 7.5-7.5-7.5"
-        />
-      </svg>
- 
-      <!-- UP icon (shown when collapsed) -->
-      <svg
-        class="icon-up"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        width="18"
-        height="18"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="m4.5 15.75 7.5-7.5 7.5 7.5"
-        />
-      </svg>
-    </button>
-    <div class="group-title">${escapeHtml(title)}</div>
-    <div>${escapeHtml(hours)} Hrs</div>
-    <div class="users">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="size-6"
-        height="20"
-        width="20"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
-        />
-      </svg>
-      <div>2</div>
+      <div class="left-header">
+        <button type="button" class="group-collapse-btn">
+          <svg class="icon-down" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="18" height="18">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="m19.5 8.25-7.5 7.5-7.5-7.5"/>
+          </svg>
+          <svg class="icon-up" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="18" height="18">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="m4.5 15.75 7.5-7.5 7.5 7.5"/>
+          </svg>
+        </button>
+
+        <div class="group-title">${escapeHtml(title)}</div>
+        <div>${escapeHtml(hours)} Hrs</div>
+
+        <div class="users">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+            height="20" width="20">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M15 19.128a9.38 9.38 0 0 0 2.625.372 ..."/>
+          </svg>
+          <div>2</div>
+        </div>
+      </div>
+
+      <div class="right-header">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+          viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+          height="24" width="24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M18 7.5v3m0 0v3m0-3h3 ..."/>
+        </svg>
+        <div>Add People</div>
+      </div>
     </div>
-  </div>
-  <div class="right-header">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke-width="1.5"
-      stroke="currentColor"
-      class="size-6"
-      height="24"
-      width="24"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z"
-      />
-    </svg>
-    <div>Add People</div>
-  </div>
-</div>
- 
   `;
+
   calendarEl.insertBefore(header, calendarEl.firstChild);
+
+  // --------------------------------------------
+  // DYNAMIC COLLAPSE BUTTON LOGIC (NO HARDCODE)
+  // --------------------------------------------
+
   const btn = header.querySelector(".group-collapse-btn");
+  const calId = calendarEl.id; // "cal0", "cal1", ...
+  const index = Number(calId.replace("cal", "")); // convert to 0,1,2,...
+
+  const groupId = groupMeta.id; // store collapse state by group id
 
   btn.addEventListener("click", () => {
-    const calId = calendarEl.id;
-    function toggleGroup(collapsed, instance, resourceStore, calendarEl) {
-      const updated = collapsed ? [] : flattenResources(resourceStore);
-      instance.setOption("resources", updated);
+    // Toggle collapse
+    calCollapsed[groupId] = !calCollapsed[groupId];
 
-      if (collapsed) {
-        calendarEl.classList.add("no-resources");
-      } else {
-        calendarEl.classList.remove("no-resources");
-      }
+    const instance = calInstances[index]; // the calendar instance
+    const resourceStore = calResources[groupId]; // original children list
 
-      // Toggle icon state
-      btn.classList.toggle("collapsed", collapsed);
+    const collapsed = calCollapsed[groupId];
+
+    // Update resources
+    const updatedResources = collapsed ? [] : flattenResources(resourceStore);
+    instance.setOption("resources", updatedResources);
+
+    // Toggle visual states
+    if (collapsed) {
+      calendarEl.classList.add("no-resources");
+    } else {
+      calendarEl.classList.remove("no-resources");
     }
 
-    if (calId === "cal1" && cal1Instance && cal1Resources) {
-      cal1Collapsed = !cal1Collapsed;
-      toggleGroup(cal1Collapsed, cal1Instance, cal1Resources, calendarEl);
-    } else if (calId === "cal2" && cal2Instance && cal2Resources) {
-      cal2Collapsed = !cal2Collapsed;
-      toggleGroup(cal2Collapsed, cal2Instance, cal2Resources, calendarEl);
-    } else if (calId === "cal3" && cal3Instance && cal3Resources) {
-      cal3Collapsed = !cal3Collapsed;
-      toggleGroup(cal3Collapsed, cal3Instance, cal3Resources, calendarEl);
-    }
+    btn.classList.toggle("collapsed", collapsed);
   });
+}
+
+window.addEventListener("click", (e) => {
+  const btn = e.target.closest(".cal-collapse-btn");
+  if (!btn) return;
+
+  const groupId = btn.dataset.groupId;
+  const index = btn.dataset.calIndex;
+
+  const instance = calInstances[index];
+  const resourceStore = calResources[groupId];
+  const collapsedState = calCollapsed[groupId];
+  const calendarEl = document.getElementById(`cal${index}`);
+
+  if (!instance) return;
+
+  // Toggle collapse
+  calCollapsed[groupId] = !collapsedState;
+
+  applyCollapseState({
+    collapsed: calCollapsed[groupId],
+    instance,
+    resourceStore,
+    calendarEl,
+    btn,
+  });
+});
+
+function applyCollapseState({
+  collapsed,
+  instance,
+  resourceStore,
+  calendarEl,
+  btn,
+}) {
+  const updated = collapsed ? [] : flattenResources(resourceStore);
+
+  instance.setOption("resources", updated);
+
+  // Toggle UI state
+  if (collapsed) {
+    calendarEl.classList.add("no-resources");
+  } else {
+    calendarEl.classList.remove("no-resources");
+  }
+
+  // Icon effect
+  btn.classList.toggle("collapsed", collapsed);
 }
 
 function CustomHeader(date) {
