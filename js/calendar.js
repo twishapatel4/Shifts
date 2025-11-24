@@ -1,53 +1,228 @@
-// let cal0Instance;
-// let cal1Instance;
-// let cal1Resources;
-// let cal1Collapsed = false;
-// let cal2Instance;
-// let cal2Resources;
-// let cal2Collapsed = false;
-// let cal3Instance;
-// let cal3Resources;
-// let cal3Collapsed = false;
-// // currently shown popup target (used by repositionPopup)
-// let activePopupEvent = null;
-// async function loadShifts() {
-//   const res = await fetch("./js/data/shifts.json");
-//   const data = await res.json();
-
-//   // Build groups (resources array still contains parent objects)
-//   const clinicManagerGroup = {
-//     resources: data.resources.filter((r) => r.id === "CLINIC_MANAGER"),
-//     events: data.events.filter((e) => [1, 2, 8].includes(Number(e.resourceId))),
-//   };
-
-//   const audiometristGroup = {
-//     resources: data.resources.filter((r) => r.id === "AUDIOMETRIST"),
-//     events: data.events.filter((e) =>
-//       [3, 4, 5, 6, 9].includes(Number(e.resourceId))
-//     ),
-//   };
-
-//   const audiologistGroup = {
-//     resources: data.resources.filter((r) => r.id === "AUDIOLOGIST"),
-//     events: data.events.filter((e) => [7, 10].includes(Number(e.resourceId))),
-//   };
-
-//   // Store original resources (including parents) for toggling UI
-//   cal1Resources = clinicManagerGroup.resources;
-//   cal2Resources = audiometristGroup.resources;
-//   cal3Resources = audiologistGroup.resources;
-//   // Initialize calendars. For calendar resources we pass a flattened list WITHOUT parent rows
-//   rendercalendars(clinicManagerGroup, audiometristGroup, audiologistGroup);
-// }
 let calInstances = []; // store calendar instances (cal1, cal2, cal3...)
 let calResources = {}; // store resources for each group
 let calCollapsed = {}; // store collapse state of each calendar section
 let activePopupEvent = null;
 
 async function loadShifts() {
-  const res = await fetch("./js/data/shifts.json");
-  const data = await res.json();
-
+  const data = {
+    resources: [
+      {
+        id: "CLENT_SERVICE",
+        title: "Client Service Officer/Representative",
+        extendedProps: { isParent: true, hours: 6 },
+        children: [
+          {
+            id: 8,
+            title: "Open Shift",
+            extendedProps: { isOpen: true, shift: 2 },
+          },
+          {
+            id: 1,
+            title: "Sarah Brown",
+            extendedProps: { shift: 2, imgUrl: "./Assets/images/Sarah.png" },
+          },
+          {
+            id: 2,
+            title: "Luke Harris",
+            extendedProps: { shift: 2, imgUrl: "./Assets/images/Jack.png" },
+          },
+        ],
+      },
+      {
+        id: "AUDIOMETRIST",
+        title: "Audiometrist",
+        extendedProps: { isParent: true, hours: 117 },
+        children: [
+          { id: 9, title: "Open Shift", extendedProps: { isOpen: true } },
+          {
+            id: 3,
+            title: "Leo Martin",
+            extendedProps: { shift: 2, imgUrl: "./Assets/images/Jack.png" },
+          },
+          {
+            id: 4,
+            title: "Ben Dravis",
+            extendedProps: { shift: 2, imgUrl: "./Assets/images/Ethan.png" },
+          },
+          {
+            id: 5,
+            title: "Eli Walker",
+            extendedProps: { shift: 2, imgUrl: "./Assets/images/Mia.png" },
+          },
+          {
+            id: 6,
+            title: "Claire David",
+            extendedProps: { shift: 2, imgUrl: "./Assets/images/Liam.png" },
+          },
+        ],
+      },
+      {
+        id: "AUDIOLOGIST",
+        title: "Audiologist",
+        extendedProps: { isParent: true, hours: 11 },
+        children: [
+          { id: 10, title: "Open Shift", extendedProps: { isOpen: true } },
+          {
+            id: 7,
+            title: "James Wilson",
+            extendedProps: { shift: 2, imgUrl: "./Assets/images/Ethan.png" },
+          },
+        ],
+      },
+      {
+        id: "Extraa",
+        title: "Extraa",
+        extendedProps: { isParent: true, hours: 11 },
+        children: [
+          { id: 11, title: "Open Shift", extendedProps: { isOpen: true } },
+          {
+            id: 12,
+            title: "James Wilson",
+            extendedProps: { shift: 2, imgUrl: "./Assets/images/Ethan.png" },
+          },
+        ],
+      },
+    ],
+    events: [
+      {
+        start: "11/24/2025",
+        end: "11/24/2025",
+        resourceId: 1,
+        title: "shift-red",
+      },
+      {
+        start: "11/23/2025",
+        end: "11/23/2025",
+        resourceId: 2,
+        title: "shift-red",
+      },
+      {
+        start: "11/23/2025",
+        end: "11/23/2025",
+        resourceId: 6,
+        title: "shift-blue",
+      },
+      {
+        start: "11/27/2025",
+        end: "11/27/2025",
+        resourceId: 4,
+        title: "shift-red",
+      },
+      {
+        start: "11/25/2025",
+        end: "11/25/2025",
+        resourceId: 7,
+        title: "shift-blue",
+      },
+      {
+        start: "10/25/2025",
+        end: "10/25/2025",
+        resourceId: 3,
+        title: "shift-blue",
+      },
+      { start: "11/06/2025", resourceId: 6, title: "shift-red" },
+      {
+        start: "11/07/2025",
+        end: "11/07/2025",
+        resourceId: 5,
+        title: "shift-blue",
+      },
+      {
+        start: "11/15/2025",
+        end: "11/15/2025",
+        resourceId: 9,
+        title: "shift-blue",
+      },
+      {
+        start: "11/15/2025",
+        end: "11/15/2025",
+        resourceId: 1,
+        title: "shift-blue",
+      },
+      {
+        start: "11/28/2025",
+        end: "11/28/2025",
+        resourceId: 2,
+        title: "shift-red",
+      },
+      {
+        start: "11/14/2025",
+        end: "11/14/2025",
+        resourceId: 4,
+        title: "shift-red",
+      },
+      {
+        start: "11/29/2025",
+        resourceId: 7,
+        title: "shift-blue",
+      },
+      {
+        start: "11/23/2025",
+        resourceId: 11,
+        title: "shift-blue",
+      },
+      {
+        start: "11/09/2025",
+        end: "11/09/2025",
+        resourceId: 9,
+        title: "shift-red",
+      },
+      {
+        start: "11/26/2025",
+        end: "11/26/2025",
+        resourceId: 12,
+        title: "shift-blue",
+      },
+      {
+        start: "11/01/2025",
+        end: "11/01/2025",
+        resourceId: 1,
+        title: "shift-blue",
+      },
+      {
+        start: "11/16/2025",
+        end: "11/16/2025",
+        resourceId: 3,
+        title: "shift-blue",
+      },
+      {
+        start: "11/17/2025",
+        end: "11/17/2025",
+        resourceId: 2,
+        title: "shift-blue",
+      },
+      {
+        start: "11/18/2025",
+        end: "11/18/2025",
+        resourceId: 5,
+        title: "shift-blue",
+      },
+      {
+        start: "11/19/2025",
+        end: "11/19/2025",
+        resourceId: 6,
+        title: "shift-red",
+      },
+      {
+        start: "11/25/2025",
+        end: "11/25/2025",
+        resourceId: 9,
+        title: "shift-red",
+      },
+      {
+        start: "11/19/2025",
+        end: "11/19/2025",
+        resourceId: 1,
+        title: "shift-blue",
+      },
+      {
+        start: "11/20/2025",
+        end: "11/20/2025",
+        resourceId: 2,
+        title: "shift-red",
+      },
+    ],
+  };
   // -------------------------------
   //  DYNAMIC GROUPING
   // -------------------------------
@@ -55,11 +230,12 @@ async function loadShifts() {
     .filter((r) => r.extendedProps?.isParent) // detect parent groups
     .map((parent) => {
       const childIds = parent.children.map((c) => Number(c.id));
-
       return {
         id: parent.id,
         title: parent.title,
+        hours: parent.extendedProps?.hours,
         resources: parent.children, // children only
+        parentResource: parent,
         events: data.events.filter((e) =>
           childIds.includes(Number(e.resourceId))
         ),
@@ -76,66 +252,60 @@ async function loadShifts() {
   renderCalendars(groups);
 }
 
-// function rendercalendars(
-//   clinicManagerGroup,
-//   audiometristGroup,
-//   audiologistGroup
-// ) {
-//   cal0Instance = initCalendar("cal0", [], [], true, null);
-//   cal1Instance = initCalendar(
-//     "cal1",
-//     flattenResources(clinicManagerGroup.resources),
-//     clinicManagerGroup.events,
-//     false, // use custom header for cal1
-//     clinicManagerGroup
-//   );
-
-//   cal2Instance = initCalendar(
-//     "cal2",
-//     flattenResources(audiometristGroup.resources),
-//     audiometristGroup.events,
-//     false,
-//     audiometristGroup
-//   );
-
-//   cal3Instance = initCalendar(
-//     "cal3",
-//     flattenResources(audiologistGroup.resources),
-//     audiologistGroup.events,
-//     false,
-//     audiologistGroup
-//   );
-// }
 function renderCalendars(groups) {
+  const wrapper = document.getElementById("calendar-container");
+  wrapper.innerHTML = ""; // clear previous calendars
+
+  // ----------------------------------------------------
+  // 1. Create CAL0 (header-only)
+  // ----------------------------------------------------
+  createCalendarContainer(0, wrapper);
+
+  calInstances[0] = initCalendar(
+    "cal0",
+    [],
+    [],
+    true, // custom header ONLY for cal0
+    { title: "Header", id: "header" }
+  );
+
+  // ----------------------------------------------------
+  // 2. Create all calendars for the groups
+  // ----------------------------------------------------
   groups.forEach((group, index) => {
-    const containerId = `cal${index}`; // cal0, cal1, cal2...
-
-    // store calendar instance in global list
-    // calInstances[index] = initCalendar(
-    //   containerId,
-    //   group.resources,
-    //   group.events,
-    //   index === 0, // first calendar gets custom header
-    //   {
-    //     title: group.title,
-    //     id: group.id,
-    //   }
-    // );
-    const useCustomHeader = index === 0;
-
-    // Create calendar instance
-    const instance = initCalendar(
-      containerId,
+    const calIndex = index + 1; // cal1, cal2, cal3...
+    createCalendarContainer(calIndex, wrapper);
+    calInstances[calIndex] = initCalendar(
+      `cal${calIndex}`,
       group.resources,
       group.events,
-      useCustomHeader,
+      false, // no custom header for group calendars
       {
         title: group.title,
         id: group.id,
+        hours: group.hours,
       }
     );
-    calInstances[index] = instance;
   });
+}
+
+// function getResourceFromId(id, data) {
+//   for (const parent of data.resources) {
+//     if (String(parent.id) === String(id)) return parent;
+
+//     if (parent.children) {
+//       for (const child of parent.children) {
+//         if (String(child.id) === String(id)) return child;
+//       }
+//     }
+//   }
+//   return null;
+// }
+function createCalendarContainer(index, wrapper) {
+  const div = document.createElement("div");
+  div.id = `cal${index}`;
+  div.className = "calendar-item";
+  wrapper.appendChild(div);
 }
 
 // Helper: flatten resource arrays by replacing parent entries with their children
@@ -290,7 +460,7 @@ function initCalendar(
         });
       });
       // Add group header if provided
-      if (groupMeta) {
+      if (!useCustomHeader && groupMeta) {
         ensureGroupHeader(calendarEl, groupMeta);
       }
 
@@ -430,20 +600,6 @@ function initCalendar(
   return calendar;
 }
 
-// document.getElementById("calPrev").addEventListener("click", () => {
-//   cal0Instance?.prev();
-//   cal1Instance?.prev();
-//   cal2Instance?.prev();
-//   cal3Instance?.prev();
-// });
-
-// document.getElementById("calNext").addEventListener("click", () => {
-//   cal0Instance?.next();
-//   cal1Instance?.next();
-//   cal2Instance?.next();
-//   cal3Instance?.next();
-// });
-
 document.getElementById("calPrev").addEventListener("click", () => {
   calInstances.forEach((cal) => cal?.prev());
 });
@@ -457,149 +613,27 @@ window.addEventListener("dateRangeChanged", (e) => {
   const startDate = new Date(start);
   const endDate = new Date(end);
   const newDate = new Date(start);
-  cal0Instance.setOption("date", newDate);
-  cal1Instance.setOption("date", newDate);
-  cal2Instance.setOption("date", newDate);
-  cal3Instance.setOption("date", newDate);
+  calInstances.forEach((cal) => {
+    if (cal) cal.setOption("date", newDate);
+  });
 });
 
 function isIsoDate(str) {
   return typeof str === "string" && /^\d{4}-\d{2}-\d{2}/.test(str);
 }
 
-// function ensureGroupHeader(calendarEl, groupMeta) {
-//   if (calendarEl.querySelector(".group-header")) return;
-
-//   const header = document.createElement("div");
-//   header.className = "group-header";
-//   const parent = groupMeta.resources.find((r) => r.extendedProps?.isParent);
-//   const title = parent ? parent.title : "Group";
-//   const hours = parent.extendedProps.hours;
-
-//   header.innerHTML = `
-//     <div class="group-header-inner">
-//   <div class="left-header">
-//     <button type="button" class="group-collapse-btn">
-//       <!-- DOWN icon (default) -->
-//       <svg
-//         class="icon-down"
-//         xmlns="http://www.w3.org/2000/svg"
-//         fill="none"
-//         viewBox="0 0 24 24"
-//         stroke-width="1.5"
-//         stroke="currentColor"
-//         width="18"
-//         height="18"
-//       >
-//         <path
-//           stroke-linecap="round"
-//           stroke-linejoin="round"
-//           d="m19.5 8.25-7.5 7.5-7.5-7.5"
-//         />
-//       </svg>
-
-//       <!-- UP icon (shown when collapsed) -->
-//       <svg
-//         class="icon-up"
-//         xmlns="http://www.w3.org/2000/svg"
-//         fill="none"
-//         viewBox="0 0 24 24"
-//         stroke-width="1.5"
-//         stroke="currentColor"
-//         width="18"
-//         height="18"
-//       >
-//         <path
-//           stroke-linecap="round"
-//           stroke-linejoin="round"
-//           d="m4.5 15.75 7.5-7.5 7.5 7.5"
-//         />
-//       </svg>
-//     </button>
-//     <div class="group-title">${escapeHtml(title)}</div>
-//     <div>${escapeHtml(hours)} Hrs</div>
-//     <div class="users">
-//       <svg
-//         xmlns="http://www.w3.org/2000/svg"
-//         fill="none"
-//         viewBox="0 0 24 24"
-//         stroke-width="1.5"
-//         stroke="currentColor"
-//         class="size-6"
-//         height="20"
-//         width="20"
-//       >
-//         <path
-//           stroke-linecap="round"
-//           stroke-linejoin="round"
-//           d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
-//         />
-//       </svg>
-//       <div>2</div>
-//     </div>
-//   </div>
-//   <div class="right-header">
-//     <svg
-//       xmlns="http://www.w3.org/2000/svg"
-//       fill="none"
-//       viewBox="0 0 24 24"
-//       stroke-width="1.5"
-//       stroke="currentColor"
-//       class="size-6"
-//       height="24"
-//       width="24"
-//     >
-//       <path
-//         stroke-linecap="round"
-//         stroke-linejoin="round"
-//         d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z"
-//       />
-//     </svg>
-//     <div>Add People</div>
-//   </div>
-// </div>
-
-//   `;
-
-//   calendarEl.insertBefore(header, calendarEl.firstChild);
-//   const btn = header.querySelector(".group-collapse-btn");
-//     btn.addEventListener("click", () => {
-//       const calId = calendarEl.id;
-//       function toggleGroup(collapsed, instance, resourceStore, calendarEl) {
-//         const updated = collapsed ? [] : flattenResources(resourceStore);
-//         instance.setOption("resources", updated);
-
-//         if (collapsed) {
-//           calendarEl.classList.add("no-resources");
-//         } else {
-//           calendarEl.classList.remove("no-resources");
-//         }
-
-//         // Toggle icon state
-//         btn.classList.toggle("collapsed", collapsed);
-//       }
-
-//       if (calId === "cal1" && cal1Instance && cal1Resources) {
-//         cal1Collapsed = !cal1Collapsed;
-//         toggleGroup(cal1Collapsed, cal1Instance, cal1Resources, calendarEl);
-//       } else if (calId === "cal2" && cal2Instance && cal2Resources) {
-//         cal2Collapsed = !cal2Collapsed;
-//         toggleGroup(cal2Collapsed, cal2Instance, cal2Resources, calendarEl);
-//       } else if (calId === "cal3" && cal3Instance && cal3Resources) {
-//         cal3Collapsed = !cal3Collapsed;
-//         toggleGroup(cal3Collapsed, cal3Instance, cal3Resources, calendarEl);
-//       }
-//     });
-// }
 function ensureGroupHeader(calendarEl, groupMeta) {
   if (calendarEl.querySelector(".group-header")) return;
 
   const header = document.createElement("div");
   header.className = "group-header";
 
-  const parent = groupMeta.resources.find((r) => r.extendedProps?.isParent);
-  const title = parent ? parent.title : "Group";
-  const hours = parent?.extendedProps?.hours || 0;
+  // const parent = groupMeta.resources.find((r) => r.extendedProps?.isParent);
+  const parent = groupMeta.parentResource;
+  // const title = parent ? parent.title : "Group";
+  const title = groupMeta.title;
+  console.log(groupMeta);
+  const hours = groupMeta.hours;
 
   header.innerHTML = `
     <div class="group-header-inner">
@@ -625,7 +659,8 @@ function ensureGroupHeader(calendarEl, groupMeta) {
             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
             height="20" width="20">
             <path stroke-linecap="round" stroke-linejoin="round"
-              d="M15 19.128a9.38 9.38 0 0 0 2.625.372 ..."/>
+               d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
+        />
           </svg>
           <div>2</div>
         </div>
@@ -636,7 +671,7 @@ function ensureGroupHeader(calendarEl, groupMeta) {
           viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
           height="24" width="24">
           <path stroke-linecap="round" stroke-linejoin="round"
-            d="M18 7.5v3m0 0v3m0-3h3 ..."/>
+            d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z"/>
         </svg>
         <div>Add People</div>
       </div>
@@ -648,7 +683,6 @@ function ensureGroupHeader(calendarEl, groupMeta) {
   // --------------------------------------------
   // DYNAMIC COLLAPSE BUTTON LOGIC (NO HARDCODE)
   // --------------------------------------------
-
   const btn = header.querySelector(".group-collapse-btn");
   const calId = calendarEl.id; // "cal0", "cal1", ...
   const index = Number(calId.replace("cal", "")); // convert to 0,1,2,...
@@ -863,31 +897,6 @@ function escapeHtml(str) {
   });
 }
 
-// Toggle buttons (if you still want the old toggle buttons in DOM)
-document.getElementById("cal1-toggle")?.addEventListener("click", () => {
-  if (!cal1Instance || !cal1Resources) return;
-
-  cal1Collapsed = !cal1Collapsed;
-  const updatedResources = cal1Collapsed ? [] : flattenResources(cal1Resources);
-  cal1Instance.setOption("resources", updatedResources);
-});
-
-document.getElementById("cal2-toggle")?.addEventListener("click", () => {
-  if (!cal2Instance || !cal2Resources) return;
-
-  cal2Collapsed = !cal2Collapsed;
-  const updatedResources = cal2Collapsed ? [] : flattenResources(cal2Resources);
-  cal2Instance.setOption("resources", updatedResources);
-});
-
-document.getElementById("cal3-toggle")?.addEventListener("click", () => {
-  if (!cal3Instance || !cal3Resources) return;
-
-  cal3Collapsed = !cal3Collapsed;
-  const updatedResources = cal3Collapsed ? [] : flattenResources(cal3Resources);
-  cal3Instance.setOption("resources", updatedResources);
-});
-
 // kick off data load
 loadShifts();
 
@@ -898,6 +907,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const emptyOpenPopup = document.getElementById("empty-open-popup");
 
   let activeEvent = null;
+  console.log(calResources);
+  const openShiftResourceIds = [];
+
+  Object.values(calResources).forEach((childrenArray) => {
+    childrenArray.forEach((child) => {
+      if (child.extendedProps?.isOpen === true) {
+        openShiftResourceIds.push(child.id);
+      }
+    });
+  });
+
   document.addEventListener("click", function (e) {
     const dot = e.target.closest(
       ".events-blue .dots, .events-red .dots,.ec-empty-cell .dots"
@@ -934,18 +954,12 @@ document.addEventListener("DOMContentLoaded", () => {
       emptyOpenPopup.style.display = "none";
 
       let popupToShow;
+      const isOpen = openShiftResourceIds.includes(Number(resId));
 
       if (isEmptyCell) {
-        const openPopupID = [8, 9, 10];
-        popupToShow = openPopupID.includes(Number(resId))
-          ? emptyOpenPopup
-          : emptyPopup;
-        // popupToShow = emptyPopup;
+        popupToShow = isOpen ? emptyOpenPopup : emptyPopup;
       } else {
-        const eventPopupIDs = [8, 9, 10];
-        popupToShow = eventPopupIDs.includes(Number(resId))
-          ? eventPopup
-          : resourcePopup;
+        popupToShow = popupToShow = isOpen ? eventPopup : resourcePopup;
       }
 
       const rect = eventBox.getBoundingClientRect();
@@ -1080,7 +1094,7 @@ function setupCalendarSync() {
   const master = injectMasterScrollbar();
 
   const scrollAreas = [];
-  document.querySelectorAll("#cal0, #cal1, #cal2, #cal3").forEach((cal) => {
+  document.querySelectorAll("[id^='cal']").forEach((cal) => {
     const header = cal.querySelector(".ec-header");
     const main = cal.querySelector(".ec-main");
     if (header && main) {
