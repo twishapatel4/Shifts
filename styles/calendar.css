@@ -288,7 +288,7 @@ body {
 .ec-events {
   height: auto !important;
   min-height: 3.8rem;
-  max-height: none;
+  max-height: 3.8rem;
 }
 
 .ec-events:not(:has(article)) {

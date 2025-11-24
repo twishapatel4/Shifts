@@ -81,12 +81,6 @@ async function loadShifts() {
       {
         start: "11/23/2025",
         end: "11/23/2025",
-        resourceId: 2,
-        title: "shift-red",
-      },
-      {
-        start: "11/23/2025",
-        end: "11/23/2025",
         resourceId: 6,
         title: "shift-blue",
       },
@@ -108,7 +102,48 @@ async function loadShifts() {
         resourceId: 3,
         title: "shift-blue",
       },
-      { start: "11/06/2025", resourceId: 6, title: "shift-red" },
+      {
+        start: "12/06/2025",
+        end: "12/06/2025",
+        resourceId: 6,
+        title: "shift-red",
+      },
+      {
+        start: "12/04/2025",
+        end: "12/04/2025",
+        resourceId: 5,
+        title: "shift-blue",
+      },
+      {
+        start: "11/15/2025",
+        end: "11/15/2025",
+        resourceId: 10,
+        title: "shift-blue",
+      },
+      {
+        start: "11/15/2025",
+        end: "11/15/2025",
+        resourceId: 1,
+        title: "shift-blue",
+      },
+      {
+        start: "11/28/2025",
+        end: "11/28/2025",
+        resourceId: 2,
+        title: "shift-red",
+      },
+      {
+        start: "11/14/2025",
+        end: "11/14/2025",
+        resourceId: 4,
+        title: "shift-red",
+      },
+      {
+        start: "11/29/2025",
+        end: "11/29/2025",
+        resourceId: 7,
+        title: "shift-blue",
+      },
       {
         start: "11/07/2025",
         end: "11/07/2025",
@@ -145,8 +180,8 @@ async function loadShifts() {
         title: "shift-blue",
       },
       {
-        start: "11/09/2025",
-        end: "11/09/2025",
+        start: "11/29/2025",
+        end: "11/29/2025",
         resourceId: 9,
         title: "shift-red",
       },
@@ -312,6 +347,7 @@ function flattenResources(resources) {
   });
   return out;
 }
+
 function initCategoryDropdown() {
   const dropdown = document
     .querySelector("#CategorydropdownContent")
@@ -340,6 +376,7 @@ function initCategoryDropdown() {
   });
 }
 
+// Selection in Category Dropdown
 function handleSelection() {
   const categoryCheckboxes = document.querySelectorAll(
     "#CategorydropdownContent input[type='checkbox']:not(.select-all)"
@@ -365,6 +402,7 @@ function handleSelection() {
     });
   }
 }
+
 function initCalendar(
   containerId,
   resources,
@@ -675,7 +713,6 @@ function ensureGroupHeader(calendarEl, groupMeta) {
   const parent = groupMeta.parentResource;
   // const title = parent ? parent.title : "Group";
   const title = groupMeta.title;
-  console.log(groupMeta);
   const hours = groupMeta.hours;
 
   header.innerHTML = `
@@ -950,7 +987,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const emptyOpenPopup = document.getElementById("empty-open-popup");
 
   let activeEvent = null;
-  console.log(calResources);
   const openShiftResourceIds = [];
 
   Object.values(calResources).forEach((childrenArray) => {
@@ -1105,7 +1141,7 @@ document.addEventListener("click", function () {
   activePopupEvent = null;
 });
 
-/* ---------- Sync utilities for 4 stacked calendars ---------- */
+/* ---------- Sync utilities for stacked calendars ---------- */
 function injectMasterScrollbar() {
   let master = document.getElementById("master-scrollbar");
 
