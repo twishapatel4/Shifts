@@ -102,7 +102,7 @@ body {
   width: 100%;
   color: #3376d0;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 0.6rem;
   text-align: center;
   overflow: hidden;
   box-sizing: border-box;
@@ -125,7 +125,7 @@ body {
   width: 100%;
   color: #e58f95;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 0.8rem;
   text-align: center;
   overflow: hidden;
   box-sizing: border-box;
@@ -189,16 +189,16 @@ body {
 
 .title {
   font-weight: 400;
-  font-size: 14px;
+  font-size: 0.8rem;
   color: #000;
 }
 
 .resource-name {
-  font-size: 16px;
+  font-size: 1rem;
 }
 
 .shift {
-  font-size: 12px;
+  font-size: 0.6rem;
   color: #7a7979;
 }
 
@@ -247,12 +247,12 @@ body {
 }
 
 .sidebar-title-main {
-  font-size: 14px;
+  font-size: 0.8rem;
   font-weight: 600;
 }
 
 .sidebar-title-sub {
-  font-size: 14px;
+  font-size: 0.8rem;
   font-weight: 400;
 }
 
@@ -263,7 +263,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 14px;
+  font-size: 0.8rem;
   font-weight: 500;
   margin: 0 !important;
   height: 100%;
@@ -275,7 +275,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 14px;
+  font-size: 0.8rem;
   font-weight: 500;
   width: 100%;
   height: auto !important;
@@ -384,7 +384,7 @@ body {
   align-items: center;
   justify-content: space-between;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 1.2rem;
   gap: 2px;
 }
 
@@ -399,7 +399,7 @@ body {
   padding-bottom: 0.6rem !important;
   background-color: #f3f2f1;
   color: #72706f;
-  font-size: 16px;
+  font-size: 1rem;
   display: flex;
   justify-content: space-between;
 }
@@ -412,7 +412,7 @@ body {
 
 .group-title {
   color: #6068ab;
-  font-size: 20px;
+  font-size: 1.4rem;
 }
 
 .left-header button {

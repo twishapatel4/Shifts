@@ -234,12 +234,12 @@ body {
 
 .startDate {
   color: #72706f;
-  font-size: 16px;
+  font-size: 1rem;
 }
 
 .endDate {
   font-weight: 600;
-  font-size: 16px;
+  font-size: 1rem;
 }
 
 .calendar-container {
@@ -297,7 +297,7 @@ body {
 
 .popup-content {
   padding: 0.4rem !important;
-  font-size: 12px;
+  font-size: 0.6rem;
 }
 
 .right-event-x,
@@ -366,7 +366,7 @@ body {
   font-weight: 600;
   margin: 1%;
   padding: 1%;
-  font-size: 14px;
+  font-size: 0.8rem;
 }
 
 h3 svg {
@@ -380,7 +380,7 @@ h3 svg {
 
 .dropdown-item {
   padding: 4px 24px;
-  font-size: 14px;
+  font-size: 0.8rem;
   cursor: pointer;
   border-radius: 4px;
 }
