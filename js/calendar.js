@@ -20,12 +20,12 @@ async function loadShifts() {
           {
             id: 1,
             title: "Sarah Brown",
-            extendedProps: { shift: 2, imgUrl: "./Assets/images/Sarah.png" },
+            extendedProps: { shift: 2, imgUrl: "../sog_SR/RBCupIcon" },
           },
           {
             id: 2,
             title: "Luke Harris",
-            extendedProps: { shift: 2, imgUrl: "./Assets/images/Jack.png" },
+            extendedProps: { shift: 2, imgUrl: "../sog_SR/RBCupIcon" },
           },
         ],
       },
@@ -38,22 +38,22 @@ async function loadShifts() {
           {
             id: 3,
             title: "Leo Martin",
-            extendedProps: { shift: 2, imgUrl: "./Assets/images/Jack.png" },
+            extendedProps: { shift: 2, imgUrl: "../sog_SR/RBCupIcon" },
           },
           {
             id: 4,
             title: "Ben Dravis",
-            extendedProps: { shift: 2, imgUrl: "./Assets/images/Ethan.png" },
+            extendedProps: { shift: 2, imgUrl: "../sog_SR/RBCupIcon" },
           },
           {
             id: 5,
             title: "Eli Walker",
-            extendedProps: { shift: 2, imgUrl: "./Assets/images/Mia.png" },
+            extendedProps: { shift: 2, imgUrl: "../sog_SR/RBCupIcon" },
           },
           {
             id: 6,
             title: "Claire David",
-            extendedProps: { shift: 2, imgUrl: "./Assets/images/Liam.png" },
+            extendedProps: { shift: 2, imgUrl: "../sog_SR/RBCupIcon" },
           },
         ],
       },
@@ -66,7 +66,7 @@ async function loadShifts() {
           {
             id: 7,
             title: "James Wilson",
-            extendedProps: { shift: 2, imgUrl: "./Assets/images/Ethan.png" },
+            extendedProps: { shift: 2, imgUrl: "../sog_SR/RBCupIcon" },
           },
         ],
       },
@@ -262,38 +262,7 @@ async function loadShifts() {
 
   // INITIALIZE CALENDARS DYNAMICALLY
   renderCalendars(groups);
-  renderCategoryDropdown(groups);
-  initCategoryDropdown();
-  handleSelection();
 }
-
-function renderCategoryDropdown(groups) {
-  const dropdown = document.getElementById("CategorydropdownContent");
-  dropdown.innerHTML = ""; // clear old content
-
-  // --- Select All ---
-  dropdown.innerHTML += `
-    <label>
-      <input type="checkbox" class="select-all" />
-      <span>Select All</span>
-    </label>
-  `;
-
-  // --- Dynamic group titles ---
-  groups.forEach((group) => {
-    dropdown.innerHTML += `
-      <label>
-        <input type="checkbox" value="${group.title}" data-group-id="${group.id}" />
-        <span>${group.title}</span>
-      </label>
-    `;
-  });
-}
-document
-  .querySelectorAll("[data-dropdown] .dropdown-content")
-  .forEach((content) =>
-    content.addEventListener("click", (e) => e.stopPropagation())
-  );
 
 function renderCalendars(groups) {
   const wrapper = document.getElementById("calendar-container");
@@ -346,61 +315,6 @@ function flattenResources(resources) {
     }
   });
   return out;
-}
-
-function initCategoryDropdown() {
-  const dropdown = document
-    .querySelector("#CategorydropdownContent")
-    .closest("[data-dropdown]");
-  const selectAll = dropdown.querySelector(".select-all");
-  const checkboxes = dropdown.querySelectorAll(
-    "input[type='checkbox']:not(.select-all)"
-  );
-
-  // Mark all selected on load
-  selectAll.checked = true;
-  checkboxes.forEach((cb) => (cb.checked = true));
-
-  // Select All logic
-  selectAll.addEventListener("change", () => {
-    checkboxes.forEach((cb) => (cb.checked = selectAll.checked));
-    handleSelection();
-  });
-
-  // Individual checkbox logic
-  checkboxes.forEach((cb) => {
-    cb.addEventListener("change", () => {
-      selectAll.checked = [...checkboxes].every((c) => c.checked);
-      handleSelection();
-    });
-  });
-}
-
-// Selection in Category Dropdown
-function handleSelection() {
-  const categoryCheckboxes = document.querySelectorAll(
-    "#CategorydropdownContent input[type='checkbox']:not(.select-all)"
-  );
-
-  const selectedTitles = [...categoryCheckboxes]
-    .filter((cb) => cb.checked)
-    .map((cb) => cb.value);
-
-  // Loop through calendarMap
-  Object.entries(calendarMap).forEach(([title, calId]) => {
-    const el = document.getElementById(calId);
-    if (!el) return;
-
-    el.style.display = selectedTitles.includes(title) ? "block" : "none";
-  });
-
-  // If nothing selected → show ALL calendars
-  if (selectedTitles.length === 0) {
-    Object.values(calendarMap).forEach((calId) => {
-      const el = document.getElementById(calId);
-      if (el) el.style.display = "block";
-    });
-  }
 }
 
 function initCalendar(
