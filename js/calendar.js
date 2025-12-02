@@ -823,8 +823,8 @@ function renderEventDetails(arg) {
          <div class="left-event">
            FT-North Sydney
            <div class="icons">
-             <img src="./Assets/icons/CupRed.svg" height="20" width="20" />
-             <img src="./Assets/icons/TimeRed.svg" height="20" width="20" />
+            <img src="../sog_SR/RBCupRedIcon" height="20" width="20" />
+            <img src="../sog_SR/RBTimeRedIcon" height="20" width="20" />
            </div>
          </div>
          <div class="right-event">X3</div>
@@ -854,8 +854,8 @@ function renderEventDetails(arg) {
       <div class="left-event">
         PT-Sydney CBD
         <div class="icons">
-          <img src="./Assets/icons/Cup.svg" height="20" width="20" />
-          <img src="./Assets/icons/Time.svg" height="20" width="20" />
+        <img src="../sog_SR/RBCupIcon" height="20" width="20" />
+        <img src="../sog_SR/RBTimeIcon" height="20" width="20" />
         </div>
       </div>
        <div class="right-event">X3</div>

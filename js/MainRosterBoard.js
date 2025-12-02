@@ -3,16 +3,13 @@ var X = parent.Xrm;
 async function fetchUniqueTerritoryTypes() {
   try {
     const results = await X.WebApi.online.retrieveMultipleRecords(
-      "territory",
-      "?$select=_managerid_value,name,_parentterritoryid_value,territoryid,sog_territorytypetypecode"
+      "GlobalOptionSetDefinitions"
+      // "?$select=sog_territorytypetypecode"
     );
-
+    console.log(results);
     const labels = results.entities.map((item) => ({
       id: item.territoryid,
-      label:
-        item[
-          "sog_territorytypetypecode@OData.Community.Display.V1.FormattedValue"
-        ],
+      label: item["name"],
     }));
 
     const uniqueMap = new Map();
@@ -35,9 +32,34 @@ async function fetchUniqueSiteTypes() {
       "bookableresource",
       "?$select=bookableresourceid,name&$filter=statecode eq 0 and resourcetype eq 7 and sog_sitetypetypecode ne null"
     );
+    const labels = results.entities.map((item) => ({
+      id: item.bookableresourceid,
+      label: item["name"],
+    }));
+
+    const uniqueMap = new Map();
+    labels.forEach((item) => {
+      if (!uniqueMap.has(item.label)) {
+        uniqueMap.set(item.label, item.id);
+      }
+    });
+
+    return Array.from(uniqueMap, ([label, id]) => ({ id, label }));
+  } catch (error) {
+    X.Navigation.openAlertDialog(error.message);
+    return [];
+  }
+}
+
+async function fetchUniqueCategoryTypes() {
+  try {
+    const results = await X.WebApi.online.retrieveMultipleRecords(
+      "bookableresourcecategory",
+      "?$select=bookableresourcecategoryid,name"
+    );
     console.log(results);
     const labels = results.entities.map((item) => ({
-      id: item.territoryid,
+      id: item.bookableresourcecategoryid,
       label: item["name"],
     }));
 
@@ -115,8 +137,16 @@ async function initTerritoryDropdown() {
 
 async function initSiteDropdown() {
   const sites = await fetchUniqueSiteTypes();
+  console.log(sites);
   renderDropdown(sites, "SiteDropdownContent");
+}
+
+async function initCategoryDropdown() {
+  const category = await fetchUniqueCategoryTypes();
+  console.log(category);
+  renderDropdown(category, "CategoryDropdownContent");
 }
 
 initTerritoryDropdown();
 initSiteDropdown();
+initCategoryDropdown();
