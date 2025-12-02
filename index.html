@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Shifts Calendar</title>
-    <link rel="stylesheet" href="styles/calendar.css" />
-    <link rel="stylesheet" href="styles/styles.css" />
+    <title>Roster Board</title>
+    <link rel="stylesheet" href="../sog_SR/RBCalendarCSS" />
+    <link rel="stylesheet" href="../sog_SR/RBStylesCSS" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@event-calendar/build@4.6.0/dist/event-calendar.min.css"
@@ -14,14 +13,20 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
     />
+    <meta />
   </head>
-
   <body>
     <div class="filter-container">
       <div class="left-filter">
         <div id="calendar-btn" class="calendar-btn">
-           <button id="today-btn" class="today-btn">Today</button>
-          <img src="./Assets/icons/calendar.svg" height="24" width="24" class="calendar-icon" id="calendar-icon" />
+          <button id="today-btn" class="today-btn">Today</button>
+          <img
+            src="../sog_sr/rbcalendaricon"
+            height="24"
+            width="24"
+            class="calendar-icon"
+            id="calendar-icon"
+          />
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -37,9 +42,8 @@
               stroke-linecap="round"
               stroke-linejoin="round"
               d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
-            />
+            ></path>
           </svg>
-
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -55,226 +59,136 @@
               stroke-linecap="round"
               stroke-linejoin="round"
               d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-            />
+            ></path>
           </svg>
-          <div id="startDate" class="startDate">Today</div>-
+          <div id="startDate" class="startDate">Today</div>
+          -
           <div id="endDate" class="endDate">11/12/2025</div>
           <input type="text" id="calendarRange" style="display: none" />
         </div>
-       
+
         <div class="dropdowns-row">
           <!-- Territory Dropdown  -->
-        <div class="dropdown" data-dropdown>
-          <button class="dropdown-btn">
-            Select Territory Type
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              width="18"
-              height="18"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-              />
-            </svg>
-          </button>
-          <div class="dropdown-content" id="TerritorydropdownContent">
-            <label
-              ><input type="checkbox" class="select-all" />
-              <span>Select All</span></label
-            >
-            <label
-              ><input type="checkbox" value="National" /><span>
-                National</span
-              ></label
-            >
-            <label
-              ><input type="checkbox" value="Regional" />
-              <span>Regional</span></label
-            >
-            <label
-              ><input type="checkbox" value="Area (Cluster)" />
-              <span>Area (Cluster)</span></label
-            >
-            <label
-              ><input type="checkbox" value="District" /><span>District</span>
-            </label>
-          </div>
-        </div>
-        
-        <!-- Site Dropdown -->
-        <div class="dropdown" data-dropdown>
-          <button class="dropdown-btn">
-            Select Site
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              width="18"
-              height="18"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-              />
-            </svg>
-          </button>
-          <div class="dropdown-content" id="dropdownContent">
-            <label
-              ><input type="checkbox" class="select-all" />
-              <span>Select All</span></label
-            >
-            <label
-              ><input type="checkbox" value="Permanent Sites" />
-              <span>Permanent Sites</span></label
-            >
-            <label
-              ><input type="checkbox" value="Visiting Sites" /><span>
-                Visiting</span
+          <div class="dropdown" data-dropdown="">
+            <button class="dropdown-btn">
+              Select Territory Type
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                width="18"
+                height="18"
               >
-              Sites</label
-            >
-            <label
-              ><input type="checkbox" value="Home Visits" /><span>
-                Home Visits</span
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                ></path>
+              </svg>
+            </button>
+            <div class="dropdown-content" id="TerritoryDropdownContent">
+              <label>
+                <input type="checkbox" class="select-all" />
+                <span>Select All</span>
+              </label>
+              <label>
+                <input type="checkbox" value="National" /><span>
+                  National
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Site Dropdown -->
+          <div class="dropdown" data-dropdown="">
+            <button class="dropdown-btn">
+              Select Site
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                width="18"
+                height="18"
               >
-            </label>
-            <label
-              ><input type="checkbox" value="Outreach Sites" /><span>
-                Outreach Sites</span
-              ></label
-            >
-            <label
-              ><input type="checkbox" value="Virtual Sites" />
-              <span>Virtual Sites</span></label
-            >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                ></path>
+              </svg>
+            </button>
+            <div class="dropdown-content" id="SiteDropdownContent">
+              <label>
+                <input type="checkbox" class="select-all" />
+                <span>Select All</span>
+              </label>
+              <label>
+                <input type="checkbox" value="Permanent Sites" />
+                <span>Permanent Sites</span>
+              </label>
+            </div>
           </div>
-        </div>
-        
-        <!-- Category Dropdown -->
-        <div class="dropdown" data-dropdown>
-          <button class="dropdown-btn">
-            Select Category
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              width="18"
-              height="18"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-              />
-            </svg>
-          </button>
-          <div class="dropdown-content" id="CategorydropdownContent">
-            <label
-              ><input type="checkbox" class="select-all" />
-              <span>Select All</span></label
-            >
-            <label
-              ><input type="checkbox" value="Clinic Service Officer" />
-              <span>Clinic Service Officer</span></label
-            >
-            <label
-              ><input type="checkbox" value="Audiometrist" />
-              <span>Audiometrist</span></label
-            >
-            <label
-              ><input type="checkbox" value="Audiologist" />
-              <span>Audiologist</span></label
-            >
+
+          <!-- Category Dropdown -->
+          <div class="dropdown" data-dropdown="">
+            <button class="dropdown-btn">
+              Select Category
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                width="18"
+                height="18"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                ></path>
+              </svg>
+            </button>
+            <div class="dropdown-content" id="CategoryDropdownContent">
+              <label>
+                <input type="checkbox" class="select-all" />
+                <span>Select All</span>
+              </label>
+            </div>
           </div>
-        </div>
         </div>
       </div>
 
-      <div class="right-filter ">
-        <div class="filter-wrapper">    
+      <div class="right-filter">
+        <div class="filter-wrapper">
           <div class="filter-btn" id="filter-btn">
-          <img src="./Assets/icons/filter.svg" height="20" />
-          Filter
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            width="18"
-            height="18"
-            class="filter-icon"
-            id="filter-icon"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m19.5 8.25-7.5 7.5-7.5-7.5"
-            />
-          </svg>
+            <img src="../sog_sr/rbfiltericon" height="20" />
+            Filter
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              width="18"
+              height="18"
+              class="filter-icon"
+              id="filter-icon"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m19.5 8.25-7.5 7.5-7.5-7.5"
+              ></path>
+            </svg>
           </div>
           <div class="filter-dropdown" id="filter-dropdown">
-              <div class="section1">
-                <h3 id="Shifts" class="head-dropdown"><svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  width="14"
-                  height="14"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                  />
-                </svg> Shifts:</h3>  
-                <div class="grouped-content">
-                <p class="dropdown-item">All Active</p>
-                <p class="dropdown-item">Time Off</p></div>
-              </div>
-              <hr>
-              <div class="section2">
-                <h3 id="Groups" class="head-dropdown"><svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  width="14"
-                  height="14"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                  />
-                </svg> Groups:</h3>
-                <div class="grouped-content">
-                <p class="dropdown-item">Audiologist</p>
-                <p class="dropdown-item">Audiometrist</p>
-                <p class="dropdown-item">Client Service Officer</p>
-              </div>
-              </div>
-          </div>
-        </div>
-
-        <div class="view-wrapper">
-           <div class="view-btn" id="view-btn">
-                <img src="./Assets/icons/view.svg" height="20" />
-                View
+            <div class="section1">
+              <h3 id="Shifts" class="head-dropdown">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -283,49 +197,108 @@
                   stroke="currentColor"
                   width="14"
                   height="14"
-                  class="view-icon"
-                  id="view-icon"
                 >
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                  />
+                  ></path>
                 </svg>
-          </div>
-           <div class="view-dropdown" id="view-dropdown">
-              <div class="section1">
-                <h3>
+                Shifts:
+              </h3>
+              <div class="grouped-content">
+                <p class="dropdown-item">All Active</p>
+                <p class="dropdown-item">Time Off</p>
+              </div>
+            </div>
+            <hr />
+            <div class="section2">
+              <h3 id="Groups" class="head-dropdown">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  width="14"
+                  height="14"
+                >
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                  />
-                </svg> Quick Access:</h3><div class="grouped-content">
-                <p class="dropdown-item"> Your Shifts</p>
-                <p class="dropdown-item">Team Shifts</p></div>
+                  ></path>
+                </svg>
+                Groups:
+              </h3>
+              <div class="grouped-content">
+                <p class="dropdown-item">Audiologist</p>
+                <p class="dropdown-item">Audiometrist</p>
+                <p class="dropdown-item">Client Service Officer</p>
               </div>
-              <hr>
-              <div class="section2">
-                <h3>
-                Show:</h3><div class="grouped-content">
+            </div>
+          </div>
+        </div>
+
+        <div class="view-wrapper">
+          <div class="view-btn" id="view-btn">
+            <img src="../sog_sr/rbviewicon" height="20" />
+            View
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              width="14"
+              height="14"
+              class="view-icon"
+              id="view-icon"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m19.5 8.25-7.5 7.5-7.5-7.5"
+              ></path>
+            </svg>
+          </div>
+          <div class="view-dropdown" id="view-dropdown">
+            <div class="section1">
+              <h3>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                >
+                  Quick Access:
+                </path>
+              </h3>
+              <div class="grouped-content">
+                <p class="dropdown-item">Your Shifts</p>
+                <p class="dropdown-item">Team Shifts</p>
+              </div>
+            </div>
+            <hr />
+            <div class="section2">
+              <h3>Show:</h3>
+              <div class="grouped-content">
                 <p class="dropdown-item">Open Shifts</p>
-                <p class="dropdown-item">Profile Pictures</p></div>
+                <p class="dropdown-item">Profile Pictures</p>
               </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    </div>
     <div class="calendar-container" id="calendar-container">
       <!-- <div id="cal0"></div>
-      <div id="cal1"></div>
-      <div id="cal2"></div>
-      <div id="cal3"></div> -->
+        <div id="cal1"></div>
+        <div id="cal2"></div>
+        <div id="cal3"></div> -->
     </div>
 
     <!-- Open Shift -->
-    <div id="event-popup" class="event-popup" >
+    <div id="event-popup" class="event-popup">
       <div class="popup-content">
         <div id="popup-description" class="popup-description">
           <div class="icon-name">
@@ -343,7 +316,7 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
-              />
+              ></path>
             </svg>
             <p>Edit Open Shift</p>
           </div>
@@ -362,7 +335,7 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 d="M12 4.5v15m7.5-7.5h-15"
-              />
+              ></path>
             </svg>
             <p>Add Open Shift</p>
           </div>
@@ -381,11 +354,11 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z"
-              />
+              ></path>
             </svg>
 
             <p>Assign Open Shift</p>
-          </div>    
+          </div>
           <div class="icon-name">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -401,11 +374,12 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75"
-              />
+              ></path>
             </svg>
             <p>Copy</p>
-          </div> 
-          <div class="icon-name"> <svg
+          </div>
+          <div class="icon-name">
+            <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -419,18 +393,16 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-              />
+              ></path>
             </svg>
-            <p>Delete</p></div>
+            <p>Delete</p>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Resource Shift -->
-    <div
-      id="resource-shift-popup"
-      class="resource-shift-popup"
-    >
+    <div id="resource-shift-popup" class="resource-shift-popup">
       <div class="popup-content">
         <div id="popup-description" class="popup-description">
           <div class="icon-name">
@@ -448,7 +420,7 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
-              />
+              ></path>
             </svg>
             <p>Edit Shift</p>
           </div>
@@ -467,7 +439,7 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 d="M12 4.5v15m7.5-7.5h-15"
-              />
+              ></path>
             </svg>
             <p>Add Shift</p>
           </div>
@@ -486,14 +458,16 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 d="M12 4.5v15m7.5-7.5h-15"
-              />
+              ></path>
             </svg>
             <p>Add Time Off</p>
           </div>
           <div class="icon-name">
-            <img src="./Assets/icons/Clock.svg" height="18" width="18" />
+            <img src="../sog_sr/rbclockicon" height="18" width="18" />
             <p>Move to Open Shift</p>
-          </div> <div class="icon-name"> <svg
+          </div>
+          <div class="icon-name">
+            <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -507,9 +481,10 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-              />
+              ></path>
             </svg>
-            <p>Delete</p></div>
+            <p>Delete</p>
+          </div>
         </div>
       </div>
     </div>
@@ -517,8 +492,12 @@
     <!-- Empty Event Popup  -->
     <div id="empty-popup" class="empty-popup">
       <div class="popup-content">
-        <div id="popup-description" class="popup-description" style="border:none">
-            <div class="icon-name">
+        <div
+          id="popup-description"
+          class="popup-description"
+          style="border: none"
+        >
+          <div class="icon-name">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -533,11 +512,11 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 d="M12 4.5v15m7.5-7.5h-15"
-              />
+              ></path>
             </svg>
             <p>Add Shift</p>
           </div>
-           <div class="icon-name">
+          <div class="icon-name">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -552,7 +531,7 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 d="M12 4.5v15m7.5-7.5h-15"
-              />
+              ></path>
             </svg>
             <p>Add Time Off</p>
           </div>
@@ -561,10 +540,14 @@
     </div>
 
     <!-- Empty Event Open Shift Popup-->
-      <div id="empty-open-popup" class="empty-open-popup">
+    <div id="empty-open-popup" class="empty-open-popup">
       <div class="popup-content">
-        <div id="popup-description" class="popup-description" style="border:none">
-            <div class="icon-name">
+        <div
+          id="popup-description"
+          class="popup-description"
+          style="border: none"
+        >
+          <div class="icon-name">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -579,7 +562,7 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 d="M12 4.5v15m7.5-7.5h-15"
-              />
+              ></path>
             </svg>
             <p>Add Open Shift</p>
           </div>
@@ -591,9 +574,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@event-calendar/build@4.6.0/dist/event-calendar.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@event-calendar/resource-timeline@4.6.0/dist/index.global.min.js"></script>
 
-    <script src="./js/app.js"></script>
-    <script src="./js/calendar.js"></script>
-    <script src="./js/RosterBoardMain.js"></script>
-    <script></script>
+    <script src="../sog_SR/RBAppJS"></script>
+    <script src="../sog_SR/RBCalendarJS"></script>
+    <script src="../sog_SR/RBRosterBoardMainJS"></script>
   </body>
 </html>
