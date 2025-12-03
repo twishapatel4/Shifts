@@ -19,16 +19,15 @@ async function FetchUniqueTerritoryTypes() {
     if (!response.ok) {
       throw new Error(`Error ${response.status}: ${response.statusText}`);
     }
-
     const result = await response.json();
 
     // Convert Options to array of { id, label }
     const labels = result.Options.map((option) => ({
-      id: option.Value, // FIXED: correct property
+      id: option.Value, // FIXED
       label: option.Label?.UserLocalizedLabel?.Label, // FIXED
     }));
 
-    // Unique filter (same as your site function)
+    // Unique filter
     const uniqueMap = new Map();
     labels.forEach((item) => {
       if (!uniqueMap.has(item.label)) {
@@ -74,7 +73,6 @@ async function FetchUniqueCategoryTypes() {
       "bookableresourcecategory",
       "?$select=bookableresourcecategoryid,name"
     );
-    console.log(results);
     const labels = results.entities.map((item) => ({
       id: item.bookableresourcecategoryid,
       label: item["name"],
@@ -94,18 +92,12 @@ async function FetchUniqueCategoryTypes() {
   }
 }
 
-async function FetchSitesBySelectedTerritories(selectedTerritoryTypeValues) {
+async function FetchSitesBySelectedTerritories(selectedTerritoryTypeValue) {
+  console.log("API 4");
   try {
-    if (!selectedTerritoryTypeValues.length) {
-      console.warn("No territory types selected");
-      return [];
-    }
-
-    // Build dynamic <value> tags based on selected values
-    const valuesXML = selectedTerritoryTypeValues
+    const valuesXML = selectedTerritoryTypeValue
       .map((v) => `<value>${v}</value>`)
       .join("");
-
     const fetchXML = `
       <fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='true'>
         <entity name='bookableresource'>
@@ -136,13 +128,12 @@ async function FetchSitesBySelectedTerritories(selectedTerritoryTypeValues) {
       "bookableresource",
       `?fetchXml=${encoded}`
     );
-
+    console.log(results);
     const labels = results.entities.map((item) => ({
       id: item.bookableresourceid,
       label: item["name"],
     }));
 
-    // Return unique values
     const unique = Array.from(
       new Map(labels.map((i) => [i.label, i])).values()
     );
@@ -179,6 +170,39 @@ function RenderDropdown(groups, containerId) {
   InitDropdownLogic(containerId);
 }
 
+function AttachTerritoryChangeListener(containerId) {
+  const container = document.getElementById(containerId);
+  const checkboxes = container.querySelectorAll(
+    "input[type='checkbox']:not(.select-all)"
+  );
+  const selectAll = container.parentElement.querySelector(".select-all");
+
+  // Listen to individual checkboxes
+  checkboxes.forEach((cb) => {
+    cb.addEventListener("change", async () => {
+      const selected = getSelectedValues(containerId);
+      const codes = selected.map((item) => Number(item.id)); // [3, 7, 9]
+      const sites = await FetchSitesBySelectedTerritories(codes);
+      RenderDropdown(sites, "SiteDropdownContent");
+      InitDropdownLogic("SiteDropdownContent");
+    });
+  });
+}
+
+function getSelectedValues(containerId) {
+  const container = document.getElementById(containerId);
+  const checkboxes = container.querySelectorAll(
+    "input[type='checkbox']:not(.select-all)"
+  );
+
+  return [...checkboxes]
+    .filter((cb) => cb.checked)
+    .map((cb) => ({
+      id: cb.dataset.groupId,
+      // label: cb.value,
+    }));
+}
+
 function InitDropdownLogic(containerId) {
   const wrapper = document
     .getElementById(containerId)
@@ -209,42 +233,19 @@ function InitDropdownLogic(containerId) {
 async function InitTerritoryDropdown() {
   const territories = await FetchUniqueTerritoryTypes();
   RenderDropdown(territories, "TerritoryDropdownContent");
+  AttachTerritoryChangeListener("TerritoryDropdownContent");
 }
 
 async function InitSiteDropdown() {
   const sites = await FetchUniqueSiteTypes();
-  console.log(sites);
   RenderDropdown(sites, "SiteDropdownContent");
 }
 
 async function InitCategoryDropdown() {
   const category = await FetchUniqueCategoryTypes();
-  console.log(category);
   RenderDropdown(category, "CategoryDropdownContent");
 }
 
-function SetupTerritoryChangeListener() {
-  const container = document.getElementById("#TerritoryDropdownContent");
-  container.addEventListener("change", async () => {
-    const selectedValues = [
-      ...container.querySelectorAll("input[type='checkbox']:checked"),
-    ]
-      .filter((cb) => cb.value !== "Select All") // ignore select-all
-      .map((cb) => cb.dataset.groupId);
-
-    console.log("Selected Territory Types:", selectedValues);
-
-    // Fetch Sites filtered by Territories
-    const filteredSites = await FetchSitesBySelectedTerritories(selectedValues);
-
-    // Re-render Site dropdown
-    RenderDropdown(filteredSites, "SiteDropdownContent");
-  });
-}
-
 InitTerritoryDropdown();
-// initTerritoryDropdown().then(() => {
-//   setupTerritoryChangeListener();
-// });
 InitSiteDropdown();
 InitCategoryDropdown();
