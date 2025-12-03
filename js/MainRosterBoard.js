@@ -1,6 +1,27 @@
+// window.RosterLoader = {
+//   pendingTasks: 0,
+
+//   show() {
+//     if (this.pendingTasks === 0) {
+//       document.getElementById("roster-loader").style.display = "block";
+//     }
+//     this.pendingTasks++;
+//     console.log(this.pendingTasks);
+//   },
+
+//   hide() {
+//     this.pendingTasks--;
+//     if (this.pendingTasks <= 0) {
+//       document.getElementById("roster-loader").style.display = "block";
+//       this.pendingTasks = 0;
+//     }
+//   },
+// };
+
 var X = parent.Xrm;
 
 async function FetchUniqueTerritoryTypes() {
+  X.Utility.showProgressIndicator("Loading...");
   try {
     const url =
       X.Utility.getGlobalContext().getClientUrl() +
@@ -39,10 +60,13 @@ async function FetchUniqueTerritoryTypes() {
   } catch (error) {
     X.Navigation.openAlertDialog({ text: error.message });
     return [];
+  } finally {
+    X.Utility.closeProgressIndicator();
   }
 }
 
 async function FetchUniqueSiteTypes() {
+  X.Utility.showProgressIndicator("Loading...");
   try {
     const results = await X.WebApi.online.retrieveMultipleRecords(
       "bookableresource",
@@ -64,10 +88,13 @@ async function FetchUniqueSiteTypes() {
   } catch (error) {
     X.Navigation.openAlertDialog(error.message);
     return [];
+  } finally {
+    X.Utility.closeProgressIndicator();
   }
 }
 
 async function FetchUniqueCategoryTypes() {
+  X.Utility.showProgressIndicator("Loading...");
   try {
     const results = await X.WebApi.online.retrieveMultipleRecords(
       "bookableresourcecategory",
@@ -89,11 +116,12 @@ async function FetchUniqueCategoryTypes() {
   } catch (error) {
     X.Navigation.openAlertDialog(error.message);
     return [];
+  } finally {
+    X.Utility.closeProgressIndicator();
   }
 }
 
 async function FetchSitesBySelectedTerritories(selectedTerritoryTypeValue) {
-  console.log("API 4");
   try {
     const valuesXML = selectedTerritoryTypeValue
       .map((v) => `<value>${v}</value>`)
@@ -128,7 +156,6 @@ async function FetchSitesBySelectedTerritories(selectedTerritoryTypeValue) {
       "bookableresource",
       `?fetchXml=${encoded}`
     );
-    console.log(results);
     const labels = results.entities.map((item) => ({
       id: item.bookableresourceid,
       label: item["name"],

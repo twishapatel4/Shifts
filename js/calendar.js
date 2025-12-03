@@ -4,7 +4,10 @@ let calCollapsed = {}; // store collapse state of each calendar section
 const calendarMap = {};
 let activePopupEvent = null;
 
+var X = parent.Xrm;
+
 async function loadShifts() {
+  X.Utility.showProgressIndicator("Loading...");
   const data = {
     resources: [
       {
@@ -262,6 +265,7 @@ async function loadShifts() {
 
   // INITIALIZE CALENDARS DYNAMICALLY
   renderCalendars(groups);
+  X.Utility.closeProgressIndicator();
 }
 
 function renderCalendars(groups) {

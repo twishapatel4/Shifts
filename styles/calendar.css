@@ -102,7 +102,7 @@ body {
   width: 100%;
   color: #3376d0;
   border-radius: 4px;
-  font-size: 0.6rem;
+  font-size: 0.8rem;
   text-align: center;
   overflow: hidden;
   box-sizing: border-box;
@@ -194,11 +194,11 @@ body {
 }
 
 .resource-name {
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .shift {
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   color: #7a7979;
 }
 
