@@ -2,6 +2,8 @@ body {
   margin: 0;
   padding: 0rem;
   background: #f3f2f1;
+  font-family: "Segoe UI", "Segoe UI Web (West European)", -apple-system,
+    BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
 }
 
 .filter-container {

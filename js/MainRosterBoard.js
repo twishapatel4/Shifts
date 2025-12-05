@@ -70,7 +70,7 @@ async function FetchUniqueSiteTypes() {
   try {
     const results = await X.WebApi.online.retrieveMultipleRecords(
       "bookableresource",
-      "?$select=bookableresourceid,name&$filter=statecode eq 0 and resourcetype eq 7 and sog_sitetypetypecode ne null"
+      "?$select=bookableresourceid,name&$filter=statecode eq 0 and resourcetype eq 7 and sog_sitetypetypecode eq null"
     );
     const labels = results.entities.map((item) => ({
       id: item.bookableresourceid,
@@ -98,7 +98,7 @@ async function FetchUniqueCategoryTypes() {
   try {
     const results = await X.WebApi.online.retrieveMultipleRecords(
       "bookableresourcecategory",
-      "?$select=bookableresourcecategoryid,name"
+      "?$select=bookableresourcecategoryid,name&$filter=statecode eq 0"
     );
     const labels = results.entities.map((item) => ({
       id: item.bookableresourcecategoryid,
@@ -122,6 +122,7 @@ async function FetchUniqueCategoryTypes() {
 }
 
 async function FetchSitesBySelectedTerritories(selectedTerritoryTypeValue) {
+  X.Utility.showProgressIndicator("Loading...");
   try {
     const valuesXML = selectedTerritoryTypeValue
       .map((v) => `<value>${v}</value>`)
@@ -168,6 +169,8 @@ async function FetchSitesBySelectedTerritories(selectedTerritoryTypeValue) {
   } catch (err) {
     X.Navigation.openAlertDialog(err.message);
     return [];
+  } finally {
+    X.Utility.closeProgressIndicator();
   }
 }
 
@@ -204,16 +207,27 @@ function AttachTerritoryChangeListener(containerId) {
   );
   const selectAll = container.parentElement.querySelector(".select-all");
 
+  async function handleTerritoryChange() {
+    const selected = getSelectedValues(containerId);
+    if (!selected || selected.length === 0) {
+      return;
+    }
+    const codes = selected.map((item) => Number(item.id)); // [3, 7, 9]
+
+    const sites = await FetchSitesBySelectedTerritories(codes);
+    RenderDropdown(sites, "SiteDropdownContent");
+    InitDropdownLogic("SiteDropdownContent");
+  }
+
   // Listen to individual checkboxes
   checkboxes.forEach((cb) => {
-    cb.addEventListener("change", async () => {
-      const selected = getSelectedValues(containerId);
-      const codes = selected.map((item) => Number(item.id)); // [3, 7, 9]
-      const sites = await FetchSitesBySelectedTerritories(codes);
-      RenderDropdown(sites, "SiteDropdownContent");
-      InitDropdownLogic("SiteDropdownContent");
-    });
+    cb.addEventListener("change", handleTerritoryChange);
   });
+
+  // Listen to "Select All"
+  if (selectAll) {
+    selectAll.addEventListener("change", handleTerritoryChange);
+  }
 }
 
 function getSelectedValues(containerId) {

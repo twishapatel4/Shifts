@@ -1,5 +1,4 @@
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0px;
   background: #f6f7fb;
@@ -41,13 +40,13 @@ body {
 .ec-timeline .ec-sidebar .ec-resource {
   overflow: hidden;
   padding: 0rem 1.2rem !important;
-  min-height: 4.2rem;
-  max-height: 4.2rem;
+  min-height: 4rem;
+  max-height: 4rem;
 }
 
 .ec-resource-row {
-  min-height: 3.8rem;
-  max-height: 4.2rem;
+  min-height: 3.6rem;
+  max-height: 4rem;
   overflow: hidden;
 }
 
@@ -83,7 +82,7 @@ body {
 }
 
 .ec-timeline .ec-body .ec-days {
-  max-height: 4.2rem !important;
+  max-height: 4rem !important;
 }
 
 .events-blue {
@@ -94,8 +93,8 @@ body {
   margin-left: 6px;
   margin-top: 16px;
   height: auto !important;
-  min-height: 3.6rem;
-  max-height: 3.6rem;
+  min-height: 3.4rem;
+  max-height: 3.4rem;
   display: flex;
   justify-content: space-between;
   padding: 0.3rem;
@@ -117,8 +116,8 @@ body {
   margin-left: 6px;
   margin-top: 16px;
   height: auto !important;
-  min-height: 3.6rem;
-  max-height: 3.6rem;
+  min-height: 3.4rem;
+  max-height: 3.4rem;
   display: flex;
   justify-content: space-between;
   padding: 0.3rem;
@@ -279,7 +278,7 @@ body {
   font-weight: 500;
   width: 100%;
   height: auto !important;
-  min-height: 3.8rem;
+  min-height: 3.6rem;
   max-height: none;
   margin-top: 0px !important;
 }
@@ -287,8 +286,8 @@ body {
 .ec-resource-row,
 .ec-events {
   height: auto !important;
-  min-height: 3.8rem;
-  max-height: 3.8rem;
+  min-height: 3.6rem;
+  max-height: 3.6rem;
 }
 
 .ec-events:not(:has(article)) {
@@ -395,8 +394,8 @@ body {
 
 .group-header-inner {
   margin: 0 !important;
-  padding: 1.2rem;
-  padding-bottom: 0.6rem !important;
+  padding: 0.6rem 1.2rem;
+  padding-bottom: 0.3rem !important;
   background-color: #f3f2f1;
   color: #72706f;
   font-size: 1rem;
