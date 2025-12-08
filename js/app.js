@@ -144,6 +144,16 @@ const fp = flatpickr(rangeInput, {
     );
   },
 });
+/* =============================
+   DROPDOWN CLOSE LOGIC
+============================= */
+function closeDropdowns() {
+  document
+    .querySelectorAll(
+      ".filter-dropdown.show, .view-dropdown.show, .dropdown.show"
+    )
+    .forEach((d) => d.classList.remove("show"));
+}
 
 /* =============================
    WEEK SELECTION LOGIC
@@ -266,6 +276,7 @@ function updateButtonText(start, end) {
 ============================= */
 calendarBtn.addEventListener("click", (e) => {
   e.stopPropagation();
+  closeDropdowns();
   fp.open();
 });
 
@@ -299,7 +310,8 @@ const FilterBtn = document.getElementById("filter-btn");
 filterDropdown = document.getElementById("filter-dropdown");
 FilterBtn.addEventListener("click", (e) => {
   e.stopPropagation();
-  viewDropdown.classList.remove("show");
+  // viewDropdown.classList.remove("show");
+  closeDropdowns();
   filterDropdown.classList.toggle("show");
 });
 
@@ -307,7 +319,8 @@ const viewBtn = document.getElementById("view-btn");
 viewDropdown = document.getElementById("view-dropdown");
 viewBtn.addEventListener("click", (e) => {
   e.stopPropagation();
-  filterDropdown.classList.remove("show");
+  // filterDropdown.classList.remove("show");
+  closeDropdowns();
   viewDropdown.classList.toggle("show");
 });
 
