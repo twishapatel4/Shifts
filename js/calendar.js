@@ -5,262 +5,392 @@ const calendarMap = {};
 let activePopupEvent = null;
 
 async function loadShifts() {
+  // const data = {
+  //   resources: [
+  //     {
+  //       id: "CLENT_SERVICE",
+  //       title: "Client Service Officer/Representative",
+  //       extendedProps: { isParent: true, hours: 6 },
+  //       children: [
+  //         {
+  //           id: 8,
+  //           title: "Open Shift",
+  //           extendedProps: { isOpen: true, shift: 2 },
+  //         },
+  //         {
+  //           id: 1,
+  //           title: "Sarah Brown",
+  //           extendedProps: { shift: 2, imgUrl: "./Assets/images/Sarah.png" },
+  //         },
+  //         {
+  //           id: 2,
+  //           title: "Luke Harris",
+  //           extendedProps: { shift: 2, imgUrl: "./Assets/images/Jack.png" },
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       id: "AUDIOMETRIST",
+  //       title: "Audiometrist",
+  //       extendedProps: { isParent: true, hours: 117 },
+  //       children: [
+  //         { id: 9, title: "Open Shift", extendedProps: { isOpen: true } },
+  //         {
+  //           id: 3,
+  //           title: "Leo Martin",
+  //           extendedProps: { shift: 2, imgUrl: "./Assets/images/Jack.png" },
+  //         },
+  //         {
+  //           id: 4,
+  //           title: "Ben Dravis",
+  //           extendedProps: { shift: 2, imgUrl: "./Assets/images/Ethan.png" },
+  //         },
+  //         {
+  //           id: 5,
+  //           title: "Eli Walker",
+  //           extendedProps: { shift: 2, imgUrl: "./Assets/images/Mia.png" },
+  //         },
+  //         {
+  //           id: 6,
+  //           title: "Claire David",
+  //           extendedProps: { shift: 2, imgUrl: "./Assets/images/Liam.png" },
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       id: "AUDIOLOGIST",
+  //       title: "Audiologist",
+  //       extendedProps: { isParent: true, hours: 11 },
+  //       children: [
+  //         { id: 10, title: "Open Shift", extendedProps: { isOpen: true } },
+  //         {
+  //           id: 7,
+  //           title: "James Wilson",
+  //           extendedProps: { shift: 2, imgUrl: "./Assets/images/Ethan.png" },
+  //         },
+  //       ],
+  //     },
+  //   ],
+  //   events: [
+  //     {
+  //       start: "11/24/2025",
+  //       end: "11/24/2025",
+  //       resourceId: 1,
+  //       title: "shift-red",
+  //     },
+  //     {
+  //       start: "11/23/2025",
+  //       end: "11/23/2025",
+  //       resourceId: 6,
+  //       title: "shift-blue",
+  //     },
+  //     {
+  //       start: "11/27/2025",
+  //       end: "11/27/2025",
+  //       resourceId: 4,
+  //       title: "shift-red",
+  //     },
+  //     {
+  //       start: "11/25/2025",
+  //       end: "11/25/2025",
+  //       resourceId: 7,
+  //       title: "shift-blue",
+  //     },
+  //     {
+  //       start: "10/25/2025",
+  //       end: "10/25/2025",
+  //       resourceId: 3,
+  //       title: "shift-blue",
+  //     },
+  //     {
+  //       start: "12/06/2025",
+  //       end: "12/06/2025",
+  //       resourceId: 6,
+  //       title: "shift-red",
+  //     },
+  //     {
+  //       start: "12/04/2025",
+  //       end: "12/04/2025",
+  //       resourceId: 5,
+  //       title: "shift-blue",
+  //     },
+  //     {
+  //       start: "11/15/2025",
+  //       end: "11/15/2025",
+  //       resourceId: 10,
+  //       title: "shift-blue",
+  //     },
+  //     {
+  //       start: "11/15/2025",
+  //       end: "11/15/2025",
+  //       resourceId: 1,
+  //       title: "shift-blue",
+  //     },
+  //     {
+  //       start: "11/28/2025",
+  //       end: "11/28/2025",
+  //       resourceId: 2,
+  //       title: "shift-red",
+  //     },
+  //     {
+  //       start: "11/14/2025",
+  //       end: "11/14/2025",
+  //       resourceId: 4,
+  //       title: "shift-red",
+  //     },
+  //     {
+  //       start: "11/29/2025",
+  //       end: "11/29/2025",
+  //       resourceId: 7,
+  //       title: "shift-blue",
+  //     },
+  //     {
+  //       start: "11/07/2025",
+  //       end: "11/07/2025",
+  //       resourceId: 5,
+  //       title: "shift-blue",
+  //     },
+  //     {
+  //       start: "11/15/2025",
+  //       end: "11/15/2025",
+  //       resourceId: 9,
+  //       title: "shift-blue",
+  //     },
+  //     {
+  //       start: "11/15/2025",
+  //       end: "11/15/2025",
+  //       resourceId: 1,
+  //       title: "shift-blue",
+  //     },
+  //     {
+  //       start: "11/28/2025",
+  //       end: "11/28/2025",
+  //       resourceId: 2,
+  //       title: "shift-red",
+  //     },
+  //     {
+  //       start: "11/14/2025",
+  //       end: "11/14/2025",
+  //       resourceId: 4,
+  //       title: "shift-red",
+  //     },
+  //     {
+  //       start: "11/29/2025",
+  //       resourceId: 7,
+  //       title: "shift-blue",
+  //     },
+  //     {
+  //       start: "11/29/2025",
+  //       end: "11/29/2025",
+  //       resourceId: 9,
+  //       title: "shift-red",
+  //     },
+  //     {
+  //       start: "11/01/2025",
+  //       end: "11/01/2025",
+  //       resourceId: 1,
+  //       title: "shift-blue",
+  //     },
+  //     {
+  //       start: "11/16/2025",
+  //       end: "11/16/2025",
+  //       resourceId: 3,
+  //       title: "shift-blue",
+  //     },
+  //     {
+  //       start: "11/17/2025",
+  //       end: "11/17/2025",
+  //       resourceId: 2,
+  //       title: "shift-blue",
+  //     },
+  //     {
+  //       start: "11/18/2025",
+  //       end: "11/18/2025",
+  //       resourceId: 5,
+  //       title: "shift-blue",
+  //     },
+  //     {
+  //       start: "11/19/2025",
+  //       end: "11/19/2025",
+  //       resourceId: 6,
+  //       title: "shift-red",
+  //     },
+  //     {
+  //       start: "11/25/2025",
+  //       end: "11/25/2025",
+  //       resourceId: 9,
+  //       title: "shift-red",
+  //     },
+  //     {
+  //       start: "11/19/2025",
+  //       end: "11/19/2025",
+  //       resourceId: 1,
+  //       title: "shift-blue",
+  //     },
+  //     {
+  //       start: "11/20/2025",
+  //       end: "11/20/2025",
+  //       resourceId: 2,
+  //       title: "shift-red",
+  //     },
+  //   ],
+  // };
   const data = {
     resources: [
       {
-        id: "CLENT_SERVICE",
+        categoryId: "ff2014946-babb-f011-bbd3-00224814b93c",
         title: "Client Service Officer/Representative",
         extendedProps: { isParent: true, hours: 6 },
         children: [
           {
-            id: 8,
+            resourceId: "OpenShift",
             title: "Open Shift",
             extendedProps: { isOpen: true, shift: 2 },
           },
           {
-            id: 1,
+            resourceId: "ResourceGUID",
             title: "Sarah Brown",
-            extendedProps: { shift: 2, imgUrl: "./Assets/images/Sarah.png" },
+            extendedProps: { shift: 2, imgUrl: "Base64String" },
           },
           {
-            id: 2,
-            title: "Luke Harris",
-            extendedProps: { shift: 2, imgUrl: "./Assets/images/Jack.png" },
-          },
-        ],
-      },
-      {
-        id: "AUDIOMETRIST",
-        title: "Audiometrist",
-        extendedProps: { isParent: true, hours: 117 },
-        children: [
-          { id: 9, title: "Open Shift", extendedProps: { isOpen: true } },
-          {
-            id: 3,
+            resourceId: "ResourceGUID2",
             title: "Leo Martin",
-            extendedProps: { shift: 2, imgUrl: "./Assets/images/Jack.png" },
-          },
-          {
-            id: 4,
-            title: "Ben Dravis",
-            extendedProps: { shift: 2, imgUrl: "./Assets/images/Ethan.png" },
-          },
-          {
-            id: 5,
-            title: "Eli Walker",
-            extendedProps: { shift: 2, imgUrl: "./Assets/images/Mia.png" },
-          },
-          {
-            id: 6,
-            title: "Claire David",
-            extendedProps: { shift: 2, imgUrl: "./Assets/images/Liam.png" },
+            extendedProps: { shift: 2, imgUrl: "Base64String" },
           },
         ],
       },
       {
-        id: "AUDIOLOGIST",
-        title: "Audiologist",
-        extendedProps: { isParent: true, hours: 11 },
+        categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
+        title: "Audiometrist",
+        extendedProps: { isParent: true, hours: 6 },
         children: [
-          { id: 10, title: "Open Shift", extendedProps: { isOpen: true } },
           {
-            id: 7,
-            title: "James Wilson",
-            extendedProps: { shift: 2, imgUrl: "./Assets/images/Ethan.png" },
+            resourceId: "OpenShift",
+            title: "Open Shift",
+            extendedProps: { isOpen: true, shift: 2 },
+          },
+          {
+            resourceId: "ResourceGUID",
+            title: "Sarah Brown",
+            extendedProps: { shift: 2, imgUrl: "Base64String" },
+          },
+          {
+            resourceId: "ResourceGUID2",
+            title: "Leo Martinn",
+            extendedProps: { shift: 2, imgUrl: "Base64String" },
           },
         ],
       },
     ],
     events: [
       {
-        start: "11/24/2025",
-        end: "11/24/2025",
-        resourceId: 1,
+        start: "12/10/2025",
+        end: "12/10/2025",
+        resourceId: "ResourceGUID",
         title: "shift-red",
+        backgroundColor: "#fff000",
+        extendedProps: {
+          categoryId: "ff2014946-babb-f011-bbd3-00224814b93c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
       },
       {
-        start: "11/23/2025",
-        end: "11/23/2025",
-        resourceId: 6,
-        title: "shift-blue",
-      },
-      {
-        start: "11/27/2025",
-        end: "11/27/2025",
-        resourceId: 4,
+        start: "12/08/2025",
+        end: "12/08/2025",
+        resourceId: "ResourceGUID2",
         title: "shift-red",
+        backgroundColor: "#fff000",
+        extendedProps: {
+          categoryId: "ff2014946-babb-f011-bbd3-00224814b93c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
       },
       {
-        start: "11/25/2025",
-        end: "11/25/2025",
-        resourceId: 7,
+        start: "12/08/2025",
+        end: "12/08/2025",
+        resourceId: "ResourceGUID2",
         title: "shift-blue",
+        backgroundColor: "#fff000",
+        extendedProps: {
+          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
       },
       {
-        start: "10/25/2025",
-        end: "10/25/2025",
-        resourceId: 3,
+        start: "12/09/2025",
+        end: "12/09/2025",
+        resourceId: "OpenShift", // CategoryID_OpenShift for OpenShift
         title: "shift-blue",
-      },
-      {
-        start: "12/06/2025",
-        end: "12/06/2025",
-        resourceId: 6,
-        title: "shift-red",
-      },
-      {
-        start: "12/04/2025",
-        end: "12/04/2025",
-        resourceId: 5,
-        title: "shift-blue",
-      },
-      {
-        start: "11/15/2025",
-        end: "11/15/2025",
-        resourceId: 10,
-        title: "shift-blue",
-      },
-      {
-        start: "11/15/2025",
-        end: "11/15/2025",
-        resourceId: 1,
-        title: "shift-blue",
-      },
-      {
-        start: "11/28/2025",
-        end: "11/28/2025",
-        resourceId: 2,
-        title: "shift-red",
-      },
-      {
-        start: "11/14/2025",
-        end: "11/14/2025",
-        resourceId: 4,
-        title: "shift-red",
-      },
-      {
-        start: "11/29/2025",
-        end: "11/29/2025",
-        resourceId: 7,
-        title: "shift-blue",
-      },
-      {
-        start: "11/07/2025",
-        end: "11/07/2025",
-        resourceId: 5,
-        title: "shift-blue",
-      },
-      {
-        start: "11/15/2025",
-        end: "11/15/2025",
-        resourceId: 9,
-        title: "shift-blue",
-      },
-      {
-        start: "11/15/2025",
-        end: "11/15/2025",
-        resourceId: 1,
-        title: "shift-blue",
-      },
-      {
-        start: "11/28/2025",
-        end: "11/28/2025",
-        resourceId: 2,
-        title: "shift-red",
-      },
-      {
-        start: "11/14/2025",
-        end: "11/14/2025",
-        resourceId: 4,
-        title: "shift-red",
-      },
-      {
-        start: "11/29/2025",
-        resourceId: 7,
-        title: "shift-blue",
-      },
-      {
-        start: "11/29/2025",
-        end: "11/29/2025",
-        resourceId: 9,
-        title: "shift-red",
-      },
-      {
-        start: "11/01/2025",
-        end: "11/01/2025",
-        resourceId: 1,
-        title: "shift-blue",
-      },
-      {
-        start: "11/16/2025",
-        end: "11/16/2025",
-        resourceId: 3,
-        title: "shift-blue",
-      },
-      {
-        start: "11/17/2025",
-        end: "11/17/2025",
-        resourceId: 2,
-        title: "shift-blue",
-      },
-      {
-        start: "11/18/2025",
-        end: "11/18/2025",
-        resourceId: 5,
-        title: "shift-blue",
-      },
-      {
-        start: "11/19/2025",
-        end: "11/19/2025",
-        resourceId: 6,
-        title: "shift-red",
-      },
-      {
-        start: "11/25/2025",
-        end: "11/25/2025",
-        resourceId: 9,
-        title: "shift-red",
-      },
-      {
-        start: "11/19/2025",
-        end: "11/19/2025",
-        resourceId: 1,
-        title: "shift-blue",
-      },
-      {
-        start: "11/20/2025",
-        end: "11/20/2025",
-        resourceId: 2,
-        title: "shift-red",
+        extendedProps: {
+          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
+        backgroundColor: "#fff000",
       },
     ],
   };
-  // -------------------------------
-  //  DYNAMIC GROUPING
-  // -------------------------------
+  function makeResourceKey(categoryId, resourceId) {
+    return `${categoryId}_${resourceId}`;
+  }
+
   const groups = data.resources
-    .filter((r) => r.extendedProps?.isParent) // detect parent groups
+    .filter((r) => r.extendedProps?.isParent)
     .map((parent) => {
-      const childIds = parent.children.map((c) => Number(c.id));
+      const resources = parent.children.map((c) => {
+        const id = makeResourceKey(parent.categoryId, c.resourceId);
+        // console.log(id);
+        return {
+          id,
+          title: c.title,
+          extendedProps: {
+            ...c.extendedProps,
+            resourceId: c.resourceId,
+            categoryId: parent.categoryId,
+          },
+        };
+      });
+
+      // Collect resource keys for this group
+      const childKeys = resources.map((r) => r.id);
+
+      // Filter events that belong to this group only
+      const events = data.events
+        .map((e) => ({
+          ...e,
+          resourceIdWithCategory: makeResourceKey(
+            e.extendedProps.categoryId,
+            e.resourceId
+          ),
+        }))
+        .filter((e) => childKeys.includes(e.resourceIdWithCategory))
+        .map((e) => ({
+          ...e,
+          resourceId: e.resourceIdWithCategory,
+        }));
+
       return {
-        id: parent.id,
+        id: parent.categoryId,
         title: parent.title,
         hours: parent.extendedProps?.hours,
-        resources: parent.children, // children only
+        resources,
         parentResource: parent,
-        events: data.events.filter((e) =>
-          childIds.includes(Number(e.resourceId))
-        ),
+        events,
       };
     });
 
   // Store resources in a flexible object
-  groups.forEach((group, index) => {
+  groups.forEach((group) => {
     calResources[group.id] = group.resources;
     calCollapsed[group.id] = false;
   });
 
-  // INITIALIZE CALENDARS DYNAMICALLY
+  console.log("Groups:", groups);
+
+  // Then render dropdown and calendars
   renderCalendars(groups);
   renderCategoryDropdown(groups);
   initCategoryDropdown();
@@ -281,6 +411,7 @@ function renderCategoryDropdown(groups) {
 
   // --- Dynamic group titles ---
   groups.forEach((group) => {
+    console.log(group.events);
     dropdown.innerHTML += `
       <label>
         <input type="checkbox" value="${group.title}" data-group-id="${group.id}" />
@@ -312,6 +443,7 @@ function renderCalendars(groups) {
   groups.forEach((group, index) => {
     const calIndex = index + 1; // cal1, cal2, cal3...
     createCalendarContainer(calIndex, wrapper);
+    console.log(group.events);
     calInstances[calIndex] = initCalendar(
       `cal${calIndex}`,
       group.resources,
@@ -897,15 +1029,19 @@ function renderResources(arg) {
 
 function renderEventDetails(arg) {
   const event = arg.event;
+  // console.log(event);
   const title = (event.title || "").toLowerCase();
   const resourceId = event.resourceIds[0];
+  const color =
+    event.extendedProps?.shiftColor || event.backgroundColor || "#000000";
+  // console.log(color);
   // Detect red vs blue from title (user requested event title detection)
   const isRed = title.includes("red") || title.includes("shift-red");
   const isBlue = title.includes("blue") || title.includes("shift-blue");
   if (isRed) {
     return {
       html: `
-       <div class="events-red" data-resource-id="${resourceId}">
+       <div class="events-red" data-resource-id="${resourceId}<style> background-color: ${color}</style">
          <div class="left-event">
            FT-North Sydney
            <div class="icons">
@@ -936,7 +1072,7 @@ function renderEventDetails(arg) {
   if (isBlue) {
     return {
       html: `
-    <div class="events-blue" data-resource-id="${resourceId}">
+    <div class="events-blue" data-resource-id="${resourceId}<style> background-color: ${color}</style>">
       <div class="left-event">
         PT-Sydney CBD
         <div class="icons">
