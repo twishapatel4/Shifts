@@ -276,7 +276,7 @@ async function loadShifts() {
           },
           {
             resourceId: "ResourceGUID2",
-            title: "Leo Martinn",
+            title: "Leo Martin",
             extendedProps: { shift: 2, imgUrl: "Base64String" },
           },
         ],
