@@ -135,14 +135,14 @@ async function FetchSitesBySelectedTerritories(selectedTerritoryTypeValue) {
           <filter type='and'>
             <condition attribute='statecode' operator='eq' value='0' />
             <condition attribute='resourcetype' operator='eq' value='7' />
-            <condition attribute='sog_sitetypetypecode' operator='not-null' />
+            <condition attribute='sog_sitetypetypecode' operator='null' />
           </filter>
           <link-entity name='msdyn_resourceterritory' from='msdyn_resource'
               to='bookableresourceid' link-type='inner' alias='resourceterritory'>
             <link-entity name='territory' from='territoryid' to='msdyn_territory'
                 link-type='inner' alias='territory'>
               <filter type='and'>
-                <condition attribute='sog_territorytypetypecode' operator='in'>
+                <condition attribute='sog_territorytypetypecode' operator='null'>
                   ${valuesXML}
                 </condition>
               </filter>
@@ -198,6 +198,19 @@ function RenderDropdown(groups, containerId) {
 
   // Activate checkbox logic
   InitDropdownLogic(containerId);
+}
+
+function FilterCategoryUpdate(groups, containerId) {
+  const filterContainer = document.getElementById(containerId);
+  filterContainer.innerHTML = "";
+  console.log(groups);
+  // filterContainer.innerHTML +=
+  groups.forEach((group) => {
+    filterContainer.innerHTML += `
+    <p class="dropdown-item" data-category-id="${group.id}">
+      ${group.label}
+    </p>`;
+  });
 }
 
 function AttachTerritoryChangeListener(containerId) {
@@ -285,6 +298,7 @@ async function InitSiteDropdown() {
 async function InitCategoryDropdown() {
   const category = await FetchUniqueCategoryTypes();
   RenderDropdown(category, "CategoryDropdownContent");
+  FilterCategoryUpdate(category, "Categories-group");
 }
 
 InitTerritoryDropdown();

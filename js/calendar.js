@@ -20,7 +20,13 @@ async function loadShifts() {
           {
             id: 1,
             title: "Sarah Brown",
-            extendedProps: { shift: 2, imgUrl: "../sog_SR/RBCupIcon" },
+            extendedProps: {
+              resourceId: "GUID_1",
+              categoryId: "Category_1",
+              shiftId: "ancsj",
+              shift: 2,
+              imgUrl: "../sog_SR/RBCupIcon",
+            },
           },
           {
             id: 2,

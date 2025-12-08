@@ -78,7 +78,7 @@ body {
   align-items: center;
   gap: 0.375rem;
   padding: 0.375rem 0.75rem;
-  font-size: 1rem;
+  font-size: 0.9rem;
   cursor: pointer;
   background: #f3f2f1;
   border: 1px solid #ccc;
@@ -236,12 +236,11 @@ body {
 
 .startDate {
   color: #72706f;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .endDate {
   font-weight: 600;
-  font-size: 1rem;
 }
 
 .calendar-container {
