@@ -86,7 +86,7 @@ body {
   max-height: 4.2rem !important;
 }
 
-.events-blue {
+.events-box {
   background-color: #d1e3f5;
   border: 2px solid #6d99d3;
   border-left: 4px solid #6d99d3;
@@ -110,29 +110,6 @@ body {
   transition: none !important;
 }
 
-.events-red {
-  background-color: #f9dada;
-  border: 2px solid #e58f95;
-  border-left: 4px solid #e58f95;
-  margin-left: 6px;
-  margin-top: 16px;
-  height: auto !important;
-  min-height: 3.6rem;
-  max-height: 3.6rem;
-  display: flex;
-  justify-content: space-between;
-  padding: 0.3rem;
-  width: 100%;
-  color: #e58f95;
-  border-radius: 4px;
-  font-size: 14px;
-  text-align: center;
-  overflow: hidden;
-  box-sizing: border-box;
-  transform: none !important;
-  transition: none !important;
-}
-
 .right-event-x {
   display: none;
   background-color: #5a5959;
@@ -141,13 +118,12 @@ body {
   border-radius: 0.4rem;
 }
 
-.events-blue:hover .right-event-x,
-.events-red:hover .right-event-x {
+
+.events-box:hover .right-event-x {
   display: block;
 }
 
-.events-red:hover,
-.events-blue:hover {
+.events-box:hover{
   border: 2px solid #5a5959;
   border-left: 4px solid #5a5959;
   transform: none !important;
@@ -155,8 +131,7 @@ body {
   width: 100%;
 }
 
-.events-red:hover .right-event,
-.events-blue:hover .right-event {
+.events-box:hover .right-event {
   display: none;
 }
 
@@ -527,8 +502,7 @@ body {
 
 /* keep inner event HTML from expanding width */
 .ec-content .ec-event,
-.ec-content .events-blue,
-.ec-content .events-red,
+.ec-content .events-box,
 .ec-content .resource-user,
 .ec-content .resource-user * {
   max-width: 100%;
