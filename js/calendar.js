@@ -63,6 +63,7 @@ async function loadShifts() {
           categoryId: "ff2014946-babb-f011-bbd3-00224814b93c",
           shiftAssignmentId: "ShiftAssignmentGUID",
           shiftId: "ShiftGUID",
+          x: 6,
         },
       },
       {
@@ -160,7 +161,6 @@ async function loadShifts() {
     .map((parent) => {
       const resources = parent.children.map((c) => {
         const id = makeResourceKey(parent.categoryId, c.resourceId);
-        // console.log(id);
         return {
           id,
           title: c.title,
@@ -206,8 +206,6 @@ async function loadShifts() {
     calCollapsed[group.id] = false;
   });
 
-  // console.log("Groups:", groups);
-
   // Then render dropdown and calendars
   renderCalendars(groups);
   renderCategoryDropdown(groups);
@@ -229,7 +227,6 @@ function renderCategoryDropdown(groups) {
 
   // --- Dynamic group titles ---
   groups.forEach((group) => {
-    // console.log(group.events);
     dropdown.innerHTML += `
       <label>
         <input type="checkbox" value="${group.title}" data-group-id="${group.id}" />
@@ -261,7 +258,6 @@ function renderCalendars(groups) {
   groups.forEach((group, index) => {
     const calIndex = index + 1; // cal1, cal2, cal3...
     createCalendarContainer(calIndex, wrapper);
-    // console.log(group.events);
     calInstances[calIndex] = initCalendar(
       `cal${calIndex}`,
       group.resources,
@@ -878,8 +874,8 @@ function renderEventDetails(arg) {
   const resourceId = event.resourceIds[0];
   const color =
     event.extendedProps?.shiftColor || event.backgroundColor || "#000000";
-  console.log(color);
   const props = event.extendedProps;
+  const x = event.extendedProps?.x || 0;
   const borderColor = getBorderColor(color);
   const cupIcon = new CupIcon(borderColor, 20, 20);
   const clockIcon = new ClockIcon(borderColor, 20, 20);
