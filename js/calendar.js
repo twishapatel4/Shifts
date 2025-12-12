@@ -57,6 +57,19 @@ async function loadShifts() {
         start: "12/10/2025",
         end: "12/10/2025",
         resourceId: "ResourceGUID",
+        title: "Sarah 2",
+        backgroundColor: "#D1E3F5",
+        extendedProps: {
+          categoryId: "ff2014946-babb-f011-bbd3-00224814b93c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+          x: 6,
+        },
+      },
+      {
+        start: "12/10/2025",
+        end: "12/10/2025",
+        resourceId: "ResourceGUID",
         title: "FT-Sydney CBD",
         backgroundColor: "#D1E3F5",
         extendedProps: {
@@ -82,7 +95,19 @@ async function loadShifts() {
         start: "12/08/2025",
         end: "12/08/2025",
         resourceId: "ResourceGUID2",
-        title: "shift-blue",
+        title: "Leo Shift",
+        backgroundColor: "#f9dada",
+        extendedProps: {
+          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
+      },
+      {
+        start: "12/08/2025",
+        end: "12/08/2025",
+        resourceId: "ResourceGUID2",
+        title: "Leo Shift 2",
         backgroundColor: "#f9dada",
         extendedProps: {
           categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
@@ -95,6 +120,18 @@ async function loadShifts() {
         end: "12/09/2025",
         resourceId: "OpenShift",
         title: "North Clan",
+        extendedProps: {
+          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
+        backgroundColor: "#E6E4F6",
+      },
+      {
+        start: "12/09/2025",
+        end: "12/09/2025",
+        resourceId: "OpenShift",
+        title: "North Clan-Sarah",
         extendedProps: {
           categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
           shiftAssignmentId: "ShiftAssignmentGUID",
@@ -423,6 +460,7 @@ function initCalendar(
     events: allEvents,
     resourceLabelContent: renderResources,
     eventContent: renderEventDetails,
+    slotEventOverlap: true,
     viewDidMount(info) {
       // quick debug - inspect resources and events passed to each calendar
       const calendarEl = document.getElementById(containerId);

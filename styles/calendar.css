@@ -42,7 +42,12 @@ body {
   overflow: hidden;
   padding: 0rem 1.2rem !important;
   min-height: 4.2rem;
-  max-height: 4.2rem;
+  /* max-height: 4.2rem; */
+}
+
+.ec-timeline .ec-sidebar .ec-resource:last-child{
+  max-height: 4.2rem !important;
+  flex-basis: 0% !important
 }
 
 .ec-resource-row {
@@ -83,7 +88,7 @@ body {
 }
 
 .ec-timeline .ec-body .ec-days {
-  max-height: 4.2rem !important;
+  /* max-height: 4.2rem !important; */
 }
 
 .events-box {
@@ -94,8 +99,8 @@ body {
   margin-left: 6px;
   margin-top: 16px;
   height: auto !important;
-  min-height: 3.6rem;
-  max-height: 3.6rem;
+  /* min-height: 3.6rem; */
+  /* max-height: 3.6rem; */
   display: flex;
   justify-content: space-between;
   padding: 0.3rem;
@@ -129,6 +134,7 @@ body {
   transform: none !important;
   transition: none !important;
   width: 100%;
+  height: 3.4rem !important;
 }
 
 .events-box:hover .right-event {
@@ -193,6 +199,14 @@ body {
   width: 100% !important;
   padding: 8px;
 }
+.ec-row{
+  display: flex;
+  flex-direction: column;
+}
+
+.ec-events .ec-event:nth-child(2) {
+  margin-top: 8.2rem !important;
+}
 
 .ec-sidebar {
   display: flex;
@@ -254,7 +268,7 @@ body {
   font-weight: 500;
   width: 100%;
   height: auto !important;
-  min-height: 3.8rem;
+  /* min-height: 3.8rem; */
   max-height: none;
   margin-top: 0px !important;
 }
