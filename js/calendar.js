@@ -1074,7 +1074,7 @@ document.addEventListener("DOMContentLoaded", () => {
       emptyOpenPopup.style.display = "none";
 
       let popupToShow;
-      const isOpen = openShiftResourceIds.includes(Number(resId));
+      const isOpen = openShiftResourceIds.includes(resId);
 
       if (isEmptyCell) {
         popupToShow = isOpen ? emptyOpenPopup : emptyPopup;
