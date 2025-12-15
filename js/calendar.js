@@ -54,8 +54,8 @@ async function loadShifts() {
     ],
     events: [
       {
-        start: "12/10/2025",
-        end: "12/10/2025",
+        start: "12/20/2025",
+        end: "12/20/2025",
         resourceId: "ResourceGUID",
         title: "Sarah 2",
         backgroundColor: "#D1E3F5",
@@ -67,8 +67,8 @@ async function loadShifts() {
         },
       },
       {
-        start: "12/10/2025",
-        end: "12/10/2025",
+        start: "12/20/2025",
+        end: "12/20/2025",
         resourceId: "ResourceGUID",
         title: "FT-Sydney CBD",
         backgroundColor: "#D1E3F5",
@@ -80,8 +80,8 @@ async function loadShifts() {
         },
       },
       {
-        start: "12/08/2025",
-        end: "12/08/2025",
+        start: "12/18/2025",
+        end: "12/18/2025",
         resourceId: "ResourceGUID2",
         title: "FT-North Sydney Clan",
         backgroundColor: "#F9DADA",
@@ -92,8 +92,8 @@ async function loadShifts() {
         },
       },
       {
-        start: "12/08/2025",
-        end: "12/08/2025",
+        start: "12/18/2025",
+        end: "12/18/2025",
         resourceId: "ResourceGUID2",
         title: "Leo Shift",
         backgroundColor: "#f9dada",
@@ -104,8 +104,8 @@ async function loadShifts() {
         },
       },
       {
-        start: "12/08/2025",
-        end: "12/08/2025",
+        start: "12/18/2025",
+        end: "12/18/2025",
         resourceId: "ResourceGUID2",
         title: "Leo Shift 2",
         backgroundColor: "#f9dada",
@@ -116,8 +116,8 @@ async function loadShifts() {
         },
       },
       {
-        start: "12/09/2025",
-        end: "12/09/2025",
+        start: "12/19/2025",
+        end: "12/19/2025",
         resourceId: "OpenShift",
         title: "North Clan",
         extendedProps: {
@@ -128,8 +128,8 @@ async function loadShifts() {
         backgroundColor: "#E6E4F6",
       },
       {
-        start: "12/09/2025",
-        end: "12/09/2025",
+        start: "12/19/2025",
+        end: "12/19/2025",
         resourceId: "OpenShift",
         title: "North Clan-Sarah",
         extendedProps: {
@@ -140,8 +140,80 @@ async function loadShifts() {
         backgroundColor: "#E6E4F6",
       },
       {
-        start: "12/08/2025",
-        end: "12/08/2025",
+        start: "12/19/2025",
+        end: "12/19/2025",
+        resourceId: "OpenShift",
+        title: "North Clan-Sarah 2",
+        extendedProps: {
+          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
+        backgroundColor: "#F5D9E5",
+      },
+      {
+        start: "12/19/2025",
+        end: "12/19/2025",
+        resourceId: "OpenShift",
+        title: "North Clan-Sarah 3",
+        extendedProps: {
+          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
+        backgroundColor: "#F5D9E5",
+      },
+      {
+        start: "12/19/2025",
+        end: "12/19/2025",
+        resourceId: "OpenShift",
+        title: "North Clan-Sarah 4",
+        extendedProps: {
+          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
+        backgroundColor: "#F5D9E5",
+      },
+      {
+        start: "12/19/2025",
+        end: "12/19/2025",
+        resourceId: "OpenShift",
+        title: "North Clan-Sarah 4",
+        extendedProps: {
+          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
+        backgroundColor: "#F5D9E5",
+      },
+      {
+        start: "12/19/2025",
+        end: "12/19/2025",
+        resourceId: "OpenShift",
+        title: "North Clan-Sarah 4",
+        extendedProps: {
+          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
+        backgroundColor: "#F5D9E5",
+      },
+      {
+        start: "12/19/2025",
+        end: "12/19/2025",
+        resourceId: "OpenShift",
+        title: "North Clan-Sarah 5",
+        extendedProps: {
+          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
+        backgroundColor: "#F5D9E5",
+      },
+      {
+        start: "12/18/2025",
+        end: "12/18/2025",
         resourceId: "OpenShift",
         title: "North Clan",
         extendedProps: {
@@ -152,8 +224,8 @@ async function loadShifts() {
         backgroundColor: "#DFF1E3",
       },
       {
-        start: "12/12/2025",
-        end: "12/12/2025",
+        start: "12/14/2025",
+        end: "12/14/2025",
         resourceId: "OpenShift",
         title: "North Clan",
         extendedProps: {
@@ -164,8 +236,8 @@ async function loadShifts() {
         backgroundColor: "#F5E9DF",
       },
       {
-        start: "12/11/2025",
-        end: "12/11/2025",
+        start: "12/16/2025",
+        end: "12/16/2025",
         resourceId: "OpenShift",
         title: "North Clan",
         extendedProps: {
@@ -176,8 +248,8 @@ async function loadShifts() {
         backgroundColor: "#E3F0F4",
       },
       {
-        start: "12/10/2025",
-        end: "12/10/2025",
+        start: "12/20/2025",
+        end: "12/20/2025",
         resourceId: "OpenShift",
         title: "North Clan",
         extendedProps: {
@@ -248,6 +320,16 @@ async function loadShifts() {
   renderCategoryDropdown(groups);
   initCategoryDropdown();
   handleSelection();
+}
+const EVENT_OFFSET_REM = 4.2;
+function handleMultiple() {
+  document.querySelectorAll(".ec-events").forEach((eventsContainer) => {
+    console.log(eventsContainer);
+    const events = eventsContainer.querySelectorAll(".ec-event");
+    events.forEach((event, index) => {
+      event.style.top = `${index * EVENT_OFFSET_REM}rem`;
+    });
+  });
 }
 
 function renderCategoryDropdown(groups) {
@@ -461,6 +543,13 @@ function initCalendar(
     resourceLabelContent: renderResources,
     eventContent: renderEventDetails,
     slotEventOverlap: true,
+    eventDidMount(info) {
+      // wait for ALL events to mount
+      console.log(info);
+      requestAnimationFrame(() => {
+        handleMultiple();
+      });
+    },
     viewDidMount(info) {
       // quick debug - inspect resources and events passed to each calendar
       const calendarEl = document.getElementById(containerId);
@@ -917,6 +1006,7 @@ function renderEventDetails(arg) {
   const borderColor = getBorderColor(color);
   const cupIcon = new CupIcon(borderColor, 20, 20);
   const clockIcon = new ClockIcon(borderColor, 20, 20);
+
   return {
     html: `
        <div class="events-box" data-resource-id="${resourceId}" style="background-color: ${color}; border:2px solid ${borderColor}; color:${borderColor};">

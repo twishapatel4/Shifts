@@ -87,9 +87,6 @@ body {
   display: none;
 }
 
-.ec-timeline .ec-body .ec-days {
-  /* max-height: 4.2rem !important; */
-}
 
 .events-box {
   background-color: #d1e3f5;
@@ -202,10 +199,6 @@ body {
 .ec-row{
   display: flex;
   flex-direction: column;
-}
-
-.ec-events .ec-event:nth-child(2) {
-  margin-top: 8.2rem !important;
 }
 
 .ec-sidebar {
