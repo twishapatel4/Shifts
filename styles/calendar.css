@@ -263,7 +263,9 @@ body {
   height: auto !important;
   /* min-height: 3.8rem; */
   max-height: none;
-  margin-top: 0px !important;
+  margin-top: 0% !important;
+  border-top:2px solid #f3f2f1;
+  border-left: 6px solid #f3f2f1;
 }
 
 .ec-resource-row,
@@ -290,6 +292,13 @@ body {
   align-items: flex-end;
   pointer-events: auto;
   padding: 0.6rem;
+}
+
+.added-events{
+  border-top: 8px solid #f3f2f1;
+  border-left: 6px solid #f3f2f1;
+  background-color: #fff !important;
+  width: 95% !important;
 }
 
 .right-empty {

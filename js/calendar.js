@@ -264,10 +264,46 @@ async function loadShifts() {
 const EVENT_OFFSET_REM = 4.2;
 function handleMultiple() {
   document.querySelectorAll(".ec-events").forEach((eventsContainer) => {
-    console.log(eventsContainer);
     const events = eventsContainer.querySelectorAll(".ec-event");
     events.forEach((event, index) => {
       event.style.top = `${index * EVENT_OFFSET_REM}rem`;
+    });
+  });
+  document.querySelectorAll(".ec-days").forEach((row) => {
+    let maxEventsInRow = 0;
+    console.log(maxEventsInRow);
+    // 1️⃣ find max events count in this row
+    row.querySelectorAll(".ec-events").forEach((eventsContainer) => {
+      const count = eventsContainer.querySelectorAll(
+        ".ec-event:not(.ec-empty)"
+      ).length;
+      maxEventsInRow = Math.max(maxEventsInRow, count);
+    });
+    row.querySelectorAll(".ec-events").forEach((eventsContainer) => {
+      let events = eventsContainer.querySelectorAll(".ec-event:not(.ec-empty)");
+      console.log(events);
+      // 🧹 remove old placeholders
+      eventsContainer
+        .querySelectorAll(".ec-event .ec-empty")
+        .forEach((e) => e.remove());
+
+      // 🎯 position real events
+      events.forEach((event, index) => {
+        event.style.top = `${index * EVENT_OFFSET_REM}rem`;
+      });
+
+      // ➕ add empty slots
+      const missing = maxEventsInRow - events.length;
+
+      for (let i = 0; i < missing; i++) {
+        console.log("empty", i);
+        const empty = document.createElement("div");
+        empty.className = "ec-event added-events ec-empty-cell";
+        empty.style.top = `${(events.length + i) * EVENT_OFFSET_REM}rem`;
+        // console.log(empty.style.top);
+        eventsContainer.appendChild(empty);
+        console.log("empty event added");
+      }
     });
   });
 }
@@ -484,7 +520,6 @@ function initCalendar(
     slotEventOverlap: true,
     eventDidMount(info) {
       // wait for ALL events to mount
-      console.log(info);
       requestAnimationFrame(() => {
         handleMultiple();
       });
