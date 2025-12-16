@@ -152,66 +152,6 @@ async function loadShifts() {
         backgroundColor: "#F5D9E5",
       },
       {
-        start: "12/19/2025",
-        end: "12/19/2025",
-        resourceId: "OpenShift",
-        title: "North Clan-Sarah 3",
-        extendedProps: {
-          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
-          shiftAssignmentId: "ShiftAssignmentGUID",
-          shiftId: "ShiftGUID",
-        },
-        backgroundColor: "#F5D9E5",
-      },
-      {
-        start: "12/19/2025",
-        end: "12/19/2025",
-        resourceId: "OpenShift",
-        title: "North Clan-Sarah 4",
-        extendedProps: {
-          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
-          shiftAssignmentId: "ShiftAssignmentGUID",
-          shiftId: "ShiftGUID",
-        },
-        backgroundColor: "#F5D9E5",
-      },
-      {
-        start: "12/19/2025",
-        end: "12/19/2025",
-        resourceId: "OpenShift",
-        title: "North Clan-Sarah 4",
-        extendedProps: {
-          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
-          shiftAssignmentId: "ShiftAssignmentGUID",
-          shiftId: "ShiftGUID",
-        },
-        backgroundColor: "#F5D9E5",
-      },
-      {
-        start: "12/19/2025",
-        end: "12/19/2025",
-        resourceId: "OpenShift",
-        title: "North Clan-Sarah 4",
-        extendedProps: {
-          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
-          shiftAssignmentId: "ShiftAssignmentGUID",
-          shiftId: "ShiftGUID",
-        },
-        backgroundColor: "#F5D9E5",
-      },
-      {
-        start: "12/19/2025",
-        end: "12/19/2025",
-        resourceId: "OpenShift",
-        title: "North Clan-Sarah 5",
-        extendedProps: {
-          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
-          shiftAssignmentId: "ShiftAssignmentGUID",
-          shiftId: "ShiftGUID",
-        },
-        backgroundColor: "#F5D9E5",
-      },
-      {
         start: "12/18/2025",
         end: "12/18/2025",
         resourceId: "OpenShift",
@@ -331,7 +271,6 @@ function handleMultiple() {
     });
   });
 }
-
 function renderCategoryDropdown(groups) {
   const dropdown = document.getElementById("CategorydropdownContent");
   dropdown.innerHTML = ""; // clear old content
