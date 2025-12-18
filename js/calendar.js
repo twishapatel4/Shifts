@@ -558,6 +558,7 @@ function initCalendar(
     eventResourceEditable: false,
     resources,
     events: allEvents,
+    dayMaxEvents: true,
     resourceLabelContent: renderResources,
     eventContent: renderEventDetails,
     slotEventOverlap: true,
@@ -1376,10 +1377,28 @@ setTimeout(setupCalendarSync, 400); // wait for EventCalendar render
 
 const calendarRoot = document.querySelector(".mbsc-eventcalendar");
 
-if (calendarRoot) {
-  const resizeObserver = new ResizeObserver(() => {
-    requestAnimationFrame(handleMultiple);
-  });
+// if (calendarRoot) {
+//   const resizeObserver = new ResizeObserver(() => {
+//     console.log("resize");
+//     requestAnimationFrame(handleMultiple);
+//   });
 
-  resizeObserver.observe(calendarRoot);
+//   resizeObserver.observe(calendarRoot);
+// }
+
+// window.addEventListener("resize", () => {
+//   console.log("window resize / zoom");
+//   handleMultiple();
+// });
+
+function stabilizeCalendarLayout() {
+  normalizeEventRows();
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      console.log("Double frame");
+      document.body.offsetHeight;
+      handleMultiple();
+    });
+  });
 }
