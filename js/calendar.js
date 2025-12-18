@@ -152,6 +152,31 @@ async function loadShifts() {
         backgroundColor: "#F5D9E5",
       },
       {
+        start: "12/19/2025",
+        end: "12/19/2025",
+        resourceId: "OpenShift",
+        title: "North Clan-Sarah 2",
+        extendedProps: {
+          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
+        backgroundColor: "#F5D9E5",
+      },
+      {
+        start: "12/19/2025",
+        end: "12/19/2025",
+        resourceId: "OpenShift",
+        title: "North Clan-Sarah 2",
+        extendedProps: {
+          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
+        backgroundColor: "#F5D9E5",
+      },
+
+      {
         start: "12/18/2025",
         end: "12/18/2025",
         resourceId: "OpenShift",
@@ -263,46 +288,64 @@ async function loadShifts() {
 }
 const EVENT_OFFSET_REM = 4.2;
 function handleMultiple() {
-  document.querySelectorAll(".ec-events").forEach((eventsContainer) => {
-    const events = eventsContainer.querySelectorAll(".ec-event");
-    events.forEach((event, index) => {
-      event.style.top = `${index * EVENT_OFFSET_REM}rem`;
-    });
-  });
   document.querySelectorAll(".ec-days").forEach((row) => {
     let maxEventsInRow = 0;
-    console.log(maxEventsInRow);
-    // 1️⃣ find max events count in this row
+
+    // 1️⃣ find max events count in this row (REAL events only)
     row.querySelectorAll(".ec-events").forEach((eventsContainer) => {
       const count = eventsContainer.querySelectorAll(
-        ".ec-event:not(.ec-empty)"
+        ".ec-event:not(.ec-empty-cell)"
       ).length;
       maxEventsInRow = Math.max(maxEventsInRow, count);
     });
-    row.querySelectorAll(".ec-events").forEach((eventsContainer) => {
-      let events = eventsContainer.querySelectorAll(".ec-event:not(.ec-empty)");
-      console.log(events);
-      // 🧹 remove old placeholders
-      eventsContainer
-        .querySelectorAll(".ec-event .ec-empty")
-        .forEach((e) => e.remove());
 
+    row.querySelectorAll(".ec-events").forEach((eventsContainer) => {
+      let events = eventsContainer.querySelectorAll(
+        ".ec-event:not(.ec-empty-cell)"
+      );
+      // ✅ get already existing empty placeholders (DO NOT REMOVE THEM)
+      const existingEmptyEvents = eventsContainer.querySelectorAll(
+        ".ec-event.ec-empty-cell:not(.added-events)"
+      );
+      const extraOffset =
+        events.length > 0 && events.length < maxEventsInRow ? 0.4 : 0;
       // 🎯 position real events
       events.forEach((event, index) => {
+        // event.style.tranform = `translateX(${index * EVENT_OFFSET_REM}rem)`;
         event.style.top = `${index * EVENT_OFFSET_REM}rem`;
+        event.style.height = `3.8rem`;
+        event.style.width = `100%`;
       });
 
-      // ➕ add empty slots
-      const missing = maxEventsInRow - events.length;
+      // 🎯 position existing empty events below real events
+      existingEmptyEvents.forEach((empty, index) => {
+        empty.style.tranform = `translateY(${
+          (events.length + index) * EVENT_OFFSET_REM
+        }rem)`;
+        // `${
+        //   (events.length + index) * EVENT_OFFSET_REM
+        // }rem`;
+        empty.style.width = `100%`;
+      });
+
+      // ➕ add empty slots ONLY if required
+      const totalExisting = events.length + existingEmptyEvents.length;
+      const missing = maxEventsInRow - totalExisting;
 
       for (let i = 0; i < missing; i++) {
-        console.log("empty", i);
         const empty = document.createElement("div");
         empty.className = "ec-event added-events ec-empty-cell";
-        empty.style.top = `${(events.length + i) * EVENT_OFFSET_REM}rem`;
-        // console.log(empty.style.top);
+        empty.style.position = "absolute";
+        // const top =
+        //   (events.length + existingEmptyEvents.length + i) * EVENT_OFFSET_REM +
+        //   extraOffset;
+        const slotIndex = events.length + existingEmptyEvents.length + i;
+        const top = slotIndex * EVENT_OFFSET_REM + extraOffset;
+        // empty.style.transform = `${top}rem`;
+        empty.style.transform = `translateY(${top}rem)`;
+        empty.style.height = `3.8rem`;
+        // empty.style.width = `10%`;
         eventsContainer.appendChild(empty);
-        console.log("empty event added");
       }
     });
   });
@@ -518,18 +561,20 @@ function initCalendar(
     resourceLabelContent: renderResources,
     eventContent: renderEventDetails,
     slotEventOverlap: true,
-    eventDidMount(info) {
-      // wait for ALL events to mount
-      requestAnimationFrame(() => {
-        handleMultiple();
-      });
-    },
+    // eventDidMount(info) {
+    //   // wait for ALL events to mount
+    //   requestAnimationFrame(async () => {
+    //     await handleMultiple();
+    //   });
+    // },
     viewDidMount(info) {
       // quick debug - inspect resources and events passed to each calendar
       const calendarEl = document.getElementById(containerId);
       setTimeout(() => {
         document.querySelectorAll(".ec-events").forEach((cell) => {
-          const hasEvent = cell.querySelector(".ec-event");
+          const hasEvent = cell.querySelector(
+            ".ec-event:not(.ec-empty):not(.ec-empty-cell)"
+          );
           if (!hasEvent) {
             cell.classList.add("ec-empty-cell");
             if (!cell.querySelector(".empty-event")) {
@@ -692,6 +737,7 @@ function initCalendar(
 
         titleMain.textContent = displayText;
       }
+      requestAnimationFrame(handleMultiple);
     },
   };
 
@@ -1327,3 +1373,13 @@ function setupCalendarSync() {
 }
 
 setTimeout(setupCalendarSync, 400); // wait for EventCalendar render
+
+const calendarRoot = document.querySelector(".mbsc-eventcalendar");
+
+if (calendarRoot) {
+  const resizeObserver = new ResizeObserver(() => {
+    requestAnimationFrame(handleMultiple);
+  });
+
+  resizeObserver.observe(calendarRoot);
+}
