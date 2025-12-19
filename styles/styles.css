@@ -129,7 +129,7 @@ body {
   top: 100%;
   left: 0;
   background-color: #fff;
-  min-width: 11.25rem;
+  /* min-width: 11.25rem; */
   margin-top: 0.625rem;
   border: 1px solid #ccc;
   box-shadow: 0rem 0.5rem 1rem rgba(0, 0, 0, 0.15);
@@ -163,7 +163,7 @@ body {
 .dropdown-btn {
   background-color: #f3f2f1;
   border: 1px solid #ccc;
-  width: 12.5rem;
+  width: 10rem;
   padding: 0.5rem 0.75rem;
   border-radius: 0.3125rem;
   cursor: pointer;
