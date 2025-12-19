@@ -107,6 +107,30 @@ async function loadShifts() {
         start: "12/18/2025",
         end: "12/18/2025",
         resourceId: "ResourceGUID2",
+        title: "Leo Shift",
+        backgroundColor: "#f9dada",
+        extendedProps: {
+          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
+      },
+      {
+        start: "12/18/2025",
+        end: "12/18/2025",
+        resourceId: "ResourceGUID2",
+        title: "Leo Shift",
+        backgroundColor: "#f9dada",
+        extendedProps: {
+          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
+      },
+      {
+        start: "12/18/2025",
+        end: "12/18/2025",
+        resourceId: "ResourceGUID2",
         title: "Leo Shift 2",
         backgroundColor: "#f9dada",
         extendedProps: {
@@ -152,31 +176,6 @@ async function loadShifts() {
         backgroundColor: "#F5D9E5",
       },
       {
-        start: "12/19/2025",
-        end: "12/19/2025",
-        resourceId: "OpenShift",
-        title: "North Clan-Sarah 2",
-        extendedProps: {
-          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
-          shiftAssignmentId: "ShiftAssignmentGUID",
-          shiftId: "ShiftGUID",
-        },
-        backgroundColor: "#F5D9E5",
-      },
-      {
-        start: "12/19/2025",
-        end: "12/19/2025",
-        resourceId: "OpenShift",
-        title: "North Clan-Sarah 2",
-        extendedProps: {
-          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
-          shiftAssignmentId: "ShiftAssignmentGUID",
-          shiftId: "ShiftGUID",
-        },
-        backgroundColor: "#F5D9E5",
-      },
-
-      {
         start: "12/18/2025",
         end: "12/18/2025",
         resourceId: "OpenShift",
@@ -187,18 +186,6 @@ async function loadShifts() {
           shiftId: "ShiftGUID",
         },
         backgroundColor: "#DFF1E3",
-      },
-      {
-        start: "12/14/2025",
-        end: "12/14/2025",
-        resourceId: "OpenShift",
-        title: "North Clan",
-        extendedProps: {
-          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
-          shiftAssignmentId: "ShiftAssignmentGUID",
-          shiftId: "ShiftGUID",
-        },
-        backgroundColor: "#F5E9DF",
       },
       {
         start: "12/16/2025",
@@ -1377,28 +1364,32 @@ setTimeout(setupCalendarSync, 400); // wait for EventCalendar render
 
 const calendarRoot = document.querySelector(".mbsc-eventcalendar");
 
-// if (calendarRoot) {
-//   const resizeObserver = new ResizeObserver(() => {
-//     console.log("resize");
-//     requestAnimationFrame(handleMultiple);
+if (calendarRoot) {
+  const resizeObserver = new ResizeObserver(() => {
+    console.log("resize");
+    requestAnimationFrame(handleMultiple);
+  });
+
+  resizeObserver.observe(calendarRoot);
+}
+
+window.addEventListener("resize", () => {
+  console.log("window resize / zoom");
+  handleMultiple();
+});
+
+// let resizeTimer = null;
+
+// function reflowCalendars() {
+//   calInstances.forEach((cal) => {
+//     if (!cal) return;
+//     cal.updateSize(); // EventCalendar re-measure
 //   });
 
-//   resizeObserver.observe(calendarRoot);
+//   requestAnimationFrame(handleMultiple);
 // }
-
 // window.addEventListener("resize", () => {
-//   console.log("window resize / zoom");
-//   handleMultiple();
+//   clearTimeout(resizeTimer);
+//   resizeTimer = setTimeout(reflowCalendars, 120);
 // });
 
-function stabilizeCalendarLayout() {
-  normalizeEventRows();
-
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      console.log("Double frame");
-      document.body.offsetHeight;
-      handleMultiple();
-    });
-  });
-}
