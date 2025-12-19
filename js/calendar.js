@@ -107,30 +107,6 @@ async function loadShifts() {
         start: "12/18/2025",
         end: "12/18/2025",
         resourceId: "ResourceGUID2",
-        title: "Leo Shift",
-        backgroundColor: "#f9dada",
-        extendedProps: {
-          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
-          shiftAssignmentId: "ShiftAssignmentGUID",
-          shiftId: "ShiftGUID",
-        },
-      },
-      {
-        start: "12/18/2025",
-        end: "12/18/2025",
-        resourceId: "ResourceGUID2",
-        title: "Leo Shift",
-        backgroundColor: "#f9dada",
-        extendedProps: {
-          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
-          shiftAssignmentId: "ShiftAssignmentGUID",
-          shiftId: "ShiftGUID",
-        },
-      },
-      {
-        start: "12/18/2025",
-        end: "12/18/2025",
-        resourceId: "ResourceGUID2",
         title: "Leo Shift 2",
         backgroundColor: "#f9dada",
         extendedProps: {
@@ -167,13 +143,61 @@ async function loadShifts() {
         start: "12/19/2025",
         end: "12/19/2025",
         resourceId: "OpenShift",
-        title: "North Clan-Sarah 2",
+        title: "North Clan-Sarah",
         extendedProps: {
           categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
           shiftAssignmentId: "ShiftAssignmentGUID",
           shiftId: "ShiftGUID",
         },
-        backgroundColor: "#F5D9E5",
+        backgroundColor: "#E6E4F6",
+      },
+      {
+        start: "12/19/2025",
+        end: "12/19/2025",
+        resourceId: "OpenShift",
+        title: "North Clan-Sarah",
+        extendedProps: {
+          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
+        backgroundColor: "#E6E4F6",
+      },
+      {
+        start: "12/19/2025",
+        end: "12/19/2025",
+        resourceId: "OpenShift",
+        title: "North Clan-Sarah",
+        extendedProps: {
+          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
+        backgroundColor: "#E6E4F6",
+      },
+      {
+        start: "12/19/2025",
+        end: "12/19/2025",
+        resourceId: "OpenShift",
+        title: "North Clan-Sarah",
+        extendedProps: {
+          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
+        backgroundColor: "#E6E4F6",
+      },
+      {
+        start: "12/19/2025",
+        end: "12/19/2025",
+        resourceId: "OpenShift",
+        title: "North Clan-Sarah",
+        extendedProps: {
+          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
+        backgroundColor: "#E6E4F6",
       },
       {
         start: "12/18/2025",
@@ -274,6 +298,7 @@ async function loadShifts() {
   handleSelection();
 }
 const EVENT_OFFSET_REM = 4.2;
+const EVENT_HEIGHT_REM = 3.8;
 function handleMultiple() {
   document.querySelectorAll(".ec-days").forEach((row) => {
     let maxEventsInRow = 0;
@@ -285,7 +310,14 @@ function handleMultiple() {
       ).length;
       maxEventsInRow = Math.max(maxEventsInRow, count);
     });
+    // 2️⃣ calculate required height
+    const totalHeightRem =
+      (maxEventsInRow - 1) * EVENT_OFFSET_REM + EVENT_HEIGHT_REM + 0.4;
 
+    // 3️⃣ LOCK ROW HEIGHT
+    row.style.height = `${totalHeightRem}rem`;
+    row.style.minHeight = `${totalHeightRem}rem`;
+    row.style.maxHeight = `${totalHeightRem}rem`;
     row.querySelectorAll(".ec-events").forEach((eventsContainer) => {
       let events = eventsContainer.querySelectorAll(
         ".ec-event:not(.ec-empty-cell)"
@@ -1377,19 +1409,3 @@ window.addEventListener("resize", () => {
   console.log("window resize / zoom");
   handleMultiple();
 });
-
-// let resizeTimer = null;
-
-// function reflowCalendars() {
-//   calInstances.forEach((cal) => {
-//     if (!cal) return;
-//     cal.updateSize(); // EventCalendar re-measure
-//   });
-
-//   requestAnimationFrame(handleMultiple);
-// }
-// window.addEventListener("resize", () => {
-//   clearTimeout(resizeTimer);
-//   resizeTimer = setTimeout(reflowCalendars, 120);
-// });
-
