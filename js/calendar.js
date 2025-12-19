@@ -224,9 +224,33 @@ async function loadShifts() {
         backgroundColor: "#E3F0F4",
       },
       {
-        start: "12/20/2025",
-        end: "12/20/2025",
-        resourceId: "OpenShift",
+        start: "12/15/2025",
+        end: "12/15/2025",
+        resourceId: "ResourceGUID",
+        title: "North Clan",
+        extendedProps: {
+          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
+        backgroundColor: "#F2E5F0",
+      },
+      {
+        start: "12/15/2025",
+        end: "12/15/2025",
+        resourceId: "ResourceGUID",
+        title: "North Clan",
+        extendedProps: {
+          categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+        },
+        backgroundColor: "#F2E5F0",
+      },
+      {
+        start: "12/15/2025",
+        end: "12/15/2025",
+        resourceId: "ResourceGUID",
         title: "North Clan",
         extendedProps: {
           categoryId: "f2014946-babb-f011-bbd3-00224814b94c",
