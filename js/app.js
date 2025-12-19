@@ -239,6 +239,7 @@ function addCustomButtons(instance) {
     background:#007bff; color:white;
     padding:8px 12px; border-radius:4px; cursor:pointer;
   `;
+  //  the calendar Apply button to pick and set the start and End date for the RosterBoard
   apply.onclick = () => {
     const sd = instance.selectedDates;
     if (sd.length === 2) updateButtonText(sd[0], sd[1]);

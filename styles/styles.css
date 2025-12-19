@@ -415,6 +415,15 @@ h3 svg {
   gap: 6px;
 }
 
+/* ADD CSS TO THE APPLY BUTTON */
+.apply-btn{
+    background:#007bff; 
+    color:white;
+    padding:8px 12px;
+    border-radius:4px; 
+    cursor:pointer;
+}
+
 /* Responsive: keep filter controls on one line under 1400px */
 @media (max-width: 1400px) {
   .dropdown-btn {
