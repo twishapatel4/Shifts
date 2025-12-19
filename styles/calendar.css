@@ -40,18 +40,18 @@ body {
   box-shadow: none !important;
 }
 
+
 .ec-timeline .ec-sidebar .ec-resource {
   overflow: hidden;
   padding: 0rem 1.2rem !important;
-  min-height: 4.2rem;
-  /* max-height: 4.2rem; */
+  min-height: 4rem;
+  /* max-height: 4rem; */
 }
 
 .ec-timeline .ec-sidebar .ec-resource:last-child{
-  max-height: 4.2rem !important;
+  max-height: 4rem !important;
   flex-basis: 0% !important
 }
-
 .ec-resource-row {
   min-height: 3.8rem;
   max-height: 4.2rem;
