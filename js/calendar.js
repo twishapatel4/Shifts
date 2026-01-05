@@ -391,16 +391,164 @@ async function loadShifts() {
 //     );
 //   });
 // }
+function ensureMultiDayLayer(resourceRow) {
+  let layer = resourceRow.querySelector(".multi-day-layer");
+  if (!layer) {
+    layer = document.createElement("div");
+    layer.className = "multi-day-layer";
+    layer.style.position = "absolute";
+    layer.style.top = "0";
+    layer.style.left = "0";
+    layer.style.width = "100%";
+    layer.style.height = "100%";
+    resourceRow.appendChild(layer);
+  }
+  return layer;
+}
+
 function getSpanWidth(startDayEl, daysSpan) {
   let width = 0;
   let current = startDayEl;
 
   for (let i = 0; i < daysSpan && current; i++) {
     width += current.offsetWidth;
-    current = current.nextElementSibling; // next ec-day
+    // current = current.nextElementSibling; // next ec-day
+    let next = current.nextElementSibling;
+    while (next && !next.classList.contains("ec-day")) {
+      next = next.nextElementSibling;
+    }
+    current = next;
   }
   console.log(width);
   return width;
+}
+
+// function renderMultiDayBars() {
+//   const handled = new Set();
+//   console.log(handled);
+//   document.querySelectorAll(".events-box[data-days-span]").forEach((box) => {
+//     const daysSpan = Number(box.dataset.daysSpan);
+//     if (daysSpan <= 1) return; // only multi-day events
+
+//     const resourceRow = box.closest(".ec-resource-row");
+//     if (!resourceRow) return;
+
+//     const resourceId = box.dataset.resourceId;
+//     const startStr = box.dataset.start;
+//     const key = `${resourceId}_${startStr}`;
+//     if (handled.has(key)) return;
+//     handled.add(key);
+
+//     const startDay = box.closest(".ec-day");
+//     if (!startDay) return;
+
+//     const layer = ensureMultiDayLayer(resourceRow);
+
+//     // Calculate width to span multiple days
+//     let width = 0;
+//     let currentDay = startDay;
+//     for (let i = 0; i < daysSpan && currentDay; i++) {
+//       width += currentDay.offsetWidth;
+
+//       // Move to next day
+//       let next = currentDay.nextElementSibling;
+//       while (next && !next.classList.contains("ec-day")) {
+//         next = next.nextElementSibling;
+//       }
+//       currentDay = next;
+//     }
+
+//     const bar = document.createElement("div");
+//     bar.className = "ec-multiday-event";
+//     bar.innerHTML = box.innerHTML;
+
+//     Object.assign(bar.style, {
+//       position: "absolute",
+//       top: "4px",
+//       left: `${startDay.offsetLeft}px`,
+//       width: `${width}px`,
+//       zIndex: 200,
+//     });
+
+//     layer.appendChild(bar);
+//   });
+// }
+function renderMultiDayBars() {
+  const handled = new Set();
+
+  // Clean old multi-day bars (important on re-render)
+  document.querySelectorAll(".ec-multiday-event").forEach((el) => el.remove());
+  // lets add the code to add one event for multiple days
+  document.querySelectorAll(".events-box[data-days-span]").forEach((box) => {
+    console.log(box);
+    const daysSpan = Number(box.dataset.daysSpan);
+    if (daysSpan <= 1) return;
+
+    const resourceRow = box.closest(".ec-event-body");
+    console.log(resourceRow);
+    if (!resourceRow) return;
+
+    const resourceId = box.dataset.resourceId;
+    const startStr = box.dataset.start;
+    const key = `${resourceId}_${startStr}`;
+
+    // process only once per event
+    if (handled.has(key)) return;
+    handled.add(key);
+
+    const startDay = box.closest(".ec-day");
+    console.log(startDay);
+    if (!startDay) return;
+
+    const layer = ensureMultiDayLayer(resourceRow);
+    console.log(layer);
+    // ---------- width calculation ----------
+    let width = 0;
+    let currentDay = startDay;
+
+    for (let i = 0; i < daysSpan && currentDay; i++) {
+      width += currentDay.offsetWidth;
+
+      let next = currentDay.nextElementSibling;
+      while (next && !next.classList.contains("ec-day")) {
+        next = next.nextElementSibling;
+      }
+      currentDay = next;
+    }
+
+    // ---------- build visual bar ----------
+    // const bar = document.createElement("div");
+    // bar.className = "ec-multiday-event continuation";
+    // We  musr FinalizationRegistry
+    // // // clone only visual content
+    // // bar.innerHTML = box.innerHTML;
+    // // const bar = box.closest(".ec-event").cloneNode(true);
+    const originalEvent = box.closest(".ec-event");
+    if (!originalEvent) return;
+
+    const bar = originalEvent.cloneNode(true);
+    bar.classList.add("ec-multiday-event", "continuation");
+    console.log(bar);
+    Object.assign(bar.style, {
+      position: "absolute",
+      top: "4px",
+      left: `${startDay.offsetLeft}px`,
+      width: `${width}px`,
+      height: `${box.offsetHeight}px`,
+      pointerEvents: "none", // visual only
+      zIndex: 200,
+    });
+
+    layer.appendChild(bar);
+
+    // ---------- keep first day interactive ----------
+    // const eventEl = box.closest(".ec-event");
+    // if (eventEl) {
+    //   eventEl.classList.add("ec-multiday-first");
+    // }
+    originalEvent.classList.add("ec-multiday-first");
+    console.log(originalEvent);
+  });
 }
 
 function positionMultiDayEvents() {
@@ -431,6 +579,7 @@ function positionMultiDayEvents() {
     if (!startBox) return;
 
     const startDay = startBox.closest(".ec-day");
+
     if (!startDay) return;
     const spanWidth = getSpanWidth(startDay, daysSpan);
     const container = startBox.closest(".ec-events");
@@ -462,41 +611,8 @@ function waitForDayLayoutAndPosition() {
   }
 
   // ✅ layout is ready
-  positionMultiDayEvents();
+  // positionMultiDayEvents();
 }
-
-// function positionMultiDayEvents() {
-//   // console.log("pos function");
-//   document.querySelectorAll(".events-box").forEach((eventEl) => {
-//     const startStr = eventEl.dataset.start;
-//     const endStr = eventEl.dataset.end;
-//     const daysSpan = parseInt(eventEl.dataset.daysSpan);
-//     console.log(daysSpan);
-//     if (!startStr || !endStr) return;
-
-//     const start = new Date(startStr);
-
-//     // Find the first day cell
-//     const firstDayCell = document.querySelector(
-//       `.ec-days[data-date="${formatDateYYYYMMDD(start)}"] .ec-events`
-//     );
-//     if (!firstDayCell) return;
-
-//     const dayWidth = firstDayCell.offsetWidth;
-
-//     // Move event inside the first cell
-//     firstDayCell.appendChild(eventEl);
-
-//     // Absolute positioning
-//     eventEl.style.position = "absolute";
-//     eventEl.style.left = "0px";
-//     eventEl.style.top = "0px";
-//     eventEl.style.width = `${dayWidth * daysSpan}px`;
-//     eventEl.style.zIndex = 10;
-//     eventEl.classList.add("multi-day-event");
-//   });
-// }
-
 // Helper: format Date as 'YYYY-MM-DD' to match data-date attributes
 function formatDateYYYYMMDD(d) {
   const y = d.getFullYear();
@@ -740,83 +856,6 @@ function initCalendar(
   useCustomHeader = false,
   groupMeta = null
 ) {
-  // const allEvents = events.map((ev) => {
-  //   let dateStart = null;
-  //   let dateEnd = null;
-
-  //   // Helper to parse "MM/DD/YYYY" format safely
-  //   function parseDate(str) {
-  //     const parts = str.split("/");
-  //     if (parts.length === 3) {
-  //       const month = parseInt(parts[0], 10) - 1;
-  //       const day = parseInt(parts[1], 10);
-  //       const year = parseInt(parts[2], 10);
-  //       return new Date(year, month, day);
-  //     }
-  //     return null;
-  //   }
-
-  //   // Determine start date
-  //   if (ev.start) {
-  //     if (isIsoDate(ev.start)) {
-  //       dateStart = new Date(ev.start);
-  //     } else if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(ev.start)) {
-  //       dateStart = parseDate(ev.start);
-  //     }
-  //   }
-
-  //   // Determine end date
-  //   if (ev.end) {
-  //     if (isIsoDate(ev.end)) {
-  //       dateEnd = new Date(ev.end);
-  //     } else if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(ev.end)) {
-  //       dateEnd = ev.end ? parseDate(ev.end) : null;
-  //     }
-  //   }
-
-  //   function format(d) {
-  //     const y = d.getFullYear();
-  //     const m = String(d.getMonth() + 1).padStart(2, "0");
-  //     const day = String(d.getDate()).padStart(2, "0");
-  //     // return `${y}-${m}-${day}T00:00:00`;
-  //     return `${y}-${m}-${day}`;
-  //   }
-  //   // const isMultiDay =
-  //   //   dateStart &&
-  //   //   dateEnd &&
-  //   //   dateStart.toDateString() !== dateEnd.toDateString();
-
-  //   // if (isMultiDay) {
-  //   //   dateEnd.setDate(dateEnd.getDate() + 1); // 🔑 KEY LINE
-  //   // }
-  //   // return {
-  //   //   ...ev,
-  //   //   start: dateStart ? format(dateStart) : ev.start,
-  //   //   end: dateEnd ? format(dateEnd) : ev.end,
-  //   //   allDay: ev.allDay ?? true,
-  //   // };
-  //   dateStart = parseDate(ev.start);
-  //   dateEnd = ev.end ? parseDate(ev.end) : null;
-
-  //   if (dateStart && dateEnd) {
-  //     const sameDay =
-  //       dateStart.getFullYear() === dateEnd.getFullYear() &&
-  //       dateStart.getMonth() === dateEnd.getMonth() &&
-  //       dateStart.getDate() === dateEnd.getDate();
-
-  //     if (!sameDay) {
-  //       // 🔥 THIS IS MANDATORY
-  //       dateEnd.setDate(dateEnd.getDate() + 1);
-  //     }
-  //   }
-  //   return {
-  //     ...ev,
-  //     start: format(dateStart), // YYYY-MM-DDT00:00:00
-  //     end: dateEnd ? format(dateEnd) : undefined,
-  //     allDay: true,
-  //   };
-  // });
-
   const calendarEvents = events.map(normalizeEvent);
   const allEvents = calendarEvents.map((ev) => {
     const parse = (str) => {
@@ -1032,7 +1071,8 @@ function initCalendar(
     },
     eventDidMount: () => {
       requestAnimationFrame(() => {
-        waitForDayLayoutAndPosition();
+        console.log("Function called");
+        renderMultiDayBars();
       });
     },
     datesSet(info) {

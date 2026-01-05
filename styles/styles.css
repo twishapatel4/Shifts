@@ -585,3 +585,12 @@ h3 svg {
   /* background-color: #A7C8F0; */
 }
 
+.ec-multiday-event {
+  border-radius: 4px;
+  background-color: inherit; /* use original background */
+  pointer-events: none; /* continuation bars */
+}
+.ec-multiday-event:first-child {
+  pointer-events: auto; /* first-day interactive */
+}
+
