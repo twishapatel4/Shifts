@@ -54,10 +54,11 @@ async function loadShifts() {
     ],
     events: [
       {
-        start: "12/20/2025",
-        end: "12/20/2025",
+        start: new Date(2026, 0, 5),
+        end: new Date(2026, 0, 8),
         resourceId: "ResourceGUID",
         title: "Sarah 2",
+        allDay: true,
         backgroundColor: "#D1E3F5",
         extendedProps: {
           categoryId: "ff2014946-babb-f011-bbd3-00224814b93c",
@@ -67,9 +68,9 @@ async function loadShifts() {
         },
       },
       {
-        start: "12/20/2025",
-        end: "12/20/2025",
-        resourceId: "ResourceGUID",
+        start: new Date(2026, 0, 5),
+        end: new Date(2026, 0, 8),
+        resourceId: "ResourceGUID2",
         title: "FT-Sydney CBD",
         backgroundColor: "#D1E3F5",
         extendedProps: {
@@ -330,7 +331,7 @@ function handleMultiple() {
     // 1️⃣ find max events count in this row (REAL events only)
     row.querySelectorAll(".ec-events").forEach((eventsContainer) => {
       const count = eventsContainer.querySelectorAll(
-        ".ec-event:not(.ec-empty-cell)"
+        ".ec-event:not(.ec-empty-cell):not(.ec-event-range)"
       ).length;
       maxEventsInRow = Math.max(maxEventsInRow, count);
     });
@@ -357,7 +358,16 @@ function handleMultiple() {
         // event.style.tranform = `translateX(${index * EVENT_OFFSET_REM}rem)`;
         event.style.top = `${index * EVENT_OFFSET_REM}rem`;
         event.style.height = `3.8rem`;
-        event.style.width = `100%`;
+        // event.style.width = `100%`;
+        requestAnimationFrame(() => {
+          document.querySelectorAll(".ec-event").forEach((event) => {
+            if (event.classList.contains("ec-event-range")) {
+              // event.style.width = "200%";
+              return;
+            }
+            event.style.width = "100%";
+          });
+        });
       });
 
       // 🎯 position existing empty events below real events
@@ -536,54 +546,150 @@ function initCalendar(
   useCustomHeader = false,
   groupMeta = null
 ) {
-  const allEvents = events.map((ev) => {
-    let dateStart = null;
-    let dateEnd = null;
+  // const allEvents = events.map((ev) => {
+  //   let dateStart = null;
+  //   let dateEnd = null;
 
-    // Helper to parse "MM/DD/YYYY" format safely
-    function parseDate(str) {
-      const parts = str.split("/");
-      if (parts.length === 3) {
-        const month = parseInt(parts[0], 10) - 1;
-        const day = parseInt(parts[1], 10);
-        const year = parseInt(parts[2], 10);
-        return new Date(year, month, day);
-      }
-      return null;
-    }
+  //   // Helper to parse "MM/DD/YYYY" format safely
+  //   function parseDate(str) {
+  //     const parts = str.split("/");
+  //     if (parts.length === 3) {
+  //       const month = parseInt(parts[0], 10) - 1;
+  //       const day = parseInt(parts[1], 10);
+  //       const year = parseInt(parts[2], 10);
+  //       return new Date(year, month, day);
+  //     }
+  //     return null;
+  //   }
 
-    // Determine start date
-    if (ev.start) {
-      if (isIsoDate(ev.start)) {
-        dateStart = new Date(ev.start);
-      } else if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(ev.start)) {
-        dateStart = parseDate(ev.start);
-      }
-    }
+  //   // Determine start date
+  //   if (ev.start) {
+  //     if (isIsoDate(ev.start)) {
+  //       dateStart = new Date(ev.start);
+  //     } else if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(ev.start)) {
+  //       dateStart = parseDate(ev.start);
+  //     }
+  //   }
 
-    // Determine end date
-    if (ev.end) {
-      if (isIsoDate(ev.end)) {
-        dateEnd = new Date(ev.end);
-      } else if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(ev.end)) {
-        dateEnd = parseDate(ev.end);
-      }
-    }
+  //   // Determine end date
+  //   if (ev.end) {
+  //     if (isIsoDate(ev.end)) {
+  //       dateEnd = new Date(ev.end);
+  //     } else if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(ev.end)) {
+  //       dateEnd = ev.end ? parseDate(ev.end) : null;
+  //     }
+  //   }
 
-    function format(d) {
-      const y = d.getFullYear();
-      const m = String(d.getMonth() + 1).padStart(2, "0");
-      const day = String(d.getDate()).padStart(2, "0");
-      // return `${y}-${m}-${day}T00:00:00`;
-      return `${y}-${m}-${day}T00:00:00Z`;
+  //   function format(d) {
+  //     const y = d.getFullYear();
+  //     const m = String(d.getMonth() + 1).padStart(2, "0");
+  //     const day = String(d.getDate()).padStart(2, "0");
+  //     // return `${y}-${m}-${day}T00:00:00`;
+  //     return `${y}-${m}-${day}`;
+  //   }
+  //   // const isMultiDay =
+  //   //   dateStart &&
+  //   //   dateEnd &&
+  //   //   dateStart.toDateString() !== dateEnd.toDateString();
+
+  //   // if (isMultiDay) {
+  //   //   dateEnd.setDate(dateEnd.getDate() + 1); // 🔑 KEY LINE
+  //   // }
+  //   // return {
+  //   //   ...ev,
+  //   //   start: dateStart ? format(dateStart) : ev.start,
+  //   //   end: dateEnd ? format(dateEnd) : ev.end,
+  //   //   allDay: ev.allDay ?? true,
+  //   // };
+  //   dateStart = parseDate(ev.start);
+  //   dateEnd = ev.end ? parseDate(ev.end) : null;
+
+  //   if (dateStart && dateEnd) {
+  //     const sameDay =
+  //       dateStart.getFullYear() === dateEnd.getFullYear() &&
+  //       dateStart.getMonth() === dateEnd.getMonth() &&
+  //       dateStart.getDate() === dateEnd.getDate();
+
+  //     if (!sameDay) {
+  //       // 🔥 THIS IS MANDATORY
+  //       dateEnd.setDate(dateEnd.getDate() + 1);
+  //     }
+  //   }
+  //   return {
+  //     ...ev,
+  //     start: format(dateStart), // YYYY-MM-DDT00:00:00
+  //     end: dateEnd ? format(dateEnd) : undefined,
+  //     allDay: true,
+  //   };
+  // });
+
+  const calendarEvents = events.map(normalizeEvent);
+  const allEvents = calendarEvents.map((ev) => {
+    const parse = (str) => {
+      const [mm, dd, yyyy] = str.split("/");
+      return new Date(yyyy, mm - 1, dd);
+    };
+
+    // let start = parse(ev.start);
+    // let end = ev.end ? parse(ev.end) : null;
+    let start = ev.start;
+    let end = ev.end;
+
+    // 🔑 ALWAYS make end exclusive
+    // if (end) {
+    //   end.setDate(end.getDate() + 1);
+    // }
+
+    // const fmt = (d) =>
+    //   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+    //     d.getDate()
+    //   ).padStart(2, "0")}`;
+    // events.forEach((e) => {
+    //   console.log(
+    //     e.title,
+    //     new Date(e.start),
+    //     new Date(e.end)
+    //     // new Date(e.end) - new Date(e.start)
+    //   );
+    // });
+
+    return {
+      ...ev,
+      start: start,
+      end: end ? end : undefined,
+      allDay: end && new Date(end) > new Date(start),
+    };
+  });
+  console.table(
+    events.map((e) => ({
+      title: e.title,
+      start: e.start,
+      allDay: e.allDay,
+      end: e.end,
+    }))
+  );
+  function normalizeEvent(ev) {
+    // const hasEnd = ev.end && new Date(ev.end) > new Date(ev.start);
+
+    // return {
+    //   ...ev,
+    //   allDay: hasEnd, // 🔑 auto-detect multi-day
+    // };
+    let start = new Date(ev.start);
+    let end = ev.end ? new Date(ev.end) : null;
+
+    if (end && end > start) {
+      // ✅ Make end exclusive: EventCalendar needs this
+      end.setDate(end.getDate() + 1);
     }
 
     return {
       ...ev,
-      start: dateStart ? format(dateStart) : ev.start,
-      end: dateEnd ? format(dateEnd) : ev.end,
+      start,
+      end: end || start,
+      allDay: true, // treat as all-day for multi-day
     };
-  });
+  }
 
   if (!resources || resources.length === 0) {
     const calendarEl = document.getElementById(containerId);
@@ -601,6 +707,8 @@ function initCalendar(
     eventResourceEditable: false,
     resources,
     events: allEvents,
+    allDay: true,
+    slotLabelInterval: { days: 1 },
     dayMaxEvents: true,
     resourceLabelContent: renderResources,
     eventContent: renderEventDetails,
@@ -817,6 +925,9 @@ function initCalendar(
   const calendar = EventCalendar.create(calendarEl, calendarOptions);
   return calendar;
 }
+
+const range = document.getElementsByClassName("ec-event-range");
+console.log(range);
 
 document.getElementById("calPrev").addEventListener("click", () => {
   calInstances.forEach((cal) => cal?.prev());
