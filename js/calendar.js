@@ -58,7 +58,6 @@ async function loadShifts() {
         end: new Date(2026, 0, 8),
         resourceId: "ResourceGUID",
         title: "Sarah 2",
-        allDay: true,
         backgroundColor: "#D1E3F5",
         extendedProps: {
           categoryId: "ff2014946-babb-f011-bbd3-00224814b93c",
@@ -68,8 +67,8 @@ async function loadShifts() {
         },
       },
       {
-        start: new Date(2026, 0, 5),
-        end: new Date(2026, 0, 8),
+        start: new Date(2026, 0, 9),
+        end: new Date(2026, 0, 9),
         resourceId: "ResourceGUID2",
         title: "FT-Sydney CBD",
         backgroundColor: "#D1E3F5",
@@ -81,8 +80,8 @@ async function loadShifts() {
         },
       },
       {
-        start: "12/18/2025",
-        end: "12/18/2025",
+        start: new Date(2026, 0, 5),
+        end: new Date(2026, 0, 5),
         resourceId: "ResourceGUID2",
         title: "FT-North Sydney Clan",
         backgroundColor: "#F9DADA",
@@ -322,6 +321,201 @@ async function loadShifts() {
   initCategoryDropdown();
   handleSelection();
 }
+// function positionMultiDayEvents() {
+//   const processed = new Set();
+//   console.log("function");
+//   document.querySelectorAll(".ec-event").forEach((eventEl) => {
+//     const box = eventEl.querySelector(".events-box");
+//     if (!box) return;
+
+//     const startStr = box.dataset.start;
+//     const daysSpan = parseInt(box.dataset.daysSpan, 10);
+
+//     if (!startStr || !daysSpan || daysSpan <= 1) return;
+
+//     // Prevent duplicate handling
+//     // const key = `${box.dataset.resourceId}-${startStr}`;
+//     // console.log(key);
+//     // if (processed.has(key)) {
+//     //   eventEl.remove(); // remove duplicate day events
+//     //   return;
+//     // }
+//     // processed.add(key);
+
+//     // const start = new Date(startStr);
+
+//     // // Find first day cell
+//     // console.log(startStr);
+//     // const firstDayCell = document.querySelector(
+//     //   `.ec-days .ec-events .ec-event .ec-event-body .events-box[data-start="${startStr}"]`
+//     // );
+//     // console.log(firstDayCell);
+//     // if (!firstDayCell) return;
+
+//     // const dayWidth = firstDayCell.offsetWidth;
+//     if (eventEl.dataset.processed === "true") {
+//       eventEl.remove();
+//       return;
+//     }
+//     eventEl.dataset.processed = "true";
+
+//     const start = new Date(startStr);
+//     // ✅ Correct day cell
+//     const startBox = document.querySelector(
+//       `.events-box[data-start="${startStr}"]`
+//     );
+//     const firstDayCell = startBox.closest(".ec-events");
+//     console.log(firstDayCell);
+//     if (!firstDayCell) return;
+
+//     const dayWidth = firstDayCell.offsetWidth;
+//     if (!dayWidth) return;
+
+//     // ✅ Preserve vertical position
+//     const originalTop = eventEl.style.top || "0px";
+//     // Move WHOLE ec-event (not events-box)
+//     firstDayCell.appendChild(eventEl);
+
+//     // Absolute positioning
+//     eventEl.style.position = "absolute";
+//     eventEl.style.left = "0";
+//     eventEl.style.top = originalTop;
+//     eventEl.style.width = `${dayWidth * daysSpan}px`;
+//     eventEl.style.zIndex = 100;
+
+//     eventEl.classList.add("multi-day-event");
+//     console.log(
+//       document
+//         .querySelector(".ec-event.multi-day-event")
+//         ?.getBoundingClientRect()
+//     );
+//   });
+// }
+function getSpanWidth(startDayEl, daysSpan) {
+  let width = 0;
+  let current = startDayEl;
+
+  for (let i = 0; i < daysSpan && current; i++) {
+    width += current.offsetWidth;
+    current = current.nextElementSibling; // next ec-day
+  }
+  console.log(width);
+  return width;
+}
+
+function positionMultiDayEvents() {
+  const handled = new Map();
+
+  document.querySelectorAll(".ec-event").forEach((eventEl) => {
+    const box = eventEl.querySelector(".events-box");
+    if (!box) return;
+
+    const startStr = box.dataset.start;
+    const daysSpan = Number(box.dataset.daysSpan);
+    const resourceId = box.dataset.resourceId;
+
+    if (!startStr || daysSpan <= 1) return;
+
+    const key = `${resourceId}_${startStr}`;
+
+    // keep only first occurrence
+    if (handled.has(key)) {
+      eventEl.remove();
+      return;
+    }
+    handled.set(key, eventEl);
+
+    const startBox = document.querySelector(
+      `.events-box[data-start="${startStr}"][data-resource-id="${resourceId}"]`
+    );
+    if (!startBox) return;
+
+    const startDay = startBox.closest(".ec-day");
+    if (!startDay) return;
+    const spanWidth = getSpanWidth(startDay, daysSpan);
+    const container = startBox.closest(".ec-events");
+    const dayCell = startBox.closest(".ec-day");
+    if (!container || !dayCell) return;
+
+    const dayWidth = dayCell.offsetWidth;
+    if (!dayWidth) return;
+
+    container.appendChild(eventEl);
+
+    eventEl.style.position = "absolute";
+    eventEl.style.left = "0";
+    eventEl.style.top = eventEl.offsetTop + "px";
+    eventEl.style.width = `${spanWidth}px`;
+    console.log(spanWidth);
+    eventEl.style.zIndex = 200;
+
+    eventEl.classList.add("multi-day-event");
+  });
+}
+
+function waitForDayLayoutAndPosition() {
+  const firstCell = document.querySelector(".ec-days .ec-events");
+
+  if (!firstCell || firstCell.offsetWidth === 0) {
+    requestAnimationFrame(waitForDayLayoutAndPosition);
+    return;
+  }
+
+  // ✅ layout is ready
+  positionMultiDayEvents();
+}
+
+// function positionMultiDayEvents() {
+//   // console.log("pos function");
+//   document.querySelectorAll(".events-box").forEach((eventEl) => {
+//     const startStr = eventEl.dataset.start;
+//     const endStr = eventEl.dataset.end;
+//     const daysSpan = parseInt(eventEl.dataset.daysSpan);
+//     console.log(daysSpan);
+//     if (!startStr || !endStr) return;
+
+//     const start = new Date(startStr);
+
+//     // Find the first day cell
+//     const firstDayCell = document.querySelector(
+//       `.ec-days[data-date="${formatDateYYYYMMDD(start)}"] .ec-events`
+//     );
+//     if (!firstDayCell) return;
+
+//     const dayWidth = firstDayCell.offsetWidth;
+
+//     // Move event inside the first cell
+//     firstDayCell.appendChild(eventEl);
+
+//     // Absolute positioning
+//     eventEl.style.position = "absolute";
+//     eventEl.style.left = "0px";
+//     eventEl.style.top = "0px";
+//     eventEl.style.width = `${dayWidth * daysSpan}px`;
+//     eventEl.style.zIndex = 10;
+//     eventEl.classList.add("multi-day-event");
+//   });
+// }
+
+// Helper: format Date as 'YYYY-MM-DD' to match data-date attributes
+function formatDateYYYYMMDD(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+function adjustMultiDayEvents() {
+  document.querySelectorAll(".ec-event").forEach((eventEl) => {
+    // console.log(eventEl.dataset.daysSpan);
+    const daysSpan = parseInt(eventEl.dataset.daysSpan) || 1;
+    // console.log(daysSpan);
+    const cellWidth = eventEl.closest(".ec-days")?.offsetWidth || 100;
+    // Set width of .ec-event to span N day columns
+    eventEl.style.width = `${daysSpan * cellWidth}px`;
+  });
+}
+
 const EVENT_OFFSET_REM = 4.2;
 const EVENT_HEIGHT_REM = 3.8;
 function handleMultiple() {
@@ -634,7 +828,8 @@ function initCalendar(
     // let end = ev.end ? parse(ev.end) : null;
     let start = ev.start;
     let end = ev.end;
-
+    console.log(ev.daysSpan);
+    let daysSpan = ev.daysSpan;
     // 🔑 ALWAYS make end exclusive
     // if (end) {
     //   end.setDate(end.getDate() + 1);
@@ -652,20 +847,23 @@ function initCalendar(
     //     // new Date(e.end) - new Date(e.start)
     //   );
     // });
-
+    console.log(ev);
     return {
       ...ev,
       start: start,
       end: end ? end : undefined,
       allDay: end && new Date(end) > new Date(start),
+      daysSpan,
     };
   });
+  // console.log(allEvents);
   console.table(
-    events.map((e) => ({
+    allEvents.map((e) => ({
       title: e.title,
       start: e.start,
       allDay: e.allDay,
       end: e.end,
+      daysSpan: e.daysSpan,
     }))
   );
   function normalizeEvent(ev) {
@@ -682,12 +880,17 @@ function initCalendar(
       // ✅ Make end exclusive: EventCalendar needs this
       end.setDate(end.getDate() + 1);
     }
-
+    const span = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
     return {
       ...ev,
       start,
       end: end || start,
       allDay: true, // treat as all-day for multi-day
+      daysSpan: span,
+      extendedProps: {
+        ...ev.extendedProps,
+        daysSpan: span, // ✅ propagate to extendedProps too
+      },
     };
   }
 
@@ -823,6 +1026,14 @@ function initCalendar(
           dayCells.forEach((cell) => (cell.style.display = "none"));
         }
       });
+      // requestAnimationFrame(() => {
+      //   waitForDayLayoutAndPosition(); // recalc after DOM is ready
+      // });
+    },
+    eventDidMount: () => {
+      requestAnimationFrame(() => {
+        waitForDayLayoutAndPosition();
+      });
     },
     datesSet(info) {
       const start = new Date(info.start);
@@ -889,7 +1100,11 @@ function initCalendar(
 
         titleMain.textContent = displayText;
       }
-      requestAnimationFrame(handleMultiple);
+      requestAnimationFrame(() => {
+        handleMultiple();
+        // adjustMultiDayEvents();
+        positionMultiDayEvents();
+      });
     },
   };
 
@@ -925,9 +1140,6 @@ function initCalendar(
   const calendar = EventCalendar.create(calendarEl, calendarOptions);
   return calendar;
 }
-
-const range = document.getElementsByClassName("ec-event-range");
-console.log(range);
 
 document.getElementById("calPrev").addEventListener("click", () => {
   calInstances.forEach((cal) => cal?.prev());
@@ -1179,12 +1391,17 @@ function renderEventDetails(arg) {
   const props = event.extendedProps;
   const x = event.extendedProps?.x || 0;
   const borderColor = getBorderColor(color);
+  const daysSpan = event.extendedProps.daysSpan || 1;
+  const widthPercent = daysSpan * 100;
   const cupIcon = new CupIcon(borderColor, 20, 20);
   const clockIcon = new ClockIcon(borderColor, 20, 20);
+  const start = formatDateYYYYMMDD(new Date(event.start));
+  const end = formatDateYYYYMMDD(new Date(event.end));
 
   return {
     html: `
-       <div class="events-box" data-resource-id="${resourceId}" style="background-color: ${color}; border:2px solid ${borderColor}; color:${borderColor};">
+       <div class="events-box" data-start="${start}" data-end="${end}" data-days-span="${daysSpan}" data-resource-id="${resourceId}" style="background-color: ${color}; border:2px solid ${borderColor}; color:${borderColor}; width: ${widthPercent}%;
+             left: 0;">
          <div class="left-event">
            ${title}
            <div class="icons">

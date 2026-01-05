@@ -548,3 +548,40 @@ h3 svg {
     display: none !important;
   }
 }
+
+/* Allow spanning outside one day */
+.ec-days,
+.ec-events {
+  overflow: visible !important;
+  position: relative;
+  min-width: 1px;
+}
+
+/* Make sure event has height */
+.ec-event.multi-day-event {
+  height: 3.8rem;              /* match your EVENT_HEIGHT_REM */
+  background: red !important;  /* debug */
+}
+
+/* IMPORTANT: body must stretch */
+.ec-event.multi-day-event .ec-event-body {
+  height: 100%;
+}
+
+
+.multi-day-event {
+  border-radius: 6px; /* smooth edges */
+  background-color: red;
+  /* border: 2px solid #5A9BD5; */
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.ec-event.multi-day-event {
+  background: red !important;
+}
+
+.multi-day-event:hover {
+  /* background-color: #A7C8F0; */
+}
+
