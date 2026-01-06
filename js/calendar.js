@@ -1452,14 +1452,13 @@ function initCalendar(
         }
       });
     },
-    eventDidMount: () => {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          renderMultiDayBars();
-        });
-      });
-    },
-
+    // eventDidMount: () => {
+    //   requestAnimationFrame(() => {
+    //     requestAnimationFrame(() => {
+    //       renderMultiDayBars();
+    //     });
+    //   });
+    // },
     datesSet(info) {
       const start = new Date(info.start);
       const end = new Date(info.end);
@@ -1528,9 +1527,6 @@ function initCalendar(
       requestAnimationFrame(() => {
         renderMultiDayBars();
         handleMultiple();
-        // adjustMultiDayEvents();
-        // positionMultiDayEvents();
-        // renderMultiDayBars();
       });
     },
   };
@@ -1823,9 +1819,6 @@ function renderEventDetails(arg) {
   const clockIcon = new ClockIcon(borderColor, 20, 20);
   const start = formatDateYYYYMMDD(new Date(event.start));
   const end = formatDateYYYYMMDD(new Date(event.end));
-  // if (daysSpan > 1) {
-  //   return;
-  // }
 
   return {
     html: `
