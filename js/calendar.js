@@ -1014,16 +1014,6 @@ function initCalendar(
       daysSpan,
     };
   });
-  // console.log(allEvents);
-  console.table(
-    allEvents.map((e) => ({
-      title: e.title,
-      start: e.start,
-      // allDay: e.allDay,
-      end: e.end,
-      daysSpan: e.daysSpan,
-    }))
-  );
   function normalizeEvent(ev) {
     let start = new Date(ev.start);
     let end = ev.end ? new Date(ev.end) : null;
@@ -1071,12 +1061,6 @@ function initCalendar(
     resourceLabelContent: renderResources,
     eventContent: renderEventDetails,
     slotEventOverlap: true,
-    // eventDidMount(info) {
-    //   // wait for ALL events to mount
-    //   requestAnimationFrame(async () => {
-    //     await handleMultiple();
-    //   });
-    // },
     viewDidMount(info) {
       // quick debug - inspect resources and events passed to each calendar
       const calendarEl = document.getElementById(containerId);
