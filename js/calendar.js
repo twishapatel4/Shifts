@@ -54,15 +54,10 @@ async function loadShifts() {
     ],
     events: [
       {
-        start: new Date(2026, 0, 5),
-        end: new Date(2026, 0, 8),
+        start: "01/05/2026",
+        end: "01/08/2026",
         resourceId: "ResourceGUID",
         title: "Sarah 2",
-        // type: "Full",
-        // slotEventOverlap: true,
-        // editable: false,
-        // durationEditable: false,
-        // eventStartEditable: false,
         backgroundColor: "#D1E3F5",
         extendedProps: {
           categoryId: "ff2014946-babb-f011-bbd3-00224814b93c",
@@ -72,15 +67,10 @@ async function loadShifts() {
         },
       },
       {
-        start: new Date(2026, 0, 6),
-        end: new Date(2026, 0, 9),
+        start: "01/06/2026",
+        end: "01/09/2026",
         resourceId: "ResourceGUID2",
         title: "Sarah 2",
-        type: "Full",
-        slotEventOverlap: true,
-        editable: false,
-        durationEditable: false,
-        eventStartEditable: false,
         backgroundColor: "#D1E3F5",
         extendedProps: {
           categoryId: "ff2014946-babb-f011-bbd3-00224814b93c",
@@ -90,8 +80,8 @@ async function loadShifts() {
         },
       },
       {
-        start: new Date(2026, 0, 9),
-        end: new Date(2026, 0, 9),
+        start: "01/09/2026",
+        end: "01/09/2026",
         resourceId: "ResourceGUID2",
         title: "FT-Sydney CBD",
         backgroundColor: "#D1E3F5",
@@ -103,8 +93,8 @@ async function loadShifts() {
         },
       },
       {
-        start: new Date(2026, 0, 8),
-        end: new Date(2026, 0, 10),
+        start: "01/08/2026",
+        end: "01/10/2026",
         resourceId: "ResourceGUID",
         title: "FT-Sydney CBD",
         backgroundColor: "#D1E3F5",
@@ -116,8 +106,8 @@ async function loadShifts() {
         },
       },
       {
-        start: new Date(2026, 0, 7),
-        end: new Date(2026, 0, 10),
+        start: "01/05/2026",
+        end: "01/10/2026",
         resourceId: "OpenShift",
         title: "FT-Sydney CBD",
         backgroundColor: "#D1E3F5",
@@ -129,20 +119,8 @@ async function loadShifts() {
         },
       },
       {
-        start: new Date(2026, 0, 5),
-        end: new Date(2026, 0, 5),
-        resourceId: "ResourceGUID2",
-        title: "FT-North Sydney Clan",
-        backgroundColor: "#F9DADA",
-        extendedProps: {
-          categoryId: "ff2014946-babb-f011-bbd3-00224814b93c",
-          shiftAssignmentId: "ShiftAssignmentGUID",
-          shiftId: "ShiftGUID",
-        },
-      },
-      {
-        start: "12/18/2025",
-        end: "12/18/2025",
+        start: "01/04/2026",
+        end: "01/05/2026",
         resourceId: "ResourceGUID2",
         title: "Leo Shift",
         backgroundColor: "#f9dada",
@@ -395,22 +373,22 @@ function ensureMultiDayLayer(resourceRow) {
   return layer;
 }
 
-function getSpanWidth(startDayEl, daysSpan) {
-  let width = 0;
-  let current = startDayEl;
+// function getSpanWidth(startDayEl, daysSpan) {
+//   let width = 0;
+//   let current = startDayEl;
 
-  for (let i = 0; i < daysSpan && current; i++) {
-    width += current.offsetWidth;
-    // current = current.nextElementSibling; // next ec-day
-    let next = current.nextElementSibling;
-    while (next && !next.classList.contains("ec-day")) {
-      next = next.nextElementSibling;
-    }
-    current = next;
-  }
-  // console.log(width);
-  return width;
-}
+//   for (let i = 0; i < daysSpan && current; i++) {
+//     width += current.offsetWidth;
+//     // current = current.nextElementSibling; // next ec-day
+//     let next = current.nextElementSibling;
+//     while (next && !next.classList.contains("ec-day")) {
+//       next = next.nextElementSibling;
+//     }
+//     current = next;
+//   }
+//   // console.log(width);
+//   return width;
+// }
 
 function renderMultiDayBars() {
   // Show events on every day they span (no single spanning continuation).
@@ -917,82 +895,82 @@ function renderMultiDayBars() {
   });
 }
 
-function positionMultiDayEvents() {
-  const handled = new Map();
+// function positionMultiDayEvents() {
+//   const handled = new Map();
 
-  document.querySelectorAll(".ec-event").forEach((eventEl) => {
-    // Skip our visual continuation bars and per-day clone placeholders so later layout doesn't overwrite them
-    if (
-      eventEl.classList.contains("ec-multiday-event") ||
-      eventEl.classList.contains("ec-multiday-clone")
-    )
-      return;
+//   document.querySelectorAll(".ec-event").forEach((eventEl) => {
+//     // Skip our visual continuation bars and per-day clone placeholders so later layout doesn't overwrite them
+//     if (
+//       eventEl.classList.contains("ec-multiday-event") ||
+//       eventEl.classList.contains("ec-multiday-clone")
+//     )
+//       return;
 
-    const box = eventEl.querySelector(".events-box");
-    if (!box) return;
+//     const box = eventEl.querySelector(".events-box");
+//     if (!box) return;
 
-    const startStr = box.dataset.start;
-    const daysSpan = Number(box.dataset.daysSpan);
-    const endStr = box.dataset.end;
-    const resourceId = box.dataset.resourceId;
+//     const startStr = box.dataset.start;
+//     const daysSpan = Number(box.dataset.daysSpan);
+//     const endStr = box.dataset.end;
+//     const resourceId = box.dataset.resourceId;
 
-    const startDate = new Date(startStr);
-    const endDate = endStr ? new Date(endStr) : new Date(startStr);
-    const msPerDay = 1000 * 60 * 60 * 24;
-    const daysToUse = Math.max(1, Math.round((endDate - startDate) / msPerDay));
+//     const startDate = new Date(startStr);
+//     const endDate = endStr ? new Date(endStr) : new Date(startStr);
+//     const msPerDay = 1000 * 60 * 60 * 24;
+//     const daysToUse = Math.max(1, Math.round((endDate - startDate) / msPerDay));
 
-    if (!startStr || daysToUse <= 1) return;
+//     if (!startStr || daysToUse <= 1) return;
 
-    const key = `${resourceId}_${startStr}`;
+//     const key = `${resourceId}_${startStr}`;
 
-    // keep only first occurrence
-    if (handled.has(key)) {
-      // Diagnostic: list all candidate occurrences for this key before removal
-      const candidates = Array.from(
-        document.querySelectorAll(
-          `.events-box[data-start="${startStr}"][data-resource-id="${resourceId}"]`
-        )
-      ).map((m) => {
-        const ev = m.closest(".ec-event");
-        const day = m.closest(".ec-day");
-        return {
-          dayDate: day?.dataset?.date || null,
-          isClone: ev?.classList?.contains("ec-multiday-clone") || false,
-          classes: ev?.className || "",
-          text: m.textContent.trim().slice(0, 30),
-        };
-      });
-      eventEl.remove();
-      return;
-    }
-    handled.set(key, eventEl);
+//     // keep only first occurrence
+//     if (handled.has(key)) {
+//       // Diagnostic: list all candidate occurrences for this key before removal
+//       const candidates = Array.from(
+//         document.querySelectorAll(
+//           `.events-box[data-start="${startStr}"][data-resource-id="${resourceId}"]`
+//         )
+//       ).map((m) => {
+//         const ev = m.closest(".ec-event");
+//         const day = m.closest(".ec-day");
+//         return {
+//           dayDate: day?.dataset?.date || null,
+//           isClone: ev?.classList?.contains("ec-multiday-clone") || false,
+//           classes: ev?.className || "",
+//           text: m.textContent.trim().slice(0, 30),
+//         };
+//       });
+//       eventEl.remove();
+//       return;
+//     }
+//     handled.set(key, eventEl);
 
-    const startBox = document.querySelector(
-      `.events-box[data-start="${startStr}"][data-resource-id="${resourceId}"]`
-    );
-    if (!startBox) return;
+//     const startBox = document.querySelector(
+//       `.events-box[data-start="${startStr}"][data-resource-id="${resourceId}"]`
+//     );
+//     if (!startBox) return;
 
-    const startDay = startBox.closest(".ec-day");
+//     const startDay = startBox.closest(".ec-day");
 
-    if (!startDay) return;
-    const spanWidth = getSpanWidth(startDay, daysToUse);
-    const container = startBox.closest(".ec-events");
-    const dayCell = startBox.closest(".ec-day");
-    if (!container || !dayCell) return;
+//     if (!startDay) return;
+//     const spanWidth = getSpanWidth(startDay, daysToUse);
+//     const container = startBox.closest(".ec-events");
+//     const dayCell = startBox.closest(".ec-day");
+//     if (!container || !dayCell) return;
 
-    const dayWidth = dayCell.offsetWidth;
-    if (!dayWidth) return;
-    container.appendChild(eventEl);
+//     const dayWidth = dayCell.offsetWidth;
+//     if (!dayWidth) return;
+//     container.appendChild(eventEl);
 
-    const prevWidth = eventEl.style.width || null;
-    eventEl.style.position = "absolute";
-    eventEl.style.left = "0";
-    eventEl.style.top = eventEl.offsetTop + "px";
-    eventEl.style.width = `${spanWidth}px`;
+//     const prevWidth = eventEl.style.width || null;
+//     eventEl.style.position = "absolute";
+//     eventEl.style.left = "0";
+//     eventEl.style.top = eventEl.offsetTop + "px";
+//     eventEl.style.width = `${spanWidth}px`;
 
-    eventEl.classList.add("multi-day-event");
-  });
-}
+//     eventEl.classList.add("multi-day-event");
+//   });
+// }
 
 // Helper: format Date as 'YYYY-MM-DD' to match data-date attributes
 function formatDateYYYYMMDD(d) {
