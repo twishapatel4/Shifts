@@ -1452,13 +1452,13 @@ function initCalendar(
         }
       });
     },
-    // eventDidMount: () => {
-    //   requestAnimationFrame(() => {
-    //     requestAnimationFrame(() => {
-    //       renderMultiDayBars();
-    //     });
-    //   });
-    // },
+    eventDidMount: () => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          renderMultiDayBars();
+        });
+      });
+    },
     datesSet(info) {
       const start = new Date(info.start);
       const end = new Date(info.end);
