@@ -400,6 +400,46 @@ h3 svg {
   display: none;
 }
 
+/* Multi-day clone placeholders (show white boxes for the rest of the span, hide clone text) */
+.ec-multiday-clone {
+  background: #ffffff !important;
+  color: transparent !important;
+  pointer-events: none;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+.ec-multiday-clone .events-box {
+  background: #ffffff !important;
+  border: none !important;
+  color: transparent !important;
+  box-shadow: none !important;
+  min-height: 100%;
+}
+
+/* Visual spanning bar for multi-day events */
+.ec-multiday-event {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+  height: calc(100% - 12px);
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: 200;
+  box-sizing: border-box;
+  /* Border and background are applied inline in JS to match event color */
+}
+
+/* Make the first-day event label visible above the spanning bar */
+.ec-event.ec-multiday-first .events-box {
+  /* border: none !important; */
+  /* background: transparent !important; */
+  /* color: inherit !important; */
+  z-index: 210 !important;
+  pointer-events: auto !important;
+}
+
 .collapsed h3 svg {
   transform: rotate(0deg);
   transition: 0.2s ease;
@@ -416,12 +456,12 @@ h3 svg {
 }
 
 /* ADD CSS TO THE APPLY BUTTON */
-.apply-btn{
-    background:#4f9df0; 
-    color:white;
-    padding:8px 12px;
-    border-radius:4px; 
-    cursor:pointer;
+.apply-btn {
+  background: #4f9df0;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 /* Responsive: keep filter controls on one line under 1400px */
@@ -559,15 +599,14 @@ h3 svg {
 
 /* Make sure event has height */
 .ec-event.multi-day-event {
-  height: 3.8rem;              /* match your EVENT_HEIGHT_REM */
-  background: red !important;  /* debug */
+  height: 3.8rem; /* match your EVENT_HEIGHT_REM */
+  background: red !important; /* debug */
 }
 
 /* IMPORTANT: body must stretch */
 .ec-event.multi-day-event .ec-event-body {
   height: 100%;
 }
-
 
 .multi-day-event {
   border-radius: 6px; /* smooth edges */
@@ -581,10 +620,6 @@ h3 svg {
   background: red !important;
 }
 
-.multi-day-event:hover {
-  /* background-color: #A7C8F0; */
-}
-
 .ec-multiday-event {
   border-radius: 4px;
   background-color: inherit; /* use original background */
@@ -593,4 +628,3 @@ h3 svg {
 .ec-multiday-event:first-child {
   pointer-events: auto; /* first-day interactive */
 }
-

@@ -58,6 +58,29 @@ async function loadShifts() {
         end: new Date(2026, 0, 8),
         resourceId: "ResourceGUID",
         title: "Sarah 2",
+        type: "Full",
+        slotEventOverlap: true,
+        editable: false,
+        durationEditable: false,
+        eventStartEditable: false,
+        backgroundColor: "#D1E3F5",
+        extendedProps: {
+          categoryId: "ff2014946-babb-f011-bbd3-00224814b93c",
+          shiftAssignmentId: "ShiftAssignmentGUID",
+          shiftId: "ShiftGUID",
+          x: 6,
+        },
+      },
+      {
+        start: new Date(2026, 0, 6),
+        end: new Date(2026, 0, 8),
+        resourceId: "ResourceGUID2",
+        title: "Sarah 2",
+        type: "Full",
+        slotEventOverlap: true,
+        editable: false,
+        durationEditable: false,
+        eventStartEditable: false,
         backgroundColor: "#D1E3F5",
         extendedProps: {
           categoryId: "ff2014946-babb-f011-bbd3-00224814b93c",
@@ -321,78 +344,17 @@ async function loadShifts() {
   initCategoryDropdown();
   handleSelection();
 }
-// function positionMultiDayEvents() {
-//   const processed = new Set();
-//   console.log("function");
-//   document.querySelectorAll(".ec-event").forEach((eventEl) => {
-//     const box = eventEl.querySelector(".events-box");
-//     if (!box) return;
-
-//     const startStr = box.dataset.start;
-//     const daysSpan = parseInt(box.dataset.daysSpan, 10);
-
-//     if (!startStr || !daysSpan || daysSpan <= 1) return;
-
-//     // Prevent duplicate handling
-//     // const key = `${box.dataset.resourceId}-${startStr}`;
-//     // console.log(key);
-//     // if (processed.has(key)) {
-//     //   eventEl.remove(); // remove duplicate day events
-//     //   return;
-//     // }
-//     // processed.add(key);
-
-//     // const start = new Date(startStr);
-
-//     // // Find first day cell
-//     // console.log(startStr);
-//     // const firstDayCell = document.querySelector(
-//     //   `.ec-days .ec-events .ec-event .ec-event-body .events-box[data-start="${startStr}"]`
-//     // );
-//     // console.log(firstDayCell);
-//     // if (!firstDayCell) return;
-
-//     // const dayWidth = firstDayCell.offsetWidth;
-//     if (eventEl.dataset.processed === "true") {
-//       eventEl.remove();
-//       return;
-//     }
-//     eventEl.dataset.processed = "true";
-
-//     const start = new Date(startStr);
-//     // ✅ Correct day cell
-//     const startBox = document.querySelector(
-//       `.events-box[data-start="${startStr}"]`
-//     );
-//     const firstDayCell = startBox.closest(".ec-events");
-//     console.log(firstDayCell);
-//     if (!firstDayCell) return;
-
-//     const dayWidth = firstDayCell.offsetWidth;
-//     if (!dayWidth) return;
-
-//     // ✅ Preserve vertical position
-//     const originalTop = eventEl.style.top || "0px";
-//     // Move WHOLE ec-event (not events-box)
-//     firstDayCell.appendChild(eventEl);
-
-//     // Absolute positioning
-//     eventEl.style.position = "absolute";
-//     eventEl.style.left = "0";
-//     eventEl.style.top = originalTop;
-//     eventEl.style.width = `${dayWidth * daysSpan}px`;
-//     eventEl.style.zIndex = 100;
-
-//     eventEl.classList.add("multi-day-event");
-//     console.log(
-//       document
-//         .querySelector(".ec-event.multi-day-event")
-//         ?.getBoundingClientRect()
-//     );
-//   });
-// }
 function ensureMultiDayLayer(resourceRow) {
-  let layer = resourceRow.querySelector(".multi-day-layer");
+  if (!resourceRow) return null;
+  // Prefer attaching to the .ec-days area so left offsets align with day cells
+  const daysContainer = resourceRow.querySelector(".ec-days");
+  const host = daysContainer || resourceRow;
+
+  if (getComputedStyle(host).position === "static") {
+    host.style.position = "relative";
+  }
+
+  let layer = host.querySelector(".multi-day-layer");
   if (!layer) {
     layer = document.createElement("div");
     layer.className = "multi-day-layer";
@@ -401,7 +363,8 @@ function ensureMultiDayLayer(resourceRow) {
     layer.style.left = "0";
     layer.style.width = "100%";
     layer.style.height = "100%";
-    resourceRow.appendChild(layer);
+    layer.style.pointerEvents = "none";
+    host.appendChild(layer);
   }
   return layer;
 }
@@ -419,135 +382,538 @@ function getSpanWidth(startDayEl, daysSpan) {
     }
     current = next;
   }
-  console.log(width);
+  // console.log(width);
   return width;
 }
 
-// function renderMultiDayBars() {
-//   const handled = new Set();
-//   console.log(handled);
-//   document.querySelectorAll(".events-box[data-days-span]").forEach((box) => {
-//     const daysSpan = Number(box.dataset.daysSpan);
-//     if (daysSpan <= 1) return; // only multi-day events
-
-//     const resourceRow = box.closest(".ec-resource-row");
-//     if (!resourceRow) return;
-
-//     const resourceId = box.dataset.resourceId;
-//     const startStr = box.dataset.start;
-//     const key = `${resourceId}_${startStr}`;
-//     if (handled.has(key)) return;
-//     handled.add(key);
-
-//     const startDay = box.closest(".ec-day");
-//     if (!startDay) return;
-
-//     const layer = ensureMultiDayLayer(resourceRow);
-
-//     // Calculate width to span multiple days
-//     let width = 0;
-//     let currentDay = startDay;
-//     for (let i = 0; i < daysSpan && currentDay; i++) {
-//       width += currentDay.offsetWidth;
-
-//       // Move to next day
-//       let next = currentDay.nextElementSibling;
-//       while (next && !next.classList.contains("ec-day")) {
-//         next = next.nextElementSibling;
-//       }
-//       currentDay = next;
-//     }
-
-//     const bar = document.createElement("div");
-//     bar.className = "ec-multiday-event";
-//     bar.innerHTML = box.innerHTML;
-
-//     Object.assign(bar.style, {
-//       position: "absolute",
-//       top: "4px",
-//       left: `${startDay.offsetLeft}px`,
-//       width: `${width}px`,
-//       zIndex: 200,
-//     });
-
-//     layer.appendChild(bar);
-//   });
-// }
 function renderMultiDayBars() {
-  const handled = new Set();
+  // Show events on every day they span (no single spanning continuation).
+  // Clean any old continuation visuals and exit — per-day copies remain as rendered by the calendar.
+  // remove any old continuation visuals
+  document
+    .querySelectorAll(".ec-multiday-event, .ec-multiday-clone")
+    .forEach((el) => el.remove());
 
-  // Clean old multi-day bars (important on re-render)
-  document.querySelectorAll(".ec-multiday-event").forEach((el) => el.remove());
-  // lets add the code to add one event for multiple days
+  // For each multi-day event create per-day clones so the event appears on all days
   document.querySelectorAll(".events-box[data-days-span]").forEach((box) => {
-    console.log(box);
     const daysSpan = Number(box.dataset.daysSpan);
-    if (daysSpan <= 1) return;
-
-    const resourceRow = box.closest(".ec-event-body");
-    console.log(resourceRow);
-    if (!resourceRow) return;
-
-    const resourceId = box.dataset.resourceId;
     const startStr = box.dataset.start;
-    const key = `${resourceId}_${startStr}`;
+    const endStr = box.dataset.end;
+    const startDate = new Date(startStr);
+    const endDate = endStr ? new Date(endStr) : new Date(startStr);
+    // compute span from actual dates (end is exclusive in our normalization)
+    const spanFromDates = Math.max(
+      1,
+      Math.round((endDate - startDate) / (1000 * 60 * 60 * 24))
+    );
 
-    // process only once per event
-    if (handled.has(key)) return;
-    handled.add(key);
+    if (spanFromDates <= 1) return;
 
-    const startDay = box.closest(".ec-day");
-    console.log(startDay);
-    if (!startDay) return;
-
-    const layer = ensureMultiDayLayer(resourceRow);
-    console.log(layer);
-    // ---------- width calculation ----------
-    let width = 0;
-    let currentDay = startDay;
-
-    for (let i = 0; i < daysSpan && currentDay; i++) {
-      width += currentDay.offsetWidth;
-
-      let next = currentDay.nextElementSibling;
-      while (next && !next.classList.contains("ec-day")) {
-        next = next.nextElementSibling;
-      }
-      currentDay = next;
+    if (spanFromDates !== daysSpan) {
+      console.warn(
+        "renderMultiDayBars: daysSpan mismatch, using spanFromDates",
+        {
+          startStr,
+          daysSpan,
+          spanFromDates,
+        }
+      );
     }
 
-    // ---------- build visual bar ----------
-    // const bar = document.createElement("div");
-    // bar.className = "ec-multiday-event continuation";
-    // We  musr FinalizationRegistry
-    // // // clone only visual content
-    // // bar.innerHTML = box.innerHTML;
-    // // const bar = box.closest(".ec-event").cloneNode(true);
-    const originalEvent = box.closest(".ec-event");
-    if (!originalEvent) return;
+    const resourceId = box.dataset.resourceId;
+    const key = `${resourceId}_${startStr}`;
 
-    const bar = originalEvent.cloneNode(true);
-    bar.classList.add("ec-multiday-event", "continuation");
-    console.log(bar);
-    Object.assign(bar.style, {
-      position: "absolute",
-      top: "4px",
-      left: `${startDay.offsetLeft}px`,
-      width: `${width}px`,
-      height: `${box.offsetHeight}px`,
-      pointerEvents: "none", // visual only
-      zIndex: 200,
+    // find start day cell
+    let day = box.closest(".ec-day");
+
+    // compute how many visible day cells are available starting at `day`
+    let availableDays = 0;
+    let tmp = day;
+    while (tmp) {
+      availableDays++;
+      let n = tmp.nextElementSibling;
+      while (n && !n.classList.contains("ec-day")) n = n.nextElementSibling;
+      tmp = n;
+    }
+
+    const spanToUse = Math.min(spanFromDates, availableDays);
+
+    for (let i = 0; i < spanToUse && day; i++) {
+      const eventsContainer = day.querySelector(".ec-events");
+      if (eventsContainer) {
+        // Skip adding clone on the first day if original exists
+        const exists = eventsContainer.querySelector(
+          `.events-box[data-start="${startStr}"][data-resource-id="${resourceId}"]`
+        );
+        if (i === 0 && exists) {
+          // already rendered by the calendar
+        } else if (!exists) {
+          const clone = document.createElement("div");
+          clone.className = "ec-event ec-multiday-clone";
+          // Mark whether this clone is the first or last day of the span
+          if (i === 0) clone.classList.add("ec-multiday-clone-first");
+          if (i === spanToUse - 1)
+            clone.classList.add("ec-multiday-clone-last");
+          clone.dataset.multidayKey = key;
+          clone.dataset.multidayDayIndex = i;
+          clone.style.position = "absolute";
+          clone.style.pointerEvents = "none";
+
+          const inner = box.cloneNode(true);
+          inner.style.width = "100%";
+          // make clone visually transparent so the spanning bar shows through
+          const innerBox = inner.querySelector(".events-box");
+          if (innerBox) {
+            innerBox.style.background = "transparent";
+            innerBox.style.border = "none";
+            innerBox.style.color = "transparent";
+          }
+
+          clone.appendChild(inner);
+
+          eventsContainer.appendChild(clone);
+        }
+      }
+
+      // move to next day cell
+      let next = day.nextElementSibling;
+      while (next && !next.classList.contains("ec-day"))
+        next = next.nextElementSibling;
+      day = next;
+    }
+  });
+
+  // Re-layout events
+  requestAnimationFrame(handleMultiple);
+
+  const handled = new Set();
+
+  document.querySelectorAll(".events-box[data-days-span]").forEach((box) => {
+    const daysSpan = Number(box.dataset.daysSpan);
+    const startStr = box.dataset.start;
+    const endStr = box.dataset.end;
+    const resourceId = box.dataset.resourceId;
+
+    const startDate = new Date(startStr);
+    let endDate = endStr ? new Date(endStr) : new Date(startStr);
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const spanFromDates = Math.max(
+      1,
+      Math.round((endDate - startDate) / msPerDay)
+    );
+
+    if (spanFromDates !== daysSpan) {
+      console.warn(
+        "renderMultiDayBars: daysSpan mismatch, using spanFromDates",
+        {
+          startStr,
+          resourceId,
+          daysSpan,
+          spanFromDates,
+        }
+      );
+    }
+
+    let daysToUse = spanFromDates;
+
+    console.log("renderMultiDayBars: found box", {
+      title: box.textContent.trim().slice(0, 40),
+      startStr,
+      resourceId,
+      daysSpan,
+      daysToUse,
     });
 
-    layer.appendChild(bar);
+    if (daysToUse <= 1) {
+      return; // only multi-day events
+    }
 
-    // ---------- keep first day interactive ----------
-    // const eventEl = box.closest(".ec-event");
-    // if (eventEl) {
-    //   eventEl.classList.add("ec-multiday-first");
-    // }
+    const key = `${resourceId}_${startStr}`;
+    if (handled.has(key)) {
+      // console.log("renderMultiDayBars: already handled", key);
+      return;
+    }
+    handled.add(key);
+
+    // Find the correct resource row (robustly)
+    let resourceRow = box.closest(".ec-resource-row");
+    if (!resourceRow) {
+      const daysRow = box.closest(".ec-days");
+      resourceRow = daysRow ? daysRow.closest(".ec-resource-row") : null;
+    }
+
+    // FALLBACK: try to find resource row by matching resource id on rows
+    if (!resourceRow) {
+      resourceRow = document.querySelector(
+        `.ec-resource-row[data-resource-id="${resourceId}"]`
+      );
+    }
+
+    // FALLBACK 2: match sidebar list and map by index to days rows
+    if (!resourceRow) {
+      const sidebarResources = Array.from(
+        document.querySelectorAll(".ec-sidebar .ec-resource")
+      );
+      const idx = sidebarResources.findIndex((res) => {
+        const span = res.querySelector(".resource-user");
+        return span?.dataset?.resourceId === resourceId;
+      });
+      if (idx !== -1) {
+        // Try mapping to the list of resource rows by index (reliable)
+        let resourceRows = Array.from(
+          document.querySelectorAll(
+            ".ec-main .ec-body .ec-content .ec-resource-row"
+          )
+        );
+        if (resourceRows[idx]) {
+          resourceRow = resourceRows[idx];
+        } else {
+          // Try a more global selector if nested path didn't match
+          resourceRows = Array.from(
+            document.querySelectorAll(".ec-resource-row")
+          );
+          if (resourceRows[idx]) {
+            resourceRow = resourceRows[idx];
+            console.log(
+              "renderMultiDayBars: found resourceRow by global resourceRows index",
+              { resourceId, idx }
+            );
+          } else {
+            // fallback: check daysRows mapping
+            const daysRows = Array.from(
+              document.querySelectorAll(
+                ".ec-main .ec-body .ec-content .ec-days"
+              )
+            );
+            const daysRow = daysRows[idx];
+            if (daysRow) {
+              // Use the daysRow directly as the host when closest('.ec-resource-row') fails
+              resourceRow = daysRow; // daysRow acts as the row content area
+              console.log(
+                "renderMultiDayBars: mapped via daysRows (using daysRow as host)",
+                { resourceId, idx, resourceRowFound: !!resourceRow }
+              );
+            }
+          }
+        }
+      }
+    }
+
+    if (!resourceRow) {
+      // Last-resort heuristic: find sidebar element and pick nearest resource-row by vertical position
+      const sidebarEl = document.querySelector(
+        `.ec-sidebar .resource-user[data-resource-id="${resourceId}"]`
+      );
+      if (sidebarEl) {
+        const sidebarTop = sidebarEl.getBoundingClientRect().top;
+        const allRows = Array.from(
+          document.querySelectorAll(".ec-resource-row")
+        );
+        let best = null;
+        let bestDist = Infinity;
+        allRows.forEach((r) => {
+          const t = r.getBoundingClientRect().top;
+          const d = Math.abs(t - sidebarTop);
+          if (d < bestDist) {
+            bestDist = d;
+            best = r;
+          }
+        });
+        if (best && bestDist < 40) {
+          resourceRow = best;
+          console.log(
+            "renderMultiDayBars: mapped by nearest resource-row via sidebar top",
+            { resourceId, bestDist }
+          );
+        }
+      }
+
+      // Diagnostics: print sidebar resource ids and days rows to diagnose mapping
+      const sidebarResources = Array.from(
+        document.querySelectorAll(".ec-sidebar .ec-resource .resource-user")
+      ).map((el) => el.dataset.resourceId);
+      const daysRows = Array.from(
+        document.querySelectorAll(".ec-main .ec-body .ec-content .ec-days")
+      );
+      const daysRowSamples = daysRows.map((r, idx) => ({
+        idx,
+        html: r.innerHTML.slice(0, 80),
+      }));
+      const resourceRows = Array.from(
+        document.querySelectorAll(
+          ".ec-main .ec-body .ec-content .ec-resource-row"
+        )
+      );
+      const resourceRowSamples = resourceRows.map((r, idx) => ({
+        idx,
+        html: r.innerHTML.slice(0, 80),
+      }));
+
+      let ancestor = box.parentElement;
+      const chain = [];
+      for (let i = 0; i < 8 && ancestor; i++) {
+        chain.push({ tag: ancestor.tagName, classes: ancestor.className });
+        ancestor = ancestor.parentElement;
+      }
+
+      console.warn("renderMultiDayBars: no resourceRow for", {
+        startStr,
+        resourceId,
+        sidebarResourceIds: sidebarResources,
+        daysRowsCount: daysRows.length,
+        daysRowSamples,
+        ancestorChain: chain,
+      });
+      return;
+    }
+
+    const layer = ensureMultiDayLayer(resourceRow);
+    if (!layer) {
+      console.warn("renderMultiDayBars: no layer for", {
+        startStr,
+        resourceId,
+      });
+      return;
+    }
+
+    const startDayEl = box.closest(".ec-day");
+    if (!startDayEl) {
+      console.warn("renderMultiDayBars: no startDay for", {
+        startStr,
+        resourceId,
+      });
+      return;
+    }
+
+    // Get the calendar view's endDate by finding the last visible day cell
+    // Clamp event span to not exceed the visible calendar range
+    const daysRow = startDayEl.closest(".ec-days");
+    if (daysRow) {
+      const allDays = Array.from(daysRow.querySelectorAll(".ec-day"));
+      if (allDays.length > 0) {
+        const lastDay = allDays[allDays.length - 1];
+        // Try multiple ways to get the date
+        let lastDayDateStr = lastDay.getAttribute("data-date");
+        if (!lastDayDateStr && lastDay.dataset) {
+          lastDayDateStr = lastDay.dataset.date;
+        }
+        if (lastDayDateStr) {
+          try {
+            // Parse the date from data-date attribute (format: YYYY-MM-DD)
+            const viewEndDate = new Date(lastDayDateStr + "T23:59:59");
+            // Clamp event endDate to not exceed calendar view's endDate
+            if (endDate > viewEndDate) {
+              endDate = new Date(viewEndDate);
+              // Recalculate daysToUse based on clamped endDate
+              daysToUse = Math.max(
+                1,
+                Math.round((endDate - startDate) / msPerDay)
+              );
+            }
+          } catch (e) {
+            // If date parsing fails, fall back to using available day count
+            console.warn(
+              "renderMultiDayBars: failed to parse lastDayDateStr",
+              lastDayDateStr
+            );
+          }
+        }
+      }
+    }
+
+    // Clamp to number of visible day cells available starting at startDayEl
+    let available = 0;
+    let tmp = startDayEl;
+    while (tmp) {
+      available++;
+      let n = tmp.nextElementSibling;
+      while (n && !n.classList.contains("ec-day")) n = n.nextElementSibling;
+      tmp = n;
+    }
+    const clampedDays = Math.min(daysToUse, available);
+    if (clampedDays !== daysToUse) {
+      console.warn("renderMultiDayBars: clamped daysToUse to available cells", {
+        startStr,
+        resourceId,
+        daysToUse,
+        available,
+        clampedDays,
+      });
+    }
+
+    // Effective span: additionally ensure we don't exceed the daysSpan attribute or the spanFromDates
+    const effectiveDays = Math.min(clampedDays, daysSpan, spanFromDates);
+
+    // Diagnostic: compute per-day widths to validate totalWidth
+    const dayWidths = [];
+    let debugCur = startDayEl;
+    // Include the width for each visible day in the effective span (start day + subsequent days)
+    for (let i = 0; i < effectiveDays && debugCur; i++) {
+      const r = debugCur.getBoundingClientRect();
+      dayWidths.push(Math.round(r.width));
+      let next = debugCur.nextElementSibling;
+      while (next && !next.classList.contains("ec-day"))
+        next = next.nextElementSibling;
+      debugCur = next;
+    }
+
+    // use effectiveDays for measurement and bar width
+    const daysForBar = effectiveDays;
+
+    // Remove duplicate instances rendered in other day cells (keep only the one in the start day)
+    const matches = document.querySelectorAll(
+      `.events-box[data-start="${startStr}"][data-resource-id="${resourceId}"]`
+    );
+
+    let keptEvent = null;
+    matches.forEach((m) => {
+      const ev = m.closest(".ec-event");
+      if (!ev) return;
+      const day = m.closest(".ec-day");
+      if (day === startDayEl && !keptEvent) {
+        keptEvent = ev;
+      } else {
+        console.log(
+          "renderMultiDayBars: removing duplicate event on non-start-day",
+          {
+            text: m.textContent.trim().slice(0, 30),
+            dayDate: day?.dataset?.date || null,
+            isClone: ev.classList.contains("ec-multiday-clone"),
+          }
+        );
+        ev.remove();
+      }
+    });
+
+    // Diagnostic: list instances after dedupe
+    const afterMatches = document.querySelectorAll(
+      `.events-box[data-start="${startStr}"][data-resource-id="${resourceId}"]`
+    );
+    const originalEvent = keptEvent || box.closest(".ec-event");
+    if (!originalEvent) {
+      console.warn("renderMultiDayBars: originalEvent not found", {
+        startStr,
+        resourceId,
+      });
+      return;
+    }
+
+    // Measure total width and left offset using bounding rects for pixel accuracy
+    let totalWidth = 0;
+    const layerRect = layer.getBoundingClientRect();
+    const startRect = startDayEl.getBoundingClientRect();
+
+    const leftPx = Math.max(0, startRect.left - layerRect.left);
+
+    // Preferred method: find the last inclusive day cell that corresponds to the event end date
+    const endDateLookup = endStr ? new Date(endStr) : new Date(startStr);
+    const lastInclusive = new Date(endDateLookup);
+    lastInclusive.setDate(lastInclusive.getDate() - 1);
+    const lastDateStr = formatDateYYYYMMDD(lastInclusive);
+
+    // Look up the last day cell within this row (resourceRow) first
+    let lastDayEl = null;
+    try {
+      lastDayEl = resourceRow.querySelector(
+        `.ec-day[data-date="${lastDateStr}"]`
+      );
+    } catch (e) {
+      lastDayEl = null;
+    }
+
+    if (lastDayEl) {
+      const lastRect = lastDayEl.getBoundingClientRect();
+      const rightPx = Math.min(
+        layerRect.width,
+        Math.max(0, Math.round(lastRect.right - layerRect.left))
+      );
+      totalWidth = Math.max(0, rightPx - leftPx);
+    } else {
+      // Fallback: sum consecutive day widths starting from startDay for daysForBar
+      let cur = startDayEl;
+      for (let i = 0; i < daysForBar && cur; i++) {
+        const r = cur.getBoundingClientRect();
+        totalWidth += r.width;
+        let next = cur.nextElementSibling;
+        while (next && !next.classList.contains("ec-day"))
+          next = next.nextElementSibling;
+        cur = next;
+      }
+
+      // Sanity-check: compute expected width from per-day measurement, or derive it from a single event's width multiplied by the span
+      const daySum = dayWidths.reduce((s, w) => s + w, 0);
+      // Prefer the inner `.events-box` computed width (handles percentage widths like "57%")
+      const innerBox = originalEvent.querySelector(".events-box");
+      const innerBoxComputedWidth = innerBox
+        ? Math.round(innerBox.getBoundingClientRect().width)
+        : null;
+      const singleEventWidth = innerBoxComputedWidth
+        ? innerBoxComputedWidth
+        : Math.round(originalEvent.getBoundingClientRect().width);
+      const eventBasedExpected = Math.round(singleEventWidth * daysForBar);
+      // Prefer the measured per-day sum when available, otherwise fall back to the event-based estimate.
+      const expectedWidth = Math.max(daySum, eventBasedExpected);
+      if (expectedWidth && totalWidth > expectedWidth + 4) {
+        console.warn(
+          "renderMultiDayBars: totalWidth exceeds expected width, capping",
+          {
+            startStr,
+            resourceId,
+            daysForBar,
+            totalWidth: Math.round(totalWidth),
+            expectedWidth,
+            daySum,
+            eventBasedExpected,
+            innerBoxComputedWidth,
+            innerBoxStyleWidth: innerBox ? innerBox.style.width : null,
+            dayWidths,
+          }
+        );
+        totalWidth = expectedWidth; // cap to prevent overflow visual
+      }
+    }
+
+    // Clone and position the continuation bar (visual only)
+    const bar = originalEvent.cloneNode(true);
+    bar.classList.add("ec-multiday-event", "continuation");
+
+    // Tag by key to make append idempotent and prevent duplicates when this function runs multiple times
+    bar.dataset.multidayKey = key;
+    const prevBar = layer.querySelector(
+      `.ec-multiday-event[data-multiday-key="${key}"]`
+    );
+    if (prevBar) prevBar.remove();
+
+    // Use offsets relative to the layer
+    const top = originalEvent.offsetTop;
+    // Limit final width to remaining layer space and ensure non-negative
+    const finalWidth = Math.max(
+      0,
+      Math.min(totalWidth, Math.max(0, layerRect.width - leftPx))
+    );
+    if (finalWidth <= 0) return; // nothing to render
+
+    Object.assign(bar.style, {
+      position: "absolute",
+      top: `${top}px`,
+      left: `${leftPx}px`,
+      width: `${finalWidth}px`,
+      height: `${originalEvent.offsetHeight}px`,
+      pointerEvents: "none",
+      zIndex: 200,
+      boxSizing: "border-box",
+    });
+
+    // Ensure children scale
+    const inner = bar.querySelector(".events-box");
+    if (inner) {
+      inner.style.width = "57%";
+    }
+
+    layer.appendChild(bar);
+    // Keep the original first-day event interactive and mark it
     originalEvent.classList.add("ec-multiday-first");
-    console.log(originalEvent);
+    // console.log("continuation appended", { startStr, resourceId });
   });
 }
 
@@ -555,19 +921,47 @@ function positionMultiDayEvents() {
   const handled = new Map();
 
   document.querySelectorAll(".ec-event").forEach((eventEl) => {
+    // Skip our visual continuation bars and per-day clone placeholders so later layout doesn't overwrite them
+    if (
+      eventEl.classList.contains("ec-multiday-event") ||
+      eventEl.classList.contains("ec-multiday-clone")
+    )
+      return;
+
     const box = eventEl.querySelector(".events-box");
     if (!box) return;
 
     const startStr = box.dataset.start;
     const daysSpan = Number(box.dataset.daysSpan);
+    const endStr = box.dataset.end;
     const resourceId = box.dataset.resourceId;
 
-    if (!startStr || daysSpan <= 1) return;
+    const startDate = new Date(startStr);
+    const endDate = endStr ? new Date(endStr) : new Date(startStr);
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const daysToUse = Math.max(1, Math.round((endDate - startDate) / msPerDay));
+
+    if (!startStr || daysToUse <= 1) return;
 
     const key = `${resourceId}_${startStr}`;
 
     // keep only first occurrence
     if (handled.has(key)) {
+      // Diagnostic: list all candidate occurrences for this key before removal
+      const candidates = Array.from(
+        document.querySelectorAll(
+          `.events-box[data-start="${startStr}"][data-resource-id="${resourceId}"]`
+        )
+      ).map((m) => {
+        const ev = m.closest(".ec-event");
+        const day = m.closest(".ec-day");
+        return {
+          dayDate: day?.dataset?.date || null,
+          isClone: ev?.classList?.contains("ec-multiday-clone") || false,
+          classes: ev?.className || "",
+          text: m.textContent.trim().slice(0, 30),
+        };
+      });
       eventEl.remove();
       return;
     }
@@ -581,38 +975,26 @@ function positionMultiDayEvents() {
     const startDay = startBox.closest(".ec-day");
 
     if (!startDay) return;
-    const spanWidth = getSpanWidth(startDay, daysSpan);
+    const spanWidth = getSpanWidth(startDay, daysToUse);
     const container = startBox.closest(".ec-events");
     const dayCell = startBox.closest(".ec-day");
     if (!container || !dayCell) return;
 
     const dayWidth = dayCell.offsetWidth;
     if (!dayWidth) return;
-
     container.appendChild(eventEl);
 
+    const prevWidth = eventEl.style.width || null;
     eventEl.style.position = "absolute";
     eventEl.style.left = "0";
     eventEl.style.top = eventEl.offsetTop + "px";
     eventEl.style.width = `${spanWidth}px`;
-    console.log(spanWidth);
     eventEl.style.zIndex = 200;
 
     eventEl.classList.add("multi-day-event");
   });
 }
 
-function waitForDayLayoutAndPosition() {
-  const firstCell = document.querySelector(".ec-days .ec-events");
-
-  if (!firstCell || firstCell.offsetWidth === 0) {
-    requestAnimationFrame(waitForDayLayoutAndPosition);
-    return;
-  }
-
-  // ✅ layout is ready
-  // positionMultiDayEvents();
-}
 // Helper: format Date as 'YYYY-MM-DD' to match data-date attributes
 function formatDateYYYYMMDD(d) {
   const y = d.getFullYear();
@@ -623,12 +1005,30 @@ function formatDateYYYYMMDD(d) {
 
 function adjustMultiDayEvents() {
   document.querySelectorAll(".ec-event").forEach((eventEl) => {
-    // console.log(eventEl.dataset.daysSpan);
-    const daysSpan = parseInt(eventEl.dataset.daysSpan) || 1;
-    // console.log(daysSpan);
-    const cellWidth = eventEl.closest(".ec-days")?.offsetWidth || 100;
+    // Skip spanning bars and clones
+    if (
+      eventEl.classList.contains("ec-multiday-event") ||
+      eventEl.classList.contains("ec-multiday-clone")
+    )
+      return;
+
+    const box = eventEl.querySelector(".events-box");
+    if (!box) return;
+    const startStr = box.dataset.start;
+    const endStr = box.dataset.end;
+    const startDate = new Date(startStr);
+    const endDate = endStr ? new Date(endStr) : new Date(startStr);
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const daysToUse = Math.max(1, Math.round((endDate - startDate) / msPerDay));
+
+    // Use the width of a single day cell (start day) instead of the full row
+    const startDay = box.closest(".ec-day");
+    console.log(startDay?.offsetWidth);
+    const dayWidth = startDay?.offsetWidth || 100;
+    const newWidth = `${daysToUse * dayWidth}px`;
+    // const prevWidth = eventEl.style.width || null;
     // Set width of .ec-event to span N day columns
-    eventEl.style.width = `${daysSpan * cellWidth}px`;
+    eventEl.style.width = newWidth;
   });
 }
 
@@ -920,6 +1320,13 @@ function initCalendar(
       end.setDate(end.getDate() + 1);
     }
     const span = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+    // Debug: log computed span for each event
+    // console.log("normalizeEvent:", {
+    //     title: ev.title,
+    //     start: start.toDateString(),
+    //     end: end ? end.toDateString() : null,
+    //     daysSpan: span,
+    //   });
     return {
       ...ev,
       start,
@@ -944,6 +1351,8 @@ function initCalendar(
     slotDuration: { days: 1 },
     headerToolbar: false,
     editable: false,
+    eventStartEditable: false,
+    durationEditable: false,
     eventStartEditable: false,
     eventDurationEditable: false,
     eventResourceEditable: false,
@@ -1065,16 +1474,15 @@ function initCalendar(
           dayCells.forEach((cell) => (cell.style.display = "none"));
         }
       });
-      // requestAnimationFrame(() => {
-      //   waitForDayLayoutAndPosition(); // recalc after DOM is ready
-      // });
     },
     eventDidMount: () => {
       requestAnimationFrame(() => {
-        console.log("Function called");
-        renderMultiDayBars();
+        requestAnimationFrame(() => {
+          renderMultiDayBars();
+        });
       });
     },
+
     datesSet(info) {
       const start = new Date(info.start);
       const end = new Date(info.end);
@@ -1143,7 +1551,8 @@ function initCalendar(
       requestAnimationFrame(() => {
         handleMultiple();
         // adjustMultiDayEvents();
-        positionMultiDayEvents();
+        // positionMultiDayEvents();
+        renderMultiDayBars();
       });
     },
   };
@@ -1432,7 +1841,6 @@ function renderEventDetails(arg) {
   const x = event.extendedProps?.x || 0;
   const borderColor = getBorderColor(color);
   const daysSpan = event.extendedProps.daysSpan || 1;
-  const widthPercent = daysSpan * 100;
   const cupIcon = new CupIcon(borderColor, 20, 20);
   const clockIcon = new ClockIcon(borderColor, 20, 20);
   const start = formatDateYYYYMMDD(new Date(event.start));
@@ -1440,8 +1848,7 @@ function renderEventDetails(arg) {
 
   return {
     html: `
-       <div class="events-box" data-start="${start}" data-end="${end}" data-days-span="${daysSpan}" data-resource-id="${resourceId}" style="background-color: ${color}; border:2px solid ${borderColor}; color:${borderColor}; width: ${widthPercent}%;
-             left: 0;">
+       <div class="events-box" data-start="${start}" data-end="${end}" data-days-span="${daysSpan}" data-resource-id="${resourceId}" style="background-color: ${color}; border:2px solid ${borderColor}; color:${borderColor}; left: 0;">
          <div class="left-event">
            ${title}
            <div class="icons">
@@ -1664,6 +2071,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   window.addEventListener("scroll", disablePopup, true);
   window.addEventListener("resize", disablePopup);
+
+  // Debounced rerender of multi-day bars on resize to keep spans accurate
+  let _multiDayResizeTimer = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(_multiDayResizeTimer);
+    _multiDayResizeTimer = setTimeout(() => {
+      requestAnimationFrame(renderMultiDayBars);
+    }, 120);
+  });
   // HOVER HANDLING
   document.addEventListener("mouseover", function (e) {
     const eventBox = e.target.closest(
@@ -1790,7 +2206,7 @@ const calendarRoot = document.querySelector(".mbsc-eventcalendar");
 
 if (calendarRoot) {
   const resizeObserver = new ResizeObserver(() => {
-    console.log("resize");
+    // console.log("resize");
     requestAnimationFrame(handleMultiple);
   });
 
@@ -1798,6 +2214,6 @@ if (calendarRoot) {
 }
 
 window.addEventListener("resize", () => {
-  console.log("window resize / zoom");
+  // console.log("window resize / zoom");
   handleMultiple();
 });

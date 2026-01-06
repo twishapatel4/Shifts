@@ -29,7 +29,7 @@ body {
 .ec-timeline .ec-days,
 .ec-timeline .ec-slot {
   border: none !important;
-  box-sizing:border-box !important;
+  box-sizing: border-box !important;
   box-shadow: none !important;
 }
 
@@ -40,7 +40,6 @@ body {
   box-shadow: none !important;
 }
 
-
 .ec-timeline .ec-sidebar .ec-resource {
   overflow: hidden;
   padding: 0rem 1.2rem !important;
@@ -48,14 +47,26 @@ body {
   /* max-height: 4rem; */
 }
 
-.ec-timeline .ec-sidebar .ec-resource:last-child{
+.ec-timeline .ec-sidebar .ec-resource:last-child {
   max-height: 4rem !important;
-  flex-basis: 0% !important
+  flex-basis: 0% !important;
 }
 .ec-resource-row {
   min-height: 3.8rem;
   max-height: 4.2rem;
   overflow: hidden;
+  /* allow absolutely-positioned continuation bars to anchor to the row */
+  position: relative;
+}
+
+/* Container used to render visually-spanning multi-day bars */
+.multi-day-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* purely visual layer */
 }
 
 .ec-timeline .ec-days-header,
@@ -120,12 +131,11 @@ body {
   border-radius: 0.4rem;
 }
 
-
 .events-box:hover .right-event-x {
   display: block;
 }
 
-.events-box:hover{
+.events-box:hover {
   border: 2px solid #5a5959;
   border-left: 4px solid #5a5959;
   transform: none !important;
@@ -196,7 +206,7 @@ body {
   width: 100% !important;
   padding: 8px;
 }
-.ec-row{
+.ec-row {
   display: flex;
   flex-direction: column;
 }
@@ -211,7 +221,7 @@ body {
 .ec-content {
   /* padding: 0px 2px; */
   padding: 0 !important;
-  box-sizing:border-box;
+  box-sizing: border-box;
   overflow-x: auto;
   overflow-y: hidden;
 }
@@ -267,7 +277,7 @@ body {
   /* min-height: 3.8rem; */
   max-height: none;
   margin-top: 0% !important;
-  border-top:2px solid #f3f2f1;
+  border-top: 2px solid #f3f2f1;
   border-left: 6px solid #f3f2f1;
 }
 
@@ -297,7 +307,7 @@ body {
   padding: 0.6rem;
 }
 
-.added-events{
+.added-events {
   background-color: #fff !important;
   width: 98% !important;
   /* border-bottom: 2px solid #f3f2f1 !important; */
@@ -313,7 +323,7 @@ body {
   align-items: center;
   background-color: #5a5959;
   flex-direction: column;
-  z-index:20
+  z-index: 20;
 }
 
 .right-empty .dots {
