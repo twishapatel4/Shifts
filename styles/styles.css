@@ -439,7 +439,9 @@ h3 svg {
   z-index: 210 !important;
   pointer-events: auto !important;
 }
-
+.ec-multiday-first{
+  margin-top: 0.1rem !important;
+}
 .collapsed h3 svg {
   transform: rotate(0deg);
   transition: 0.2s ease;
@@ -598,33 +600,33 @@ h3 svg {
 }
 
 /* Make sure event has height */
-.ec-event.multi-day-event {
-  height: 3.8rem; /* match your EVENT_HEIGHT_REM */
-  background: red !important; /* debug */
-}
+/* .ec-event.multi-day-event {
+  height: 3.8rem; 
+  background: red !important; 
+} */
 
 /* IMPORTANT: body must stretch */
-.ec-event.multi-day-event .ec-event-body {
+/* .ec-event.multi-day-event .ec-event-body {
   height: 100%;
-}
+} */
 
-.multi-day-event {
+/* .multi-day-event {
   border-radius: 6px; /* smooth edges */
-  background-color: red;
+  /* background-color: red;  */
   /* border: 2px solid #5A9BD5; */
-  overflow: hidden;
+  /* overflow: hidden;
   cursor: pointer;
-}
+} */
 
-.ec-event.multi-day-event {
+/* .ec-event.multi-day-event {
   background: red !important;
 }
 
 .ec-multiday-event {
   border-radius: 4px;
-  background-color: inherit; /* use original background */
-  pointer-events: none; /* continuation bars */
+  background-color: inherit; use original background */
+  /* pointer-events: none; continuation bars
 }
 .ec-multiday-event:first-child {
-  pointer-events: auto; /* first-day interactive */
-}
+  pointer-events: auto; first-day interactive
+} */
