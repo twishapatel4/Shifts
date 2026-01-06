@@ -373,123 +373,7 @@ function ensureMultiDayLayer(resourceRow) {
   return layer;
 }
 
-// function getSpanWidth(startDayEl, daysSpan) {
-//   let width = 0;
-//   let current = startDayEl;
-
-//   for (let i = 0; i < daysSpan && current; i++) {
-//     width += current.offsetWidth;
-//     // current = current.nextElementSibling; // next ec-day
-//     let next = current.nextElementSibling;
-//     while (next && !next.classList.contains("ec-day")) {
-//       next = next.nextElementSibling;
-//     }
-//     current = next;
-//   }
-//   // console.log(width);
-//   return width;
-// }
-
 function renderMultiDayBars() {
-  // Show events on every day they span (no single spanning continuation).
-  // Clean any old continuation visuals and exit — per-day copies remain as rendered by the calendar.
-  // remove any old continuation visuals
-  // document
-  //   .querySelectorAll(".ec-multiday-event, .ec-multiday-clone")
-  //   .forEach((el) => el.remove());
-
-  // For each multi-day event create per-day clones so the event appears on all days
-  // document.querySelectorAll(".events-box[data-days-span]").forEach((box) => {
-  //   const daysSpan = Number(box.dataset.daysSpan);
-  //   const startStr = box.dataset.start;
-  //   const endStr = box.dataset.end;
-  //   const startDate = new Date(startStr);
-  //   const endDate = endStr ? new Date(endStr) : new Date(startStr);
-  //   // compute span from actual dates (end is exclusive in our normalization)
-  //   const spanFromDates = Math.max(
-  //     1,
-  //     Math.round((endDate - startDate) / (1000 * 60 * 60 * 24))
-  //   );
-
-  //   if (spanFromDates <= 1) return;
-
-  //   if (spanFromDates !== daysSpan) {
-  //     console.warn(
-  //       "renderMultiDayBars: daysSpan mismatch, using spanFromDates",
-  //       {
-  //         startStr,
-  //         daysSpan,
-  //         spanFromDates,
-  //       }
-  //     );
-  //   }
-
-  //   const resourceId = box.dataset.resourceId;
-  //   const key = `${resourceId}_${startStr}`;
-
-  //   // find start day cell
-  //   let day = box.closest(".ec-day");
-
-  //   // compute how many visible day cells are available starting at `day`
-  //   let availableDays = 0;
-  //   let tmp = day;
-  //   while (tmp) {
-  //     availableDays++;
-  //     let n = tmp.nextElementSibling;
-  //     while (n && !n.classList.contains("ec-day")) n = n.nextElementSibling;
-  //     tmp = n;
-  //   }
-
-  //   const spanToUse = Math.min(spanFromDates, availableDays);
-
-  //   for (let i = 0; i < spanToUse && day; i++) {
-  //     const eventsContainer = day.querySelector(".ec-events");
-  //     if (eventsContainer) {
-  //       // Skip adding clone on the first day if original exists
-  //       const exists = eventsContainer.querySelector(
-  //         `.events-box[data-start="${startStr}"][data-resource-id="${resourceId}"]`
-  //       );
-  //       if (i === 0 && exists) {
-  //         // already rendered by the calendar
-  //       } else if (!exists) {
-  //         const clone = document.createElement("div");
-  //         clone.className = "ec-event ec-multiday-clone";
-  //         // Mark whether this clone is the first or last day of the span
-  //         if (i === 0) clone.classList.add("ec-multiday-clone-first");
-  //         if (i === spanToUse - 1)
-  //           clone.classList.add("ec-multiday-clone-last");
-  //         clone.dataset.multidayKey = key;
-  //         clone.dataset.multidayDayIndex = i;
-  //         clone.style.position = "absolute";
-  //         clone.style.pointerEvents = "none";
-
-  //         const inner = box.cloneNode(true);
-  //         inner.style.width = "100%";
-  //         // make clone visually transparent so the spanning bar shows through
-  //         const innerBox = inner.querySelector(".events-box");
-  //         if (innerBox) {
-  //           innerBox.style.background = "transparent";
-  //           innerBox.style.border = "none";
-  //           innerBox.style.color = "transparent";
-  //         }
-
-  //         clone.appendChild(inner);
-
-  //         eventsContainer.appendChild(clone);
-  //       }
-  //     }
-
-  //     // move to next day cell
-  //     let next = day.nextElementSibling;
-  //     while (next && !next.classList.contains("ec-day"))
-  //       next = next.nextElementSibling;
-  //     day = next;
-  //   }
-  // });
-
-  // Re-layout events
-  // requestAnimationFrame(handleMultiple);
-
   const handled = new Set();
 
   document.querySelectorAll(".events-box[data-days-span]").forEach((box) => {
@@ -519,22 +403,12 @@ function renderMultiDayBars() {
     }
 
     let daysToUse = spanFromDates;
-
-    // console.log("renderMultiDayBars: found box", {
-    //   title: box.textContent.trim().slice(0, 40),
-    //   startStr,
-    //   resourceId,
-    //   daysSpan,
-    //   daysToUse,
-    // });
-
     if (daysToUse <= 1) {
       return; // only multi-day events
     }
 
     const key = `${resourceId}_${startStr}`;
     if (handled.has(key)) {
-      // console.log("renderMultiDayBars: already handled", key);
       return;
     }
     handled.add(key);
@@ -890,87 +764,8 @@ function renderMultiDayBars() {
     layer.appendChild(bar);
     // Keep the original first-day event interactive and mark it
     originalEvent.classList.add("ec-multiday-first");
-    // requestAnimationFrame(handleMultiple);
-    // console.log("continuation appended", { startStr, resourceId });
   });
 }
-
-// function positionMultiDayEvents() {
-//   const handled = new Map();
-
-//   document.querySelectorAll(".ec-event").forEach((eventEl) => {
-//     // Skip our visual continuation bars and per-day clone placeholders so later layout doesn't overwrite them
-//     if (
-//       eventEl.classList.contains("ec-multiday-event") ||
-//       eventEl.classList.contains("ec-multiday-clone")
-//     )
-//       return;
-
-//     const box = eventEl.querySelector(".events-box");
-//     if (!box) return;
-
-//     const startStr = box.dataset.start;
-//     const daysSpan = Number(box.dataset.daysSpan);
-//     const endStr = box.dataset.end;
-//     const resourceId = box.dataset.resourceId;
-
-//     const startDate = new Date(startStr);
-//     const endDate = endStr ? new Date(endStr) : new Date(startStr);
-//     const msPerDay = 1000 * 60 * 60 * 24;
-//     const daysToUse = Math.max(1, Math.round((endDate - startDate) / msPerDay));
-
-//     if (!startStr || daysToUse <= 1) return;
-
-//     const key = `${resourceId}_${startStr}`;
-
-//     // keep only first occurrence
-//     if (handled.has(key)) {
-//       // Diagnostic: list all candidate occurrences for this key before removal
-//       const candidates = Array.from(
-//         document.querySelectorAll(
-//           `.events-box[data-start="${startStr}"][data-resource-id="${resourceId}"]`
-//         )
-//       ).map((m) => {
-//         const ev = m.closest(".ec-event");
-//         const day = m.closest(".ec-day");
-//         return {
-//           dayDate: day?.dataset?.date || null,
-//           isClone: ev?.classList?.contains("ec-multiday-clone") || false,
-//           classes: ev?.className || "",
-//           text: m.textContent.trim().slice(0, 30),
-//         };
-//       });
-//       eventEl.remove();
-//       return;
-//     }
-//     handled.set(key, eventEl);
-
-//     const startBox = document.querySelector(
-//       `.events-box[data-start="${startStr}"][data-resource-id="${resourceId}"]`
-//     );
-//     if (!startBox) return;
-
-//     const startDay = startBox.closest(".ec-day");
-
-//     if (!startDay) return;
-//     const spanWidth = getSpanWidth(startDay, daysToUse);
-//     const container = startBox.closest(".ec-events");
-//     const dayCell = startBox.closest(".ec-day");
-//     if (!container || !dayCell) return;
-
-//     const dayWidth = dayCell.offsetWidth;
-//     if (!dayWidth) return;
-//     container.appendChild(eventEl);
-
-//     const prevWidth = eventEl.style.width || null;
-//     eventEl.style.position = "absolute";
-//     eventEl.style.left = "0";
-//     eventEl.style.top = eventEl.offsetTop + "px";
-//     eventEl.style.width = `${spanWidth}px`;
-
-//     eventEl.classList.add("multi-day-event");
-//   });
-// }
 
 // Helper: format Date as 'YYYY-MM-DD' to match data-date attributes
 function formatDateYYYYMMDD(d) {
@@ -979,35 +774,6 @@ function formatDateYYYYMMDD(d) {
   const day = String(d.getDate()).padStart(2, "0");
   return `${y}-${m}-${day}`;
 }
-
-// function adjustMultiDayEvents() {
-//   document.querySelectorAll(".ec-event").forEach((eventEl) => {
-//     // Skip spanning bars and clones
-//     if (
-//       eventEl.classList.contains("ec-multiday-event") ||
-//       eventEl.classList.contains("ec-multiday-clone")
-//     )
-//       return;
-
-//     const box = eventEl.querySelector(".events-box");
-//     if (!box) return;
-//     const startStr = box.dataset.start;
-//     const endStr = box.dataset.end;
-//     const startDate = new Date(startStr);
-//     const endDate = endStr ? new Date(endStr) : new Date(startStr);
-//     const msPerDay = 1000 * 60 * 60 * 24;
-//     const daysToUse = Math.max(1, Math.round((endDate - startDate) / msPerDay));
-
-//     // Use the width of a single day cell (start day) instead of the full row
-//     const startDay = box.closest(".ec-day");
-//     console.log(startDay?.offsetWidth);
-//     const dayWidth = startDay?.offsetWidth || 100;
-//     const newWidth = `${daysToUse * dayWidth}px`;
-//     // const prevWidth = eventEl.style.width || null;
-//     // Set width of .ec-event to span N day columns
-//     eventEl.style.width = newWidth;
-//   });
-// }
 
 const EVENT_OFFSET_REM = 4.2;
 const EVENT_HEIGHT_REM = 3.8;
@@ -1235,40 +1001,16 @@ function initCalendar(
 ) {
   const calendarEvents = events.map(normalizeEvent);
   const allEvents = calendarEvents.map((ev) => {
-    // const parse = (str) => {
-    //   const [mm, dd, yyyy] = str.split("/");
-    //   return new Date(yyyy, mm - 1, dd);
-    // };
-
-    // let start = parse(ev.start);
-    // let end = ev.end ? parse(ev.end) : null;
     let start = ev.start;
     let end = ev.end;
     console.log(ev.daysSpan);
     let daysSpan = ev.daysSpan;
-    // 🔑 ALWAYS make end exclusive
-    // if (end) {
-    //   end.setDate(end.getDate() + 1);
-    // }
 
-    // const fmt = (d) =>
-    //   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
-    //     d.getDate()
-    //   ).padStart(2, "0")}`;
-    // events.forEach((e) => {
-    //   console.log(
-    //     e.title,
-    //     new Date(e.start),
-    //     new Date(e.end)
-    //     // new Date(e.end) - new Date(e.start)
-    //   );
-    // });
-    // console.log(ev);
     return {
       ...ev,
       start: start,
       end: end ? end : undefined,
-      allDay: end && new Date(end) > new Date(start),
+      // allDay: end && new Date(end) > new Date(start),
       daysSpan,
     };
   });
@@ -1277,42 +1019,30 @@ function initCalendar(
     allEvents.map((e) => ({
       title: e.title,
       start: e.start,
-      allDay: e.allDay,
+      // allDay: e.allDay,
       end: e.end,
       daysSpan: e.daysSpan,
     }))
   );
   function normalizeEvent(ev) {
-    // const hasEnd = ev.end && new Date(ev.end) > new Date(ev.start);
-
-    // return {
-    //   ...ev,
-    //   allDay: hasEnd, // 🔑 auto-detect multi-day
-    // };
     let start = new Date(ev.start);
     let end = ev.end ? new Date(ev.end) : null;
 
     if (end && end > start) {
-      // ✅ Make end exclusive: EventCalendar needs this
+      // Make end exclusive: EventCalendar needs this
       end.setDate(end.getDate() + 1);
     }
     const span = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
-    // Debug: log computed span for each event
-    // console.log("normalizeEvent:", {
-    //     title: ev.title,
-    //     start: start.toDateString(),
-    //     end: end ? end.toDateString() : null,
-    //     daysSpan: span,
-    //   });
+
     return {
       ...ev,
       start,
       end: end || start,
-      allDay: true, // treat as all-day for multi-day
+      // allDay: true,
       daysSpan: span,
       extendedProps: {
         ...ev.extendedProps,
-        daysSpan: span, // ✅ propagate to extendedProps too
+        daysSpan: span,
       },
     };
   }
@@ -1335,7 +1065,7 @@ function initCalendar(
     eventResourceEditable: false,
     resources,
     events: allEvents,
-    allDay: true,
+    // allDay: true,
     slotLabelInterval: { days: 1 },
     dayMaxEvents: true,
     resourceLabelContent: renderResources,
