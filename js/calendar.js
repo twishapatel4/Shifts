@@ -80,8 +80,8 @@ async function loadShifts() {
         },
       },
       {
-        start: "01/09/2026",
-        end: "01/09/2026",
+        start: "01/08/2026",
+        end: "01/08/2026",
         resourceId: "ResourceGUID2",
         title: "FT-Sydney CBD",
         backgroundColor: "#D1E3F5",
@@ -980,34 +980,34 @@ function formatDateYYYYMMDD(d) {
   return `${y}-${m}-${day}`;
 }
 
-function adjustMultiDayEvents() {
-  document.querySelectorAll(".ec-event").forEach((eventEl) => {
-    // Skip spanning bars and clones
-    if (
-      eventEl.classList.contains("ec-multiday-event") ||
-      eventEl.classList.contains("ec-multiday-clone")
-    )
-      return;
+// function adjustMultiDayEvents() {
+//   document.querySelectorAll(".ec-event").forEach((eventEl) => {
+//     // Skip spanning bars and clones
+//     if (
+//       eventEl.classList.contains("ec-multiday-event") ||
+//       eventEl.classList.contains("ec-multiday-clone")
+//     )
+//       return;
 
-    const box = eventEl.querySelector(".events-box");
-    if (!box) return;
-    const startStr = box.dataset.start;
-    const endStr = box.dataset.end;
-    const startDate = new Date(startStr);
-    const endDate = endStr ? new Date(endStr) : new Date(startStr);
-    const msPerDay = 1000 * 60 * 60 * 24;
-    const daysToUse = Math.max(1, Math.round((endDate - startDate) / msPerDay));
+//     const box = eventEl.querySelector(".events-box");
+//     if (!box) return;
+//     const startStr = box.dataset.start;
+//     const endStr = box.dataset.end;
+//     const startDate = new Date(startStr);
+//     const endDate = endStr ? new Date(endStr) : new Date(startStr);
+//     const msPerDay = 1000 * 60 * 60 * 24;
+//     const daysToUse = Math.max(1, Math.round((endDate - startDate) / msPerDay));
 
-    // Use the width of a single day cell (start day) instead of the full row
-    const startDay = box.closest(".ec-day");
-    console.log(startDay?.offsetWidth);
-    const dayWidth = startDay?.offsetWidth || 100;
-    const newWidth = `${daysToUse * dayWidth}px`;
-    // const prevWidth = eventEl.style.width || null;
-    // Set width of .ec-event to span N day columns
-    eventEl.style.width = newWidth;
-  });
-}
+//     // Use the width of a single day cell (start day) instead of the full row
+//     const startDay = box.closest(".ec-day");
+//     console.log(startDay?.offsetWidth);
+//     const dayWidth = startDay?.offsetWidth || 100;
+//     const newWidth = `${daysToUse * dayWidth}px`;
+//     // const prevWidth = eventEl.style.width || null;
+//     // Set width of .ec-event to span N day columns
+//     eventEl.style.width = newWidth;
+//   });
+// }
 
 const EVENT_OFFSET_REM = 4.2;
 const EVENT_HEIGHT_REM = 3.8;
@@ -1235,10 +1235,10 @@ function initCalendar(
 ) {
   const calendarEvents = events.map(normalizeEvent);
   const allEvents = calendarEvents.map((ev) => {
-    const parse = (str) => {
-      const [mm, dd, yyyy] = str.split("/");
-      return new Date(yyyy, mm - 1, dd);
-    };
+    // const parse = (str) => {
+    //   const [mm, dd, yyyy] = str.split("/");
+    //   return new Date(yyyy, mm - 1, dd);
+    // };
 
     // let start = parse(ev.start);
     // let end = ev.end ? parse(ev.end) : null;
